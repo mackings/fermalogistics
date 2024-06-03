@@ -1,3 +1,4 @@
+import 'package:fama/Views/Auth/attachimg.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/verification.dart';
 import 'package:flutter/material.dart';
@@ -17,19 +18,28 @@ class _VerificationState extends ConsumerState<Verification> {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return Scaffold(
+          appBar: AppBar(),
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-              padding: const EdgeInsets.only(left: 20,right: 20),
+              padding: const EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 children: [
-                  SizedBox(height: 10.h,),
                   Container(
-                    height: 15.h,
-                    child: VerificationInfoWidget(email: "Macs@gmail.com")),
+                      height: 15.h,
+                      child: VerificationInfoWidget(email: "Macs@gmail.com")),
                   VerificationWidget(),
-                  SizedBox(height: 5.h,),
-                  CustomButton(text: "Verify", onPressed: (){})
+                  SizedBox(
+                    height: 5.h,
+                  ),
+                  CustomButton(
+                      text: "Verify",
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AttachImg()));
+                      })
                 ],
               ),
             ),
