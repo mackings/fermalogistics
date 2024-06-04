@@ -106,6 +106,7 @@ class _SignupState extends ConsumerState<Signup> {
                     onChanged: _checkPasswordRequirements,
                   ),
                   SizedBox(height: 2.h),
+
                   CountryCodeTextFormField(
                     labelText: 'Country code',
                     hintText: "8137159066",
@@ -114,6 +115,7 @@ class _SignupState extends ConsumerState<Signup> {
                     countryCodes: ['+1', '+91', '+44'],
                     selectedCountryCode: '+91',
                   ),
+                  
                   SizedBox(height: 2.h),
                   TermsAndConditionsWidget(
                       buttonColor: btncolor, onPressed: () {}),

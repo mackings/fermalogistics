@@ -1,3 +1,5 @@
+import 'package:fama/Views/widgets/colors.dart';
+import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
@@ -36,24 +38,27 @@ class CountryCodeTextFormField extends StatelessWidget {
         SizedBox(height: 8.0),
 
         Container(
-          height: 7.h,
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          //height: 7.h,
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: Row(
             children: [
+
 DropdownButton<String>(
   value: selectedCountryCode,
   onChanged: (String? newValue) {},
-  underline: null, // Remove underline
+  underline: CustomText(text: '') ,
   items: countryCodes.map<DropdownMenuItem<String>>((String value) {
     return DropdownMenuItem<String>(
       value: value,
-      child: Text(
-        value,
-        style: TextStyle(fontSize: 14.0),
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 0.1.w, vertical: 0.5.h),
+        child: CustomText(
+          text: value,
+        ),
       ),
     );
   }).toList(),

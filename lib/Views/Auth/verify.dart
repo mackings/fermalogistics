@@ -18,16 +18,18 @@ class _VerificationState extends ConsumerState<Verification> {
     return Sizer(
       builder: (context, orientation, deviceType) {
         return Scaffold(
-          appBar: AppBar(),
+          backgroundColor: Colors.white,
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
+              padding: const EdgeInsets.only(left: 17, right: 17,),
               child: Column(
                 children: [
+                  SizedBox(height: 7.h,),
                   Container(
                       height: 15.h,
                       child: VerificationInfoWidget(email: "Macs@gmail.com")),
+                      SizedBox(height: 2.h,),
                   VerificationWidget(),
                   SizedBox(
                     height: 5.h,

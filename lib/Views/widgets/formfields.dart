@@ -6,13 +6,15 @@ class CustomTextFormField extends StatelessWidget {
   final String labelText;
   final String hintText;
   final TextEditingController controller;
-   final Function(String) onChanged;
+  final Function(String) onChanged;
+  final Widget? suffix;
 
   CustomTextFormField({
     required this.labelText,
     required this.hintText,
-    required this.controller, 
+    required this.controller,
     required this.onChanged,
+    this.suffix
   });
 
   @override
@@ -20,7 +22,6 @@ class CustomTextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         Text(
           labelText,
           style: GoogleFonts.plusJakartaSans(
@@ -29,26 +30,25 @@ class CustomTextFormField extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-
-        SizedBox(height: 8.0),
-
+        SizedBox(height: 1.h),
         Container(
-          height: 7.h,
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
           decoration: BoxDecoration(
             border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8.0),
+            borderRadius: BorderRadius.circular(2.w),
           ),
           child: TextFormField(
             controller: controller,
             onChanged: onChanged,
             style: GoogleFonts.inter(
-              fontSize: 14.0,
+              fontSize: 12.sp,
               color: Colors.black,
             ),
             decoration: InputDecoration(
               hintText: hintText,
+              suffixIcon: suffix,
               hintStyle: GoogleFonts.inter(
+                fontSize: 11.sp,
                 color: Colors.grey,
               ),
               border: InputBorder.none,

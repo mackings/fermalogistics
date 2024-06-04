@@ -74,7 +74,7 @@ class _AttachImgState extends ConsumerState<AttachImg> {
                   SizedBox(height: 1.h),
                   CustomText(text: "Choose Image"),
 
-                  SizedBox(height: 33.h),
+                  SizedBox(height: 30.h),
               
                   CustomButton(text: "Continue", onPressed: (){
                      Navigator.push(

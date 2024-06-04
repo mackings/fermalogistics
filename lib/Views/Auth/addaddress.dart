@@ -1,3 +1,4 @@
+import 'package:fama/Views/Address/createaddress.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
@@ -91,60 +92,71 @@ class _AddaddressState extends ConsumerState<Addaddress> {
                           return Container(
                             height: 35.h,
                             decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                              )
-                            ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10),
+                                )),
                             child: Padding(
                               padding: const EdgeInsets.all(13.0),
                               child: Column(
                                 children: [
-                                  SizedBox(height: 3.h,),
-                            
-                                            Container(
-                                            height: 10.h,
-                                            decoration: BoxDecoration(
-                                                color: Color(0xFFFFF5F6),
-                                                borderRadius: BorderRadius.circular(10)),
-                                            child: Center(
-                                              child: ListTile(
-                                                title: CustomText(
-                                                  text: "Use current location",
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                leading: CircleAvatar(
-                                                  backgroundColor: Colors.white,
-                                                  child: Image.asset("assets/location.png")
-                                                ),
-                                                trailing: Icon(Icons.arrow_forward_ios),
-                                              ),
-                                            ),
+                                  SizedBox(
+                                    height: 3.h,
+                                  ),
+                                  Container(
+                                    height: 10.h,
+                                    decoration: BoxDecoration(
+                                        color: Color(0xFFFFF5F6),
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    child: Center(
+                                      child: ListTile(
+                                        title: CustomText(
+                                          text: "Use current location",
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                        leading: CircleAvatar(
+                                            backgroundColor: Colors.white,
+                                            child: Image.asset(
+                                                "assets/location.png")),
+                                        trailing: Icon(Icons.arrow_forward_ios),
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2.h,
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  Createaddress()));
+                                    },
+                                    child: Container(
+                                      height: 10.h,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFFFFF5F6),
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: ListTile(
+                                          title: CustomText(
+                                            text: "Enter Address Manually",
+                                            fontWeight: FontWeight.w600,
                                           ),
-
-
-                                        SizedBox(height: 2.h,),
-                            
-                                            Container(
-                                            height: 10.h,
-                                            decoration: BoxDecoration(
-                                                color: Color(0xFFFFF5F6),
-                                                borderRadius: BorderRadius.circular(10)),
-                                            child: Center(
-                                              child: ListTile(
-                                                title: CustomText(
-                                                  text: "Enter Address Manually",
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                                leading: CircleAvatar(
-                                                  backgroundColor: Colors.white,
-                                                  child: Image.asset("assets/hand.png")
-                                                ),
-                                                trailing: Icon(Icons.arrow_forward_ios),
-                                              ),
-                                            ),
-                                          ),
+                                          leading: CircleAvatar(
+                                              backgroundColor: Colors.white,
+                                              child: Image.asset(
+                                                  "assets/hand.png")),
+                                          trailing:
+                                              Icon(Icons.arrow_forward_ios),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),

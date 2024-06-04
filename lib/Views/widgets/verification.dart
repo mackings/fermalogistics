@@ -77,8 +77,8 @@ class _VerificationWidgetState extends State<VerificationWidget> {
       onTap: () => onNumberPressed(number),
       child: Container(
         margin: EdgeInsets.all(2.w),
-        width: 15.w,
-        height: 15.w,
+        width: 12.w,
+        height: 12.w,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color:  Color(0xFFF3F3F3),
@@ -106,8 +106,8 @@ class _VerificationWidgetState extends State<VerificationWidget> {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(4, (index) {
             return Container(
-              width: 15.w,
-              height: 15.w,
+              width: 12.w,
+              height: 12.w,
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(8.0),
@@ -140,6 +140,8 @@ class _VerificationWidgetState extends State<VerificationWidget> {
             ],
           ),
         ),
+
+        SizedBox(height: 3.h),
 
         Column(
           children: [
