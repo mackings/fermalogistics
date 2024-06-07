@@ -1,6 +1,8 @@
 
 import 'package:fama/Views/widgets/colors.dart';
+import 'package:fama/Views/widgets/homecard.dart';
 import 'package:fama/Views/widgets/texts.dart';
+import 'package:fama/Views/widgets/tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
@@ -58,7 +60,45 @@ class _DashboardState extends ConsumerState<Dashboard> {
                     child: Icon(Icons.notifications_outlined)
                     )
                 ],
-              )
+              ),
+              SizedBox(height: 3.h,),
+
+              ShipmentTrackingCard(),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    CustomText(
+                    text: 'Our Services',
+                    fontWeight: FontWeight.w700,
+                    )
+                  ],
+                ),
+              ),
+
+              ShipmentOptions(),
+
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomText(
+                    text: 'Recent Shipping',
+                    fontWeight: FontWeight.w700,
+                    ),
+
+                    CustomText(text: 'See all',color: btngrey,)
+                  ],
+                ),
+              ),
+
+   //TrackingDotsWidget(currentStage: 2,),
+
+
+
+
             ],
           ),
         ),
