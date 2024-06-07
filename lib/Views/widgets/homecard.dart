@@ -1,3 +1,4 @@
+import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -241,3 +242,176 @@ class ShipmentTrackingCard extends StatelessWidget {
 }
 
 
+class ScreenProgress extends StatefulWidget {
+  final int ticks;
+
+  ScreenProgress({required this.ticks});
+
+  @override
+  _ScreenProgressState createState() => _ScreenProgressState();
+}
+
+class _ScreenProgressState extends State<ScreenProgress> {
+  Color btnColor = btncolor; // Change this color based on API data
+  Color btnGrey = Colors.grey;  // Grey color for unchecked state
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: <Widget>[
+        tick(widget.ticks > 0),
+        line(widget.ticks > 1),
+        tick(widget.ticks > 1),
+        line(widget.ticks > 2),
+        tick(widget.ticks > 2),
+        line(widget.ticks > 3),
+        tick(widget.ticks > 3),
+      ],
+    );
+  }
+
+  Widget tick(bool isChecked) {
+    return Icon(
+      isChecked ? Icons.check_circle : Icons.radio_button_unchecked,
+      color: isChecked ? btncolor : btnGrey,
+    );
+  }
+
+  Widget line(bool isChecked) {
+    return Container(
+      color: isChecked ? btncolor : btnGrey,
+      height: 5.0,
+      width: 16.w,
+    );
+  }
+}
+
+
+
+
+class Shipments extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 5.w, vertical: 2.h),
+      child: Column(
+        children: [
+          Container(
+            width: screenWidth * 0.9,
+            padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 4.h),
+            decoration: ShapeDecoration(
+              color: Color(0xFFFFF5F6),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: screenWidth * 0.45,
+                            child: CustomText(
+                              text:'Tracking ID',
+                                color: Color(0xFF121212),
+                                fontSize: 11.sp,
+                                fontWeight: FontWeight.w400,
+
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+
+                          CustomText(
+                           text: '#127890',
+                           color: Color(0xFF121212),
+                              fontSize: 10.sp,
+                              fontWeight: FontWeight.w400,
+                          ),
+                        ],
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 2.w, vertical: 1.h),
+                        decoration: ShapeDecoration(
+                          color: Color(0xFFEA2A3A),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(19),
+                          ),
+                        ),
+                        child: CustomText(
+                          text:'In Transit',
+                             color: Colors.white,
+                            fontSize: 6.sp,
+                            fontWeight: FontWeight.w400,
+
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Padding(
+                  padding: const EdgeInsets.only(left: 5,right: 5),
+                  child: ScreenProgress(ticks: 2),
+                ),
+                const SizedBox(height: 16),
+                Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+                          CustomText(text: '06 March 2024',
+                          color: Color(0xFF808080),
+                          fontSize: 6.sp,
+                          fontWeight: FontWeight.w400,
+                          ),
+
+
+                       CustomText(text: 'China',
+                          color: Color(0xFF121212),
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.w600,
+                          ),
+
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                         CustomText(text: 'Estimated 06 March 2024',
+                          color: Color(0xFF808080),
+                          fontSize: 6.sp,
+                          fontWeight: FontWeight.w400,
+                          ),
+
+                       CustomText(text: 'Nigeria',
+                          color: Color(0xFF121212),
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.w600,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
