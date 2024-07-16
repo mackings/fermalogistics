@@ -1,6 +1,11 @@
+import 'package:fama/Views/Product/cardrequestwidget.dart';
+import 'package:fama/Views/Product/newrequest.dart';
+import 'package:fama/Views/Product/widgets.dart';
+import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sizer/sizer.dart';
 
 class Requestproduct extends ConsumerStatefulWidget {
   const Requestproduct({super.key});
@@ -9,7 +14,8 @@ class Requestproduct extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _RequestproductState();
 }
 
-class _RequestproductState extends ConsumerState<Requestproduct> with SingleTickerProviderStateMixin {
+class _RequestproductState extends ConsumerState<Requestproduct>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _activeIndex = 0;
 
@@ -35,41 +41,52 @@ class _RequestproductState extends ConsumerState<Requestproduct> with SingleTick
     return DefaultTabController(
       length: 3, // Number of tabs
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: CustomText(text: 'Request Product'),
           elevation: 0,
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(50.0),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 17, right: 17),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200, 
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TabBar(
-                    controller: _tabController, 
-                    dividerColor: Colors.transparent,
-                    indicatorColor: Colors.transparent,
-                    tabs: [
-                      CustomTab(
-                        title: 'Tab 1',
-                        isActive: _activeIndex == 0,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                double containerWidth = constraints.maxWidth > 600
+                    ? constraints.maxWidth * 0.8
+                    : constraints.maxWidth -
+                        32; // Adjust width based on screen width
+
+                return Center(
+                  child: Container(
+                    width: containerWidth,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade200,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TabBar(
+                        controller: _tabController,
+                        dividerColor: Colors.transparent,
+                        indicatorColor: Colors.transparent,
+                        tabs: [
+                          CustomTab(
+                            title: 'Ongoing',
+                            isActive: _activeIndex == 0,
+                          ),
+                          CustomTab(
+                            title: 'Cancelled',
+                            isActive: _activeIndex == 1,
+                          ),
+                          CustomTab(
+                            title: 'Completed',
+                            isActive: _activeIndex == 2,
+                          ),
+                        ],
                       ),
-                      CustomTab(
-                        title: 'Tab 2',
-                        isActive: _activeIndex == 1,
-                      ),
-                      CustomTab(
-                        title: 'Tab 3',
-                        isActive: _activeIndex == 2,
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
+                );
+              },
             ),
           ),
         ),
@@ -78,20 +95,53 @@ class _RequestproductState extends ConsumerState<Requestproduct> with SingleTick
                 controller: _tabController,
                 children: [
                   Container(
-                    color: Colors.white,
-                    child: Center(child: CustomText(text: 'Content for Tab 1')),
-                  ),
-                  Container(
-                    color: Colors.white,
-                    child: Center(child: CustomText(text: 'Content for Tab 2')),
-                  ),
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: 5.h,
+                          ),
+                          ImageWithText(
+                            title: "No Request Yet",
+                            bodyText1:
+                                "You haven't placed any request yet,requests",
+                            bodyText2: "will be displayed here",
+                            svgPath: '',
+                          ),
+                        ],
+                      )),
+
+                      //TAB2
+
+                      RequestCard(
+                      title: "Scanner", 
+                      subtitle: '100 pcs',
+                       leadingIcon: Icons.scanner,
+                        trailingIcon: 'Pending' ,
+                        text1: 'Time Placed', 
+                        text2: "Placed at"),
+
+
+                  //TAB3
+
                   Container(
                     color: Colors.white,
                     child: Center(child: CustomText(text: 'Content for Tab 3')),
                   ),
                 ],
               )
-            : Container(), // Show an empty container while the TabController is initializing
+            : Container(),
+        floatingActionButton: FloatingActionButton(
+            backgroundColor: btncolor,
+            shape: CircleBorder(),
+            child: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => Newrequest()));
+            }),
       ),
     );
   }
@@ -108,12 +158,16 @@ class CustomTab extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 8, horizontal: 18),
       decoration: BoxDecoration(
-        color: isActive ? Colors.white : Colors.grey.shade200, // Adjust the background color
+        color: isActive ? Colors.white : Colors.grey.shade200,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: CustomText(
-        text: title,
-        color: isActive ? Colors.black : Colors.black,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: CustomText(
+          text: title,
+          fontSize: 10.sp,
+          color: isActive ? Colors.black : Colors.black,
+        ),
       ),
     );
   }
