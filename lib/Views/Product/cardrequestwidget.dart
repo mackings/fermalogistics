@@ -25,42 +25,37 @@ class RequestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-      height: 20.h, // Set the height of the Container
       decoration: BoxDecoration(
-        color: Colors.white, // Adjust the color if necessary
+        color: Colors.white, 
+        border: Border.all(width:0.5),
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 5,
-            offset: Offset(0, 3),
-          ),
-        ],
       ),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: SizedBox(
-          height: 20.h - 20, // Adjust the height to fit within the Container's padding
+          height: 20.h - 10,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               ListTile(
                 leading: CircleAvatar(
                   child: Icon(leadingIcon),
                 ),
                 title: CustomText(text: title, fontWeight: FontWeight.w500,),
-                subtitle: Text(subtitle),
+                subtitle: Text(subtitle), 
                 trailing: Container(
                   decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
+                    color: const Color.fromARGB(255, 160, 41, 33),
+                    borderRadius: BorderRadius.circular(15),
                   ),
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
                   child: CustomText(text: trailingIcon, color: Colors.white,)
                 ),
               ),
+              
               Divider(),
+
               Padding(
                 padding: const EdgeInsets.only(left: 18, right: 18, top: 5),
                 child: Row(

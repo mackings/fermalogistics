@@ -91,6 +91,7 @@ class _NewrequestState extends ConsumerState<Newrequest> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Icon(Icons.cloud_upload),
+                                  
                                   CustomText(text: 'Upload your request here'),
                                   CustomText(
                                     text: 'JPG & PNG Formats, 5MB max file size',

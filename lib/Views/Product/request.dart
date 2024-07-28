@@ -1,5 +1,6 @@
 import 'package:fama/Views/Product/cardrequestwidget.dart';
 import 'package:fama/Views/Product/newrequest.dart';
+import 'package:fama/Views/Product/reqstatus.dart';
 import 'package:fama/Views/Product/widgets.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
@@ -111,16 +112,27 @@ class _RequestproductState extends ConsumerState<Requestproduct>
                         ],
                       )),
 
-                      //TAB2
+                  //TAB2
 
-                      RequestCard(
-                      title: "Scanner", 
-                      subtitle: '100 pcs',
-                       leadingIcon: Icons.scanner,
-                        trailingIcon: 'Pending' ,
-                        text1: 'Time Placed', 
-                        text2: "Placed at"),
-
+                  Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => requeststatus()));
+                        },
+                        child: RequestCard(
+                            title: "Scanner",
+                            subtitle: '100 pcs',
+                            leadingIcon: Icons.scanner,
+                            trailingIcon: 'Pending',
+                            text1: 'Time Placed',
+                            text2: "Placed at"),
+                      ),
+                    ],
+                  ),
 
                   //TAB3
 
