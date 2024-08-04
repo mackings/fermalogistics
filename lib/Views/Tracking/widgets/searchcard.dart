@@ -27,6 +27,7 @@ class _SearchCardState extends State<SearchCard> {
         padding: const EdgeInsets.all(8.0),
         child: Column(
           children: [
+            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
