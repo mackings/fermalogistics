@@ -1,5 +1,6 @@
 import 'package:fama/Views/Product/quote.dart';
 import 'package:fama/Views/Product/request.dart';
+import 'package:fama/Views/Tracking/home.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,10 @@ class ShipmentOptions extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {                 
+                   Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SearchHome()));
+                  },
                   child: ShipmentOptionCard(
                       color: Color(0xFFE7F9DF),
                       title: 'Track Shipment',

@@ -30,12 +30,12 @@ class RSummaryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       //height: 70.h,
-      margin: EdgeInsets.symmetric(vertical: 15, horizontal: 15),
+      margin: EdgeInsets.symmetric(vertical: 15,),
       decoration: BoxDecoration(
         color: btngrey,
-        border: Border.all(width: 0.5),
         borderRadius: BorderRadius.circular(10),
       ),
+
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: Container(
@@ -53,7 +53,7 @@ class RSummaryCard extends StatelessWidget {
                 subtitle: Text(subtitle),
                 trailing: Container(
                   decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 160, 41, 33),
+                    color: Colors.black,
                     borderRadius: BorderRadius.circular(15),
                   ),
                   padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),

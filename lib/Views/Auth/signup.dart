@@ -1,4 +1,5 @@
 import 'package:fama/Views/Auth/verify.dart';
+import 'package:fama/Views/Home/dashboard.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/countrycode.dart';
@@ -131,7 +132,13 @@ class _SignupState extends ConsumerState<Signup> {
                   SizedBox(height: 1.h),
                   AlreadyHaveAccountWidget(
                     buttonColor: btncolor,
-                    onLoginPressed: () {},
+                    onLoginPressed: () {
+                      
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Dashboard()));
+                    },
                   ),
                 ],
               ),
