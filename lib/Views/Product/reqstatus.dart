@@ -1,3 +1,4 @@
+import 'package:fama/Views/Tracking/widgets/thetimeline.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/customtimeline.dart';
@@ -42,132 +43,31 @@ class _requeststatusState extends ConsumerState<requeststatus> {
                   padding: const EdgeInsets.only(
                       left: 15, right: 15, top: 10, bottom: 10),
                   child: Column(
-                    children: [
-                      TimelineTile(
-                          isFirst: true,
-                          hasIndicator: true,
-                          indicatorStyle: IndicatorStyle(
-                              height: 30,
-                              width: 30,
-                              indicator: CircleAvatar(
-                                radius: 90,
-                                backgroundColor: Colors.white,
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.red,
-                                  radius: 5,
-                                ),
-                              )),
-                          endChild: ListTile(
-                            title: CustomText(
-                              text: "Request Placed",
-                              fontWeight: FontWeight.w600,
-                            ),
-                            trailing: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(
-                                  height: 0.5.h,
-                                ),
-                                CustomText(
-                                  text: "7th Dec 2024",
-                                  fontSize: 7.sp,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                CustomText(
-                                  text: "18:00",
-                                  fontSize: 6.sp,
-                                ),
-                              ],
-                            ),
-                            subtitle: CustomText(
-                              text: "We have recieved your request",
-                              fontSize: 6.sp,
-                            ),
-                          )),
-                      TimelineTile(
-                          isFirst: false,
-                          hasIndicator: true,
-                          indicatorStyle: IndicatorStyle(
-                              height: 30,
-                              width: 30,
-                              indicator: CircleAvatar(
-                                radius: 90,
-                                backgroundColor: Colors.white,
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.red,
-                                  radius: 5,
-                                ),
-                              )),
-                          endChild: ListTile(
-                            title: CustomText(
-                              text: "Request Processed",
-                              fontWeight: FontWeight.w600,
-                            ),
-                            trailing: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(
-                                  height: 0.5.h,
-                                ),
-                                CustomText(
-                                  text: "7th Dec 2024",
-                                  fontSize: 7.sp,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                CustomText(
-                                  text: "18:00",
-                                  fontSize: 6.sp,
-                                ),
-                              ],
-                            ),
-                            subtitle: CustomText(
-                              text: "We will soon give you feedback",
-                              fontSize: 6.sp,
-                            ),
-                          )),
-                      TimelineTile(
-                          isLast: true,
-                          hasIndicator: true,
-                          indicatorStyle: IndicatorStyle(
-                              height: 30,
-                              width: 30,
-                              indicator: CircleAvatar(
-                                radius: 90,
-                                backgroundColor: Colors.white,
-                                child: CircleAvatar(
-                                  backgroundColor: Colors.red,
-                                  radius: 5,
-                                ),
-                              )),
-                          endChild: ListTile(
-                            title: CustomText(
-                              text: "Request Delivered",
-                              fontWeight: FontWeight.w600,
-                            ),
-                            trailing: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(
-                                  height: 0.5.h,
-                                ),
-                                CustomText(
-                                  text: "7th Dec 2024",
-                                  fontSize: 7.sp,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                CustomText(
-                                  text: "18:00",
-                                  fontSize: 6.sp,
-                                ),
-                              ],
-                            ),
-                            subtitle: CustomText(
-                              text: "Check your notification",
-                              fontSize: 6.sp,
-                            ),
-                          )),
-                    ],
-                  ),
+                  children: [
+                
+                     CustomTimelineTile(
+                      title: "Request Placed",
+                      subtitle: "We have received your request",
+                      date: "7th Dec 2024",
+                      time: "18:00",
+                      isFirst: true,
+                    ),
+                    CustomTimelineTile(
+                      title: "Request Processed",
+                      subtitle: "We will soon give you feedback",
+                      date: "7th Dec 2024",
+                      time: "18:00",
+                    ),
+                    CustomTimelineTile(
+                      title: "Request Delivered",
+                      subtitle: "Check your notification",
+                      date: "7th Dec 2024",
+                      time: "18:00",
+                      isLast: true,
+                    ),
+                
+                  ],
+                ),
                 ),
               ),
               SizedBox(
@@ -207,9 +107,9 @@ class _requeststatusState extends ConsumerState<requeststatus> {
                                     topLeft: Radius.circular(15),
                                     topRight: Radius.circular(15),
                                   )),
-                              height: 25.h,
+                              height: 29.h,
                               child: Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.only(left: 20,right: 20),
                                 child: Column(
                                   children: [
                                     SizedBox(

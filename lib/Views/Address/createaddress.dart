@@ -143,7 +143,8 @@ class _TextSwitchRowState extends State<TextSwitchRow> {
       children: [
         CustomText(
           text: '${widget.label}',
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w400,
+          color: Colors.grey
         ),
         Switch(
           value: _isSwitchOn,

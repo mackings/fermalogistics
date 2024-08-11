@@ -46,6 +46,8 @@ dependencies:
   flutter_svg: ^2.0.10+1
   dotted_border: ^2.1.0
   timeline_tile: ^2.0.0
+  google_maps_flutter: ^2.7.1
+  flutter_barcode_scanner: ^2.0.0
 
  
 

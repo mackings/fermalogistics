@@ -1,5 +1,6 @@
 import 'package:fama/Views/Product/quote.dart';
 import 'package:fama/Views/Product/request.dart';
+import 'package:fama/Views/Send%20Product/send.dart';
 import 'package:fama/Views/Tracking/home.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
@@ -19,7 +20,10 @@ class ShipmentOptions extends StatelessWidget {
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SendProduct()));
+                  },
                   child: ShipmentOptionCard(
                       color: Color(0xFFFFF2F3),
                       title: 'Send Package',
@@ -43,15 +47,13 @@ class ShipmentOptions extends StatelessWidget {
               ),
             ],
           ),
-
           const SizedBox(height: 16),
-          
           Row(
             children: [
               Expanded(
                 child: GestureDetector(
-                  onTap: () {                 
-                   Navigator.push(context,
+                  onTap: () {
+                    Navigator.push(context,
                         MaterialPageRoute(builder: (context) => SearchHome()));
                   },
                   child: ShipmentOptionCard(
@@ -62,12 +64,13 @@ class ShipmentOptions extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 16),
-
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                     Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => Requestproduct()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Requestproduct()));
                   },
                   child: ShipmentOptionCard(
                       color: Color(0xFFFFEBC9),
@@ -76,8 +79,6 @@ class ShipmentOptions extends StatelessWidget {
                       img: Image.asset('assets/request.jpg')),
                 ),
               ),
-
-
             ],
           ),
         ],

@@ -64,15 +64,18 @@ class _SignupState extends ConsumerState<Signup> {
                   SizedBox(
                     height: 2.h,
                   ),
+
                   CustomTextFormField(
                     labelText: "full name",
                     hintText: "Enter your full name",
                     controller: fullname,
                     onChanged: (p0) {},
                   ),
+
                   SizedBox(
                     height: 2.h,
                   ),
+                  
                   CustomTextFormField(
                     labelText: "email",
                     hintText: "Enter your email",

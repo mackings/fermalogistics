@@ -1,4 +1,5 @@
 
+import 'package:fama/Views/Tracking/widgets/searchcard.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/homecard.dart';
 import 'package:fama/Views/widgets/texts.dart';
@@ -94,7 +95,8 @@ class _DashboardState extends ConsumerState<Dashboard> {
                 ),
               ),
 
-              Shipments()
+              //Shipments()
+              SearchCard(),
 
             ],
           ),
