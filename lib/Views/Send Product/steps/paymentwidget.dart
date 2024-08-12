@@ -33,12 +33,12 @@ class PaymentMethodContainer extends StatelessWidget {
             backgroundColor: Colors.transparent,
             child: SvgPicture.asset(
               svgPath,
-              width: 40,  // Adjust the width and height as needed
+              width: 40,  
               height: 40,
             ),
           ),
           SizedBox(width: 16),
-          
+
           Expanded(
             child: CustomText(
               text: paymentMethod,

@@ -6,25 +6,73 @@ import 'package:fama/Views/widgets/texts.dart';
 import 'package:fama/Views/widgets/tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:location/location.dart' as loc;
 import 'package:sizer/sizer.dart';
 
-class Dashboard extends ConsumerStatefulWidget {
+
+
+class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _DashboardState();
+  State<Dashboard> createState() => _DashboardState();
 }
 
-class _DashboardState extends ConsumerState<Dashboard> {
+class _DashboardState extends State<Dashboard> {
+
+  String? currentAddress;
+  loc.LocationData? currentLocation;
+
+    Future<void> getCurrentLocation() async {
+    loc.Location location = loc.Location();
+
+    bool _serviceEnabled;
+    loc.PermissionStatus _permissionGranted;
+
+    _serviceEnabled = await location.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await location.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await location.hasPermission();
+    if (_permissionGranted == loc.PermissionStatus.denied) {
+      _permissionGranted = await location.requestPermission();
+      if (_permissionGranted != loc.PermissionStatus.granted) {
+        return;
+      }
+    }
+
+    currentLocation = await location.getLocation();
+
+    // Convert the coordinates to an address
+    List<Placemark> placemarks = await placemarkFromCoordinates(
+      currentLocation!.latitude!,
+      currentLocation!.longitude!,
+    );
+
+    Placemark place = placemarks[0];
+    setState(() {
+      currentAddress = "${place.locality}, ${place.country}";
+    });
+  }
+
+    @override
+  void initState() {
+    super.initState();
+    getCurrentLocation();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Padding(
-          padding: const EdgeInsets.only(left: 15,right: 15,top: 15),
+          padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
           child: Column(
             children: [
               SizedBox(height: 5.h,),
@@ -39,15 +87,18 @@ class _DashboardState extends ConsumerState<Dashboard> {
                         text: 'Current Location',
                         fontSize: 7.sp,
                         color: Colors.grey
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(Icons.location_on),
-                            CustomText(text: 'Lagos, Nigeria',fontWeight: FontWeight.w600,),
-                            Icon(Icons.arrow_drop_down_outlined)
-                          ],
-                        )
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(Icons.location_on),
+                          CustomText(
+                            text: currentAddress ?? 'Fetching location...',
+                            fontWeight: FontWeight.w600,
+                          ),
+                          Icon(Icons.arrow_drop_down_outlined)
+                        ],
+                      )
                     ],
                   ),
 
@@ -59,11 +110,13 @@ class _DashboardState extends ConsumerState<Dashboard> {
                       borderRadius: BorderRadius.circular(8)
                     ),
                     child: Icon(Icons.notifications_outlined)
-                    )
+                  )
                 ],
               ),
               SizedBox(height: 3.h,),
 
+              // Other widgets here...
+              
               ShipmentTrackingCard(),
 
               Padding(
@@ -71,8 +124,8 @@ class _DashboardState extends ConsumerState<Dashboard> {
                 child: Row(
                   children: [
                     CustomText(
-                    text: 'Our Services',
-                    fontWeight: FontWeight.w700,
+                      text: 'Our Services',
+                      fontWeight: FontWeight.w700,
                     )
                   ],
                 ),
@@ -86,18 +139,17 @@ class _DashboardState extends ConsumerState<Dashboard> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     CustomText(
-                    text: 'Recent Shipping',
-                    fontWeight: FontWeight.w700,
+                      text: 'Recent Shipping',
+                      fontWeight: FontWeight.w700,
                     ),
 
-                    CustomText(text: 'See all',color: btngrey,)
+                    CustomText(text: 'See all', color: Colors.grey,)
                   ],
                 ),
               ),
+              SizedBox(height: 1.h,),
 
-              //Shipments()
               SearchCard(),
-
             ],
           ),
         ),

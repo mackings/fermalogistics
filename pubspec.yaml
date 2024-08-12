@@ -48,6 +48,8 @@ dependencies:
   timeline_tile: ^2.0.0
   google_maps_flutter: ^2.7.1
   flutter_barcode_scanner: ^2.0.0
+  geocoding: ^3.0.0
+  location: ^7.0.0
 
  
 

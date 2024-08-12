@@ -41,6 +41,7 @@ class _SearchHomeState extends ConsumerState<SearchHome> {
                   child: Icon(Icons.qr_code_scanner)),
             ),
             SizedBox(height: 20.0),
+            
             Flexible(child: SearchCard()),
           ],
         ),

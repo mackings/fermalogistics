@@ -39,11 +39,11 @@ class _SearchCardState extends State<SearchCard> {
                     children: [
                       CustomText(
                         text: "Tracking ID",
-                        fontSize: 12.sp,
+                        fontSize: 9.sp,
                       ),
                       Container(
-                        height: 40,
-                        width: 90,
+                        height: 35,
+                        width: 100,
                         decoration: BoxDecoration(
                           color: btncolor,
                           borderRadius: BorderRadius.circular(15),
@@ -59,7 +59,7 @@ class _SearchCardState extends State<SearchCard> {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: CustomText(text: "LKNVNM"),
+                    child: CustomText(text: "234003",fontSize: 9.sp,),
                   ),
                   SizedBox(height: 2.h),
                   //Timelines(),

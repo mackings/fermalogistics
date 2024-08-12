@@ -5,6 +5,7 @@ import 'package:fama/Views/Tracking/home.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
@@ -28,7 +29,8 @@ class ShipmentOptions extends StatelessWidget {
                       color: Color(0xFFFFF2F3),
                       title: 'Send Package',
                       subtitle: 'Pickup or drop off orders',
-                      img: Image.asset('assets/send.jpg')),
+                      img: SvgPicture.asset('assets/send.svg')
+                      ),
                 ),
               ),
               const SizedBox(width: 16),
@@ -42,7 +44,7 @@ class ShipmentOptions extends StatelessWidget {
                       color: Color(0xFFE9E3FD),
                       title: 'Get a Quote',
                       subtitle: 'Know your shipment fee',
-                      img: Image.asset('assets/quote.jpg')),
+                      img: SvgPicture.asset('assets/quote.svg')),
                 ),
               ),
             ],
@@ -60,7 +62,7 @@ class ShipmentOptions extends StatelessWidget {
                       color: Color(0xFFE7F9DF),
                       title: 'Track Shipment',
                       subtitle: 'See where your order is',
-                      img: Image.asset('assets/track.jpg')),
+                      img: SvgPicture.asset('assets/track.svg')),
                 ),
               ),
               const SizedBox(width: 16),
@@ -76,7 +78,7 @@ class ShipmentOptions extends StatelessWidget {
                       color: Color(0xFFFFEBC9),
                       title: 'Request Product',
                       subtitle: 'Enquire for any product',
-                      img: Image.asset('assets/request.jpg')),
+                      img: SvgPicture.asset('assets/request.svg')),
                 ),
               ),
             ],
