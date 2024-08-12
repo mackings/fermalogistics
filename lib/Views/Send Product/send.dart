@@ -1,5 +1,7 @@
 import 'package:fama/Views/Send%20Product/steps/step1.dart';
 import 'package:fama/Views/Send%20Product/steps/step2.dart';
+import 'package:fama/Views/Send%20Product/steps/step3.dart';
+import 'package:fama/Views/Send%20Product/steps/step4.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -46,7 +48,7 @@ class _SendProductState extends ConsumerState<SendProduct> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(4, (index) {
                 return Container(
-                  width: 80,
+                  width: 70,
                   height: 3,
                   color: _stepsCompleted[index] ? Colors.red : Colors.grey,
                 );
@@ -79,38 +81,4 @@ class _SendProductState extends ConsumerState<SendProduct> {
 }
 
 
-class StepForm3 extends StatelessWidget {
-  final void Function(Map<String, dynamic> data) onComplete;
 
-  const StepForm3({required this.onComplete, Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {
-          onComplete({'step3Data': 'data from step 3'});
-        },
-        child: Text('Complete Step 3'),
-      ),
-    );
-  }
-}
-
-class StepForm4 extends StatelessWidget {
-  final void Function(Map<String, dynamic> data) onComplete;
-
-  const StepForm4({required this.onComplete, Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {
-          onComplete({'step4Data': 'data from step 4'});
-        },
-        child: Text('Complete Step 4'),
-      ),
-    );
-  }
-}

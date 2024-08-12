@@ -18,7 +18,6 @@ class StepForm2 extends StatefulWidget {
 }
 
 class _StepForm1State extends State<StepForm2> {
-
   TextEditingController senderName = TextEditingController();
   TextEditingController senderPhone = TextEditingController();
   TextEditingController pickupAddress = TextEditingController();
@@ -36,73 +35,65 @@ class _StepForm1State extends State<StepForm2> {
             SizedBox(
               height: 5.h,
             ),
-      
             CustomText(
               text: "Drop-off details",
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,
             ),
-      
             CustomText(
               text: "Please enter the correct details ",
               fontSize: 8.sp,
               fontWeight: FontWeight.w400,
             ),
-      
-            SizedBox(height: 5.h,),
-      
+            SizedBox(
+              height: 5.h,
+            ),
             CustomTextFormField(
-              labelText: "Sender's Name *",
+              labelText: "Reciever's Name *",
               hintText: "Enter your full name",
               controller: senderName,
               onChanged: (p0) {},
             ),
-      
-            SizedBox(height: 2.h,),
-      
-               CountryCodeTextFormField(
-                      labelText: 'Phone Number *',
-                      hintText: "8137159066",
-                      controller: senderPhone,
-                      onChanged: (value) {},
-                      countryCodes: ['+1', '+91', '+234'],
-                      selectedCountryCode: '+234',
-                    ),
-      
-                    SizedBox(height: 2.h,),
-      
-             CustomTextFormField(
-              labelText: "Pickup Address *",
+            SizedBox(
+              height: 2.h,
+            ),
+            CountryCodeTextFormField(
+              labelText: 'Phone Number *',
+              hintText: "8137159066",
+              controller: senderPhone,
+              onChanged: (value) {},
+              countryCodes: ['+1', '+91', '+234'],
+              selectedCountryCode: '+234',
+            ),
+            SizedBox(
+              height: 2.h,
+            ),
+            CustomTextFormField(
+              labelText: "Reciever's Address *",
               hintText: "Enter Pickup Address",
               controller: pickupAddress,
               onChanged: (p0) {},
             ),
-      
-          SizedBox(height: 2.h,),
-      
-             CustomTextFormField(
+            SizedBox(
+              height: 2.h,
+            ),
+            CustomTextFormField(
               labelText: "Email Address *",
               hintText: "Enter Email",
               controller: pickupEmail,
               onChanged: (p0) {},
             ),
-      
-                SizedBox(height: 2.h),
-      
-                TextSwitchRow(
-                    label: 'Save details?',
-                    initialSwitchValue: true,
-                    onSwitchChanged: (value) {}),
-
-
-                    SizedBox(height: 2.h),
-
-                    CustomButton(text: 'Continue', 
-                    onPressed: (){
-                       widget.onComplete({'step2Data': 'data from step 2'});
-
-                    })
-
+            SizedBox(height: 2.h),
+            TextSwitchRow(
+                label: 'Save details?',
+                initialSwitchValue: true,
+                onSwitchChanged: (value) {}),
+            SizedBox(height: 2.h),
+            CustomButton(
+                text: 'Continue',
+                onPressed: () {
+                  widget.onComplete({'step2Data': 'data from step 2'});
+                })
           ],
         ),
       ),
