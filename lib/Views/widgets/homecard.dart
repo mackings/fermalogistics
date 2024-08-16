@@ -52,6 +52,8 @@ class ShipmentOptions extends StatelessWidget {
           const SizedBox(height: 16),
           Row(
             children: [
+
+
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -65,7 +67,10 @@ class ShipmentOptions extends StatelessWidget {
                       img: SvgPicture.asset('assets/track.svg')),
                 ),
               ),
+
+
               const SizedBox(width: 16),
+
               Expanded(
                 child: GestureDetector(
                   onTap: () {
@@ -78,9 +83,11 @@ class ShipmentOptions extends StatelessWidget {
                       color: Color(0xFFFFEBC9),
                       title: 'Request Product',
                       subtitle: 'Enquire for any product',
-                      img: SvgPicture.asset('assets/request.svg')),
+                      img: SvgPicture.asset('assets/request.svg')
+                      ),
                 ),
               ),
+
             ],
           ),
         ],

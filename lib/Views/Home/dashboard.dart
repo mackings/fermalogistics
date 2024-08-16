@@ -93,7 +93,7 @@ class _DashboardState extends State<Dashboard> {
                         children: [
                           Icon(Icons.location_on),
                           CustomText(
-                            text: currentAddress ?? 'Fetching location...',
+                            text: currentAddress ?? 'Updating Loc..',
                             fontWeight: FontWeight.w600,
                           ),
                           Icon(Icons.arrow_drop_down_outlined)
