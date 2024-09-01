@@ -1,20 +1,21 @@
 import 'dart:async';
-
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
+
 class VerificationWidget extends StatefulWidget {
+  final void Function(String) onOtpEntered;
+
+  VerificationWidget({required this.onOtpEntered});
+
   @override
   _VerificationWidgetState createState() => _VerificationWidgetState();
 }
 
 class _VerificationWidgetState extends State<VerificationWidget> {
-
-
-
-    late Timer _timer;
+  late Timer _timer;
   int _start = 120; // 2 minutes in seconds
 
   @override
@@ -58,6 +59,10 @@ class _VerificationWidgetState extends State<VerificationWidget> {
       if (currentIndex < 4) {
         inputValues[currentIndex] = number;
         currentIndex++;
+        if (currentIndex == 4) {
+          // OTP is fully entered, trigger the callback
+          widget.onOtpEntered(inputValues.join());
+        }
       }
     });
   }
@@ -71,7 +76,6 @@ class _VerificationWidgetState extends State<VerificationWidget> {
     });
   }
 
-
   Widget buildNumberButton(String number) {
     return GestureDetector(
       onTap: () => onNumberPressed(number),
@@ -81,7 +85,7 @@ class _VerificationWidgetState extends State<VerificationWidget> {
         height: 12.w,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color:  Color(0xFFF3F3F3),
+          color: Color(0xFFF3F3F3),
         ),
         child: Center(
           child: Text(
@@ -130,7 +134,7 @@ class _VerificationWidgetState extends State<VerificationWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CustomText(text: 'Didnt Get an OTP?'),
+              CustomText(text: 'Didn’t Get an OTP?'),
               SizedBox(width: 1.w,),
               CustomText(
                 text: 'Resend In $timerText s',
@@ -140,9 +144,7 @@ class _VerificationWidgetState extends State<VerificationWidget> {
             ],
           ),
         ),
-
         SizedBox(height: 3.h),
-
         Column(
           children: [
             Row(
@@ -200,6 +202,7 @@ class _VerificationWidgetState extends State<VerificationWidget> {
 
 
 
+
 class VerificationInfoWidget extends StatelessWidget {
   final String email;
 
@@ -228,7 +231,7 @@ class VerificationInfoWidget extends StatelessWidget {
             text: TextSpan(
               children: [
                 TextSpan(
-                  text: 'Please enter the 6-digit OTP sent to your \nemail ',
+                  text: 'Please enter the 4-digit OTP sent to your \nemail ',
                   style: GoogleFonts.inter(
                     color: Color(0xFF808080),
                     fontSize: 14,

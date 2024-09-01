@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:sizer/sizer.dart';
 
+
 class PaymentMethodContainer extends StatelessWidget {
   final String svgPath;
   final String paymentMethod;
@@ -28,6 +29,7 @@ class PaymentMethodContainer extends StatelessWidget {
       ),
       child: Row(
         children: [
+
           CircleAvatar(
             radius: 20,
             backgroundColor: Colors.transparent,
@@ -37,6 +39,7 @@ class PaymentMethodContainer extends StatelessWidget {
               height: 40,
             ),
           ),
+
           SizedBox(width: 16),
 
           Expanded(
@@ -46,11 +49,13 @@ class PaymentMethodContainer extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
+
           Radio<bool>(
             value: true,
             groupValue: isSelected,
             onChanged: onSelected,
           ),
+
         ],
       ),
     );

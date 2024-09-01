@@ -14,6 +14,7 @@ class SearchCard extends StatefulWidget {
 }
 
 class _SearchCardState extends State<SearchCard> {
+
   TextEditingController Search = TextEditingController();
 
   @override
@@ -34,6 +35,7 @@ class _SearchCardState extends State<SearchCard> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
+                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -57,12 +59,15 @@ class _SearchCardState extends State<SearchCard> {
                       )
                     ],
                   ),
+
                   Align(
                     alignment: Alignment.centerLeft,
                     child: CustomText(text: "234003",fontSize: 9.sp,),
                   ),
+
                   SizedBox(height: 2.h),
                   //Timelines(),
+
                   Timelines(
                     firstTile: TimelineData(
                       indicatorColor: btncolor,
@@ -103,6 +108,7 @@ class _SearchCardState extends State<SearchCard> {
                           )
                         ],
                       ),
+
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
@@ -117,6 +123,7 @@ class _SearchCardState extends State<SearchCard> {
                           )
                         ],
                       )
+
                     ],
                   )
                 ],

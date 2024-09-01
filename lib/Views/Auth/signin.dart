@@ -1,10 +1,15 @@
+import 'dart:convert';
+
 import 'package:fama/Views/Home/dashboard.dart';
 import 'package:fama/Views/widgets/button.dart';
+import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/formfields.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
 
 class Signin extends ConsumerStatefulWidget {
   const Signin({super.key});
@@ -16,6 +21,56 @@ class Signin extends ConsumerStatefulWidget {
 class _SigninState extends ConsumerState<Signin> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
+
+  bool isLoading = false;
+
+  Future<void> _login() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final Map<String, dynamic> requestData = {
+      "email": email.text,
+      "password": password.text,
+    };
+
+    final String url =
+        "https://fama-logistics.onrender.com/api/v1/user/userLogin";
+
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(requestData),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+
+        // Save the entire response as a JSON string
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userData', jsonEncode(responseData));
+
+        // Navigate to the Dashboard or any other page
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Dashboard()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Login Failed: ${response.body}')),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +98,7 @@ class _SigninState extends ConsumerState<Signin> {
               child: Column(
                 children: [
                   CustomTextFormField(
-                      labelText: "Phone Nmber / Email Address *",
+                      labelText: "Phone Number / Email Address *",
                       hintText: 'Email or Phone number',
                       controller: email,
                       onChanged: (value) {}),
@@ -61,25 +116,25 @@ class _SigninState extends ConsumerState<Signin> {
                   ),
                   Align(
                       alignment: Alignment.topRight,
-                      child: CustomText(text: 'forgot password?')),
+                      child: CustomText(text: 'Forgot password?')),
                   SizedBox(
                     height: 23.h,
                   ),
-                  CustomButton(
-                      text: 'Login',
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Dashboard()));
-                      }),
+                  isLoading
+                      ? CircularProgressIndicator(
+                          color: btncolor,
+                        )
+                      : CustomButton(
+                          text: 'Login',
+                          onPressed: _login,
+                        ),
                   SizedBox(
                     height: 2.h,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      CustomText(text: 'Dont have an account?'),
+                      CustomText(text: 'Don\'t have an account?'),
                       SizedBox(
                         width: 1.w,
                       ),

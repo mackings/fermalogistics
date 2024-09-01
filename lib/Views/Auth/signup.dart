@@ -1,3 +1,4 @@
+import 'package:fama/Views/Auth/signin.dart';
 import 'package:fama/Views/Auth/verify.dart';
 import 'package:fama/Views/Home/dashboard.dart';
 import 'package:fama/Views/widgets/button.dart';
@@ -9,7 +10,10 @@ import 'package:fama/Views/widgets/terms.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Signup extends ConsumerStatefulWidget {
   const Signup({super.key});
@@ -38,7 +42,91 @@ class _SignupState extends ConsumerState<Signup> {
     });
   }
 
+  void _onSignUpButtonPressed() {
+    _checkPasswordRequirements(password.text);
+
+    if (hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar) {
+      signUp();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text(
+                'Password must include uppercase, lowercase, number, and special character.')),
+      );
+    }
+  }
+
   List<String> Country = ['+234', '+233', '+245'];
+
+  bool isLoading = false;
+
+  Future<void> signUp() async {
+    setState(() {
+      isLoading = true;
+    });
+
+    final Map<String, dynamic> requestData = {
+      "fullName": fullname.text,
+      "phoneNumber": countrycode.text,
+      "email": email.text,
+      "password": password.text,
+      // Optional
+      "country": "Nigeria",
+      "roles": "deliveryPersonnel",
+      "address": "56, Hugh street, Yaba, Lagos"
+    };
+
+    // API URL
+    final String url =
+        "https://fama-logistics.onrender.com/api/v1/user/userSignUp";
+
+    try {
+      // Make the POST request
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {"Content-Type": "application/json"},
+        body: jsonEncode(requestData),
+      );
+      print(requestData);
+
+      // Check if the request was successful
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        // Parse the API response
+        final responseData = jsonDecode(response.body);
+        print(responseData);
+
+        // Save email to SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('email', responseData['user']['email']);
+
+        // Show success snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content: Text('Signup Successful: ${responseData['message']}')),
+        );
+
+       Navigator.push(context, MaterialPageRoute(builder: (context) => Verification()));
+      } else {
+        final responseData = jsonDecode(response.body);
+
+ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(content: Text(responseData['message'])),
+);
+
+
+        print(response.body);
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('An error occurred: $e')),
+      );
+      print(e);
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,22 +152,19 @@ class _SignupState extends ConsumerState<Signup> {
                   SizedBox(
                     height: 2.h,
                   ),
-
                   CustomTextFormField(
                     labelText: "full name",
                     hintText: "Enter your full name",
                     controller: fullname,
                     onChanged: (p0) {},
                   ),
-
                   SizedBox(
                     height: 2.h,
                   ),
-                  
                   CustomTextFormField(
                     labelText: "email",
                     hintText: "Enter your email",
-                    controller: fullname,
+                    controller: email,
                     onChanged: (p0) {},
                   ),
                   SizedBox(
@@ -88,7 +173,7 @@ class _SignupState extends ConsumerState<Signup> {
                   CustomTextFormField(
                     labelText: "password",
                     hintText: "Enter your password",
-                    controller: fullname,
+                    controller: password,
                     onChanged: _checkPasswordRequirements,
                   ),
                   SizedBox(
@@ -106,11 +191,10 @@ class _SignupState extends ConsumerState<Signup> {
                   CustomTextFormField(
                     labelText: "confirm password",
                     hintText: "Confirm Password ",
-                    controller: fullname,
+                    controller: password,
                     onChanged: _checkPasswordRequirements,
                   ),
                   SizedBox(height: 2.h),
-
                   CountryCodeTextFormField(
                     labelText: 'Country code',
                     hintText: "8137159066",
@@ -119,28 +203,27 @@ class _SignupState extends ConsumerState<Signup> {
                     countryCodes: ['+1', '+91', '+44'],
                     selectedCountryCode: '+91',
                   ),
-                  
                   SizedBox(height: 2.h),
                   TermsAndConditionsWidget(
                       buttonColor: btncolor, onPressed: () {}),
                   SizedBox(height: 1.h),
-                  CustomButton(
-                      text: "Continue with Email",
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Verification()));
-                      }),
+                  isLoading
+                      ? Center(
+                        child: CircularProgressIndicator(
+                            color: btncolor,
+                          ),
+                      )
+                      : CustomButton(
+                          text: "Continue with Email",
+                          onPressed: () {
+                            _onSignUpButtonPressed();
+                          }),
                   SizedBox(height: 1.h),
                   AlreadyHaveAccountWidget(
                     buttonColor: btncolor,
                     onLoginPressed: () {
-                      
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Dashboard()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Signin()));
                     },
                   ),
                 ],

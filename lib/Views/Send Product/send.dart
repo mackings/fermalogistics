@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sizer/sizer.dart';
 
+
+
 class SendProduct extends ConsumerStatefulWidget {
   const SendProduct({super.key});
 
@@ -63,6 +65,8 @@ class _SendProductState extends ConsumerState<SendProduct> {
     );
   }
 
+
+
   Widget _getFormForStep(int step) {
     switch (step) {
       case 0:
@@ -75,10 +79,8 @@ class _SendProductState extends ConsumerState<SendProduct> {
         return StepForm4(onComplete: _completeStep);
       default:
         return Container();
-    }
+    }   
   }
+
   
 }
-
-
-
