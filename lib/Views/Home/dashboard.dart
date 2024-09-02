@@ -65,6 +65,7 @@ class _DashboardState extends State<Dashboard> {
     });
   }
 
+
   Future<void> _retrieveUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userDataString = prefs.getString('userData');
@@ -87,6 +88,7 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -106,47 +108,76 @@ class _DashboardState extends State<Dashboard> {
               SizedBox(
                 height: 5.h,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CircleAvatar(
-                    child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AttachImg()));
-                        },
-                        child: Icon(Icons.person)),
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    // User Image or Icon in CircleAvatar
+    GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AttachImg()),
+        );
+      },
+      child: CircleAvatar(
+        radius: 18, 
+        backgroundColor: Colors.grey[200], // Background color when no image is present
+        child: userImage != null && userImage.isNotEmpty
+            ? ClipOval(
+                child: Image.network(
+                  userImage,
+                  width: 50,
+                  height: 50, 
+                  fit: BoxFit.cover,
+                ),
+              )
+            : Icon(Icons.person, size: 24.sp),
+      ),
+    ),
+
+    // Current Location Column
+    Expanded(
+      flex: 2,
+      child: Column(
+       // crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CustomText(
+            text: 'Current Location',
+            fontSize: 7.sp,
+            color: Colors.grey,
+          ),
+          SizedBox(height: 4), 
+          Row(
+            children: [
+              //Icon(Icons.location_on, size: 18.sp), 
+              SizedBox(width: 2.w), 
+              Expanded(
+                child: Center(
+                  child: CustomText(
+                    text: currentAddress ?? 'Updating Loc..',
+                    fontWeight: FontWeight.w600,
                   ),
-                  Column(
-                    children: [
-                      CustomText(
-                          text: 'Current Location',
-                          fontSize: 7.sp,
-                          color: Colors.grey),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Icon(Icons.location_on),
-                          CustomText(
-                            text: currentAddress ?? 'Updating Loc..',
-                            fontWeight: FontWeight.w600,
-                          ),
-                          Icon(Icons.arrow_drop_down_outlined)
-                        ],
-                      )
-                    ],
-                  ),
-                  Container(
-                      height: 6.h,
-                      width: 12.w,
-                      decoration: BoxDecoration(
-                          color: btngrey,
-                          borderRadius: BorderRadius.circular(8)),
-                      child: Icon(Icons.notifications_outlined))
-                ],
+                ),
               ),
+              Icon(Icons.arrow_drop_down_outlined, size: 18.sp),
+            ],
+          ),
+        ],
+      ),
+    ),
+
+    // Notification Icon Container
+    Container(
+      height: 6.h,
+      width: 12.w,
+      decoration: BoxDecoration(
+        color: btngrey,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Icon(Icons.notifications_outlined, size: 20.sp),
+    ),
+  ],
+),
 
               SizedBox(
                 height: 3.h,

@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:fama/Views/Product/Model/requests.dart';
 import 'package:fama/Views/Product/cardrequestwidget.dart';
 import 'package:fama/Views/Product/newrequest.dart';
 import 'package:fama/Views/Product/reqstatus.dart';
@@ -6,7 +9,9 @@ import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
+import 'package:http/http.dart' as http;
 
 class Requestproduct extends ConsumerStatefulWidget {
   const Requestproduct({super.key});
@@ -19,17 +24,69 @@ class _RequestproductState extends ConsumerState<Requestproduct>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _activeIndex = 0;
+  late Future<List<Request>> _futureRequests;
+
+  dynamic userToken;
+
+  Future<void> _retrieveUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userDataString = prefs.getString('userData');
+
+    if (userDataString != null) {
+      Map<String, dynamic> userData = jsonDecode(userDataString);
+
+      String? token = userData['token'];
+      Map<String, dynamic> user = userData['user'];
+
+      String? fullName = user['fullName'];
+      String? email = user['email'];
+
+      setState(() {
+        userToken = userData['token'];
+        print(userToken);
+      });
+    }
+  }
+
+  Future<List<Request>> fetchRequests() async {
+    final response = await http.get(
+      Uri.parse(
+          'https://fama-logistics.onrender.com/api/v1/request/getAllRequest'),
+      headers: {
+        'Authorization': 'Bearer $userToken',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      final List<dynamic> data = json.decode(response.body)['request'];
+      return data.map((json) => Request.fromJson(json)).toList();
+    } else {
+      print(response.body);
+      throw Exception('Failed to load requests');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    _retrieveUserData();
     _tabController = TabController(length: 3, vsync: this);
     _tabController.addListener(() {
       setState(() {
         _activeIndex = _tabController.index;
       });
     });
+    _initialize();
   }
+
+
+  Future<void> _initialize() async {
+  await _retrieveUserData();
+  setState(() {
+    _futureRequests = fetchRequests();  // Fetch the requests only after the token is loaded
+  });
+}
 
   @override
   void dispose() {
@@ -53,8 +110,7 @@ class _RequestproductState extends ConsumerState<Requestproduct>
               builder: (context, constraints) {
                 double containerWidth = constraints.maxWidth > 600
                     ? constraints.maxWidth * 0.8
-                    : constraints.maxWidth -
-                        32; // Adjust width based on screen width
+                    : constraints.maxWidth - 32;
 
                 return Center(
                   child: Container(
@@ -95,42 +151,68 @@ class _RequestproductState extends ConsumerState<Requestproduct>
             ? TabBarView(
                 controller: _tabController,
                 children: [
-                  Container(
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 5.h,
-                          ),
-                          ImageWithText(
-                            title: "No Request Yet",
-                            bodyText1:
-                                "You haven't placed any request yet,requests",
-                            bodyText2: "will be displayed here",
-                            svgPath: '',
-                          ),
-                        ],
-                      )),
+                  //Tab1
+
+
+                  FutureBuilder<List<Request>>(
+                    future: _futureRequests,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (snapshot.hasData) {
+                        if (snapshot.data!.isEmpty) {
+                          return Column(
+                            children: [
+                              SizedBox(height: 5.h),
+                              ImageWithText(
+                                title: "No Request Yet",
+                                bodyText1:
+                                    "You haven't placed any request yet,requests",
+                                bodyText2: "will be displayed here",
+                                svgPath: '',
+                              ),
+                            ],
+                          );
+                        }
+                        return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            final request = snapshot.data![index];
+
+                            return RequestCard(
+                              title: request.user.fullName,
+                              subtitle: '${request.quantity} pcs',
+                              leadingIconUrl: request.productImage,
+                              dateTimePlaced: request.createdAt.toLocal().toString(),
+                            );
+                          },
+                        );
+                      }
+                      return Container();
+                    },
+                  ),
 
                   //TAB2
 
                   Column(
                     children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => requeststatus()));
-                        },
-                        child: RequestCard(
-                            title: "Scanner",
-                            subtitle: '100 pcs',
-                            leadingIcon: Icons.scanner,
-                            trailingIcon: 'Pending',
-                            text1: 'Time Placed',
-                            text2: "Placed at"),
-                      ),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => requeststatus()));
+                      //   },
+                      //   child: RequestCard(
+                      //       title: "Scanner",
+                      //       subtitle: '100 pcs',
+                      //       leadingIcon: Icons.scanner,
+                      //       trailingIcon: 'Pending',
+                      //       text1: 'Time Placed',
+                      //       text2: "Placed at"),
+                      // ),
                     ],
                   ),
 

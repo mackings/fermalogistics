@@ -1,61 +1,82 @@
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
+import 'package:intl/intl.dart';
+
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:sizer/sizer.dart';
 
 class RequestCard extends StatelessWidget {
-
   final String title;
   final String subtitle;
-  final IconData leadingIcon;
-  final String trailingIcon;
-  final String text1;
-  final String text2;
+  final String leadingIconUrl;
+  final String dateTimePlaced;
 
   const RequestCard({
     Key? key,
     required this.title,
     required this.subtitle,
-    required this.leadingIcon,
-    required this.trailingIcon,
-    required this.text1,
-    required this.text2,
+    required this.leadingIconUrl,
+    required this.dateTimePlaced,
   }) : super(key: key);
+
+  String _formatDate(String dateTime) {
+    final dateTimeObj = DateTime.parse(dateTime);
+    return DateFormat('MMM d, yyyy').format(dateTimeObj); // e.g., "Sept 1, 2024"
+  }
+
+  String _formatTime(String dateTime) {
+    final dateTimeObj = DateTime.parse(dateTime);
+    return DateFormat('h:mm a').format(dateTimeObj); // e.g., "2:00 PM"
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: BoxDecoration(
-        color: Colors.white, 
-        border: Border.all(width:0.5),
+        color: Colors.white,
+        border: Border.all(width: 0.5),
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         child: SizedBox(
           height: 20.h - 10,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               ListTile(
                 leading: CircleAvatar(
-                  child: Icon(leadingIcon),
+                  backgroundImage: NetworkImage(leadingIconUrl), // Load leading image from URL
                 ),
-                title: CustomText(text: title, fontWeight: FontWeight.w500,),
-                subtitle: Text(subtitle), 
-                trailing: Container(
-                  decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 160, 41, 33),
-                    borderRadius: BorderRadius.circular(15),
+                title: CustomText(
+                  text: title,
+                  fontWeight: FontWeight.w500,
+                ),
+                subtitle: Text(subtitle),
+                trailing: GestureDetector(
+                  onTap: () {
+                    // Handle click action here
+                    print('Check Status clicked!');
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    child: CustomText(
+                      text: 'Check Status',
+                      color: Colors.white,
+                      fontSize: 7.sp,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                  child: CustomText(text: trailingIcon, color: Colors.white,)
                 ),
               ),
-              
               Divider(),
-
               Padding(
                 padding: const EdgeInsets.only(left: 18, right: 18, top: 5),
                 child: Row(
@@ -64,15 +85,33 @@ class RequestCard extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CustomText(text: 'Time Placed', color: Colors.grey, fontSize: 7.sp,),
-                        CustomText(text: '8:27 AM', color: Colors.black, fontSize: 8.sp, fontWeight: FontWeight.w700,),
+                        CustomText(
+                          text: 'Time Placed',
+                          color: Colors.grey,
+                          fontSize: 7.sp,
+                        ),
+                        CustomText(
+                          text: _formatTime(dateTimePlaced),
+                          color: Colors.black,
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
-                        CustomText(text: 'Date Placed', color: Colors.grey, fontSize: 7.sp,),
-                        CustomText(text: '1 July, 2025', color: Colors.black, fontSize: 8.sp, fontWeight: FontWeight.w700,),
+                        CustomText(
+                          text: 'Date Placed',
+                          color: Colors.grey,
+                          fontSize: 7.sp,
+                        ),
+                        CustomText(
+                          text: _formatDate(dateTimePlaced),
+                          color: Colors.black,
+                          fontSize: 8.sp,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ],
                     ),
                   ],

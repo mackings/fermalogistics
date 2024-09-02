@@ -41,6 +41,7 @@ class _AttachImgState extends ConsumerState<AttachImg> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
 
+
     final Uri url = Uri.parse(
         "https://fama-logistics.onrender.com/api/v1/user/uploadProfilePicture");
     final request = http.MultipartRequest('PUT', url)
