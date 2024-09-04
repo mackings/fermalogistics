@@ -1,3 +1,4 @@
+import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -10,6 +11,7 @@ class CustomTimelineTile extends StatelessWidget {
   final String time;
   final bool isFirst;
   final bool isLast;
+  final bool isActive;
 
   const CustomTimelineTile({
     Key? key,
@@ -19,6 +21,7 @@ class CustomTimelineTile extends StatelessWidget {
     required this.time,
     this.isFirst = false,
     this.isLast = false,
+    this.isActive = false,  // Added isActive parameter with a default value
   }) : super(key: key);
 
   @override
@@ -31,11 +34,11 @@ class CustomTimelineTile extends StatelessWidget {
         height: 30,
         width: 30,
         indicator: CircleAvatar(
-          radius: 90,
+          radius: 15,
           backgroundColor: Colors.white,
           child: CircleAvatar(
-            backgroundColor: Colors.red,
-            radius: 5,
+            backgroundColor: isActive ? btncolor : Colors.grey,  // Active state color
+            radius: 10,
           ),
         ),
       ),

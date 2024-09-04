@@ -24,7 +24,8 @@ class _RequestproductState extends ConsumerState<Requestproduct>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _activeIndex = 0;
-  late Future<List<Request>> _futureRequests;
+  late Future<List<Request>> _futureRequests = Future.value([]);
+  //late Future<List<Request>> _futureRequests;
 
   dynamic userToken;
 
@@ -80,13 +81,13 @@ class _RequestproductState extends ConsumerState<Requestproduct>
     _initialize();
   }
 
-
   Future<void> _initialize() async {
-  await _retrieveUserData();
-  setState(() {
-    _futureRequests = fetchRequests();  // Fetch the requests only after the token is loaded
-  });
-}
+    await _retrieveUserData();
+    setState(() {
+      _futureRequests =
+          fetchRequests(); // Fetch the requests only after the token is loaded
+    });
+  }
 
   @override
   void dispose() {
@@ -153,9 +154,11 @@ class _RequestproductState extends ConsumerState<Requestproduct>
                 children: [
                   //Tab1
 
-
                   FutureBuilder<List<Request>>(
-                    future: _futureRequests,
+                    // future: _futureRequests,
+                    future: _futureRequests != null
+                        ? _futureRequests
+                        : Future.value([]),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
@@ -166,6 +169,7 @@ class _RequestproductState extends ConsumerState<Requestproduct>
                           return Column(
                             children: [
                               SizedBox(height: 5.h),
+
                               ImageWithText(
                                 title: "No Request Yet",
                                 bodyText1:
@@ -173,6 +177,7 @@ class _RequestproductState extends ConsumerState<Requestproduct>
                                 bodyText2: "will be displayed here",
                                 svgPath: '',
                               ),
+
                             ],
                           );
                         }
@@ -181,11 +186,22 @@ class _RequestproductState extends ConsumerState<Requestproduct>
                           itemBuilder: (context, index) {
                             final request = snapshot.data![index];
 
-                            return RequestCard(
-                              title: request.user.fullName,
-                              subtitle: '${request.quantity} pcs',
-                              leadingIconUrl: request.productImage,
-                              dateTimePlaced: request.createdAt.toLocal().toString(),
+                            return GestureDetector(
+                              onTap: () {
+
+                                print(request.status);
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => requeststatus(request: request,)));
+                              },
+                              child: RequestCard(
+                                title: request.user.fullName,
+                                subtitle: '${request.quantity} pcs',
+                                leadingIconUrl: request.productImage,
+                                dateTimePlaced:
+                                    request.createdAt.toLocal().toString(),
+                              ),
                             );
                           },
                         );
@@ -197,23 +213,7 @@ class _RequestproductState extends ConsumerState<Requestproduct>
                   //TAB2
 
                   Column(
-                    children: [
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     Navigator.push(
-                      //         context,
-                      //         MaterialPageRoute(
-                      //             builder: (context) => requeststatus()));
-                      //   },
-                      //   child: RequestCard(
-                      //       title: "Scanner",
-                      //       subtitle: '100 pcs',
-                      //       leadingIcon: Icons.scanner,
-                      //       trailingIcon: 'Pending',
-                      //       text1: 'Time Placed',
-                      //       text2: "Placed at"),
-                      // ),
-                    ],
+                    children: [],
                   ),
 
                   //TAB3
