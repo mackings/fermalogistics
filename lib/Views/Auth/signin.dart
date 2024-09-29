@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:fama/Views/Home/dashboard.dart';
+import 'package:fama/Views/Home/home.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/formfields.dart';
@@ -54,7 +55,7 @@ class _SigninState extends ConsumerState<Signin> {
         // Navigate to the Dashboard or any other page
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Dashboard()),
+          MaterialPageRoute(builder: (context) => HomePage()),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

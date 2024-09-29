@@ -57,6 +57,8 @@ class _StepForm1State extends State<StepForm2> {
             SizedBox(
               height: 2.h,
             ),
+
+
             CountryCodeTextFormField(
               labelText: 'Phone Number *',
               hintText: "8137159066",
@@ -65,30 +67,39 @@ class _StepForm1State extends State<StepForm2> {
               countryCodes: ['+1', '+91', '+234'],
               selectedCountryCode: '+234',
             ),
+
+
             SizedBox(
               height: 2.h,
             ),
+
             CustomTextFormField(
               labelText: "Reciever's Address *",
               hintText: "Enter Pickup Address",
               controller: pickupAddress,
               onChanged: (p0) {},
             ),
+
             SizedBox(
               height: 2.h,
             ),
+
             CustomTextFormField(
               labelText: "Email Address *",
               hintText: "Enter Email",
               controller: pickupEmail,
               onChanged: (p0) {},
             ),
+
             SizedBox(height: 2.h),
+
             TextSwitchRow(
                 label: 'Save details?',
                 initialSwitchValue: true,
                 onSwitchChanged: (value) {}),
+
             SizedBox(height: 2.h),
+
 CustomButton(
   text: 'Continue',
   onPressed: () {
@@ -100,6 +111,7 @@ CustomButton(
     });
   },
 )
+
 
           ],
         ),

@@ -22,7 +22,11 @@ class StepForm3 extends StatefulWidget {
 class _StepForm3State extends State<StepForm3> {
   TextEditingController itemName = TextEditingController();
   TextEditingController Weight = TextEditingController();
+  TextEditingController length = TextEditingController();
+  TextEditingController Width = TextEditingController();
+  TextEditingController height = TextEditingController();
   TextEditingController pickupemail = TextEditingController();
+  TextEditingController noofPackages = TextEditingController();
 
   String selectedCategory = '';
   String selectedCategory2 = '';
@@ -75,23 +79,24 @@ class _StepForm3State extends State<StepForm3> {
             ),
             CustomTextFormField(
               labelText: "Item Name *",
-              hintText: "Enter your full name",
+              hintText: "Enter your Item name",
               controller: itemName,
               onChanged: (p0) {},
             ),
+            SizedBox(height: 2.h),
+
+          TwoFieldsRow(controller1:Weight , controller2: length),
+
             SizedBox(
               height: 2.h,
             ),
-            CustomTextFormField(
-              labelText: "Weight of package *",
-              hintText: "Enter Pickup Address",
-              controller: Weight,
-              //suffix: 'Kg',
-              onChanged: (p0) {},
-            ),
+
+          TwoFieldsRow2(controller1:Width , controller2: height),
+
             SizedBox(
               height: 2.h,
             ),
+
             CustomDropdownFormField(
               labelText: "Package Category *",
               // hintText: selectedCategory == null? "Select a Category":selectedCategory,
@@ -111,14 +116,18 @@ class _StepForm3State extends State<StepForm3> {
                 });
               },
             ),
+
             SizedBox(height: 2.h),
+
             CustomTextFormField(
               labelText: "No of packages *",
               hintText: "Enter Pickup Address",
-              controller: Weight,
+              controller: noofPackages,
               onChanged: (p0) {},
             ),
+            
             SizedBox(height: 2.h),
+
             CustomDropdownFormField(
               labelText: "Select Shipping method *",
               hintText: "Select a Category",
@@ -156,8 +165,11 @@ CustomButton(
     widget.onComplete({
       'itemName': itemName.text,
       'weightOfPackage': int.tryParse(Weight.text) ?? 0, // Convert to integer
+      'length':int.tryParse(length.text)?? 0,
+      'width':int.tryParse(Width.text)?? 0,
+      'height':int.tryParse(height.text)?? 0,
       'packageCategory': selectedCategory,
-      'numberOfPackages': int.tryParse(Weight.text) ?? 0, // Example
+      'numberOfPackages': int.tryParse(noofPackages.text) ?? 0, // Example
       'shipmentMethod': selectedCategory2,
     });
   },
@@ -169,3 +181,87 @@ CustomButton(
     );
   }
 }
+
+
+class TwoFieldsRow extends StatelessWidget {
+  final TextEditingController controller1;
+  final TextEditingController controller2;
+
+  TwoFieldsRow({
+    required this.controller1,
+    required this.controller2,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // First CustomTextFormField
+        Expanded(
+          child: CustomTextFormField(
+            labelText: 'Weight',
+            hintText: 'Enter weight in KG',
+            controller: controller1,
+            onChanged: (value) {
+              // Handle changes here
+            },
+          ),
+        ),
+        SizedBox(width: 4.w), // Add spacing between the two fields
+        // Second CustomTextFormField
+        Expanded(
+          child: CustomTextFormField(
+            labelText: 'Length',
+            hintText: 'Enter Length',
+            controller: controller2,
+            onChanged: (value) {
+              // Handle changes here
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class TwoFieldsRow2 extends StatelessWidget {
+  final TextEditingController controller1;
+  final TextEditingController controller2;
+
+  TwoFieldsRow2({
+    required this.controller1,
+    required this.controller2,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        // First CustomTextFormField
+        Expanded(
+          child: CustomTextFormField(
+            labelText: 'Width',
+            hintText: 'Enter Width',
+            controller: controller1,
+            onChanged: (value) {
+              // Handle changes here
+            },
+          ),
+        ),
+        SizedBox(width: 4.w), // Add spacing between the two fields
+        // Second CustomTextFormField
+        Expanded(
+          child: CustomTextFormField(
+            labelText: 'Height',
+            hintText: 'Enter Height',
+            controller: controller2,
+            onChanged: (value) {
+              // Handle changes here
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
