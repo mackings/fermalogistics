@@ -149,11 +149,20 @@ class _StepForm3State extends State<StepForm3> {
               },
             ),
             SizedBox(height: 5.h),
-            CustomButton(
-                text: 'Continue',
-                onPressed: () {
-                  widget.onComplete({'step2Data': 'data from step 2'});
-                })
+
+CustomButton(
+  text: 'Continue',
+  onPressed: () {
+    widget.onComplete({
+      'itemName': itemName.text,
+      'weightOfPackage': int.tryParse(Weight.text) ?? 0, // Convert to integer
+      'packageCategory': selectedCategory,
+      'numberOfPackages': int.tryParse(Weight.text) ?? 0, // Example
+      'shipmentMethod': selectedCategory2,
+    });
+  },
+)
+
           ],
         ),
       ),

@@ -89,11 +89,18 @@ class _StepForm1State extends State<StepForm2> {
                 initialSwitchValue: true,
                 onSwitchChanged: (value) {}),
             SizedBox(height: 2.h),
-            CustomButton(
-                text: 'Continue',
-                onPressed: () {
-                  widget.onComplete({'step2Data': 'data from step 2'});
-                })
+CustomButton(
+  text: 'Continue',
+  onPressed: () {
+    widget.onComplete({
+      'recieverName': senderName.text,
+      'recieverPhoneNumber': senderPhone.text,
+      'recieverAddress': pickupAddress.text,
+      'recieverEmailAddress': pickupEmail.text,
+    });
+  },
+)
+
           ],
         ),
       ),

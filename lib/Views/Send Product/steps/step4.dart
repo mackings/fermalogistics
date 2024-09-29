@@ -19,7 +19,6 @@ class StepForm4 extends StatefulWidget {
 }
 
 class _StepForm4State extends State<StepForm4> {
-
   TextEditingController senderName = TextEditingController();
   TextEditingController senderPhone = TextEditingController();
   TextEditingController pickupAddress = TextEditingController();
@@ -30,9 +29,9 @@ class _StepForm4State extends State<StepForm4> {
   void onPaymentMethodSelected(String method) {
     setState(() {
       selectedMethod = method;
+      print(selectedMethod);
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -43,69 +42,65 @@ class _StepForm4State extends State<StepForm4> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             SizedBox(
               height: 5.h,
             ),
-
             CustomText(
               text: "Payment Method",
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,
             ),
-
             CustomText(
               text: "Kindly select your preferred payment method ",
               fontSize: 8.sp,
               fontWeight: FontWeight.w400,
             ),
-
             SizedBox(
               height: 5.h,
             ),
-
             PaymentMethodContainer(
               paymentMethod: 'My Wallet',
               isSelected: selectedMethod == 'My Wallet',
               onSelected: (value) {
                 onPaymentMethodSelected('My Wallet');
-              }, svgPath: 'assets/wallet.svg',
+              },
+              svgPath: 'assets/wallet.svg',
             ),
-
             PaymentMethodContainer(
               paymentMethod: 'Cash on pickup',
               isSelected: selectedMethod == 'Cash on pickup',
               onSelected: (value) {
                 onPaymentMethodSelected('Cash on pickup');
-              }, svgPath: 'assets/cash.svg',
+              },
+              svgPath: 'assets/cash.svg',
             ),
-
             PaymentMethodContainer(
               paymentMethod: 'Paypal',
               isSelected: selectedMethod == 'Paypal',
               onSelected: (value) {
                 onPaymentMethodSelected('Paypal');
-              }, svgPath: 'assets/paypal.svg',
+              },
+              svgPath: 'assets/paypal.svg',
             ),
-
             PaymentMethodContainer(
               paymentMethod: 'GooglePay',
               isSelected: selectedMethod == 'GooglePay',
               onSelected: (value) {
                 onPaymentMethodSelected('GooglePay');
-              }, svgPath: 'assets/GooglePay.svg',
+              },
+              svgPath: 'assets/GooglePay.svg',
             ),
-
-
-           SizedBox(
+            SizedBox(
               height: 7.h,
             ),
-
             CustomButton(
-                text: 'Continue',
-                onPressed: () {
-                  widget.onComplete({'step2Data': 'data from step 2'});
-                })
+              text: 'Continue',
+              onPressed: () {
+                widget.onComplete({
+                  'paymentMethod': selectedMethod, // Add payment method
+                });
+              },
+            )
           ],
         ),
       ),

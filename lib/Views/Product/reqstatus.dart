@@ -39,47 +39,49 @@ class _requeststatusState extends ConsumerState<requeststatus> {
                 fontSize: 12.sp,
               ),
               SizedBox(height: 2.h),
-              Container(
-                decoration: BoxDecoration(
-                    color: btngrey, borderRadius: BorderRadius.circular(10)),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      left: 15, right: 15, top: 10, bottom: 10),
-                  child: Column(
-                    children: [
-                      CustomTimelineTile(
-                        title: "Request Placed",
-                        subtitle: "We have received your request",
-                        date:
-                            DateFormat('d MMM yyyy').format(request.createdAt),
-                        time: DateFormat('HH:mm').format(request.createdAt),
-                        isFirst: true,
-                        isActive: request.status == "pending" ||
-                            request.status == "on delivery" ||
-                            request.status == "arrived",
-                      ),
-                      CustomTimelineTile(
-                        title: "Request Processed",
-                        subtitle: "We will soon give you feedback",
-                        date:
-                            DateFormat('d MMM yyyy').format(request.updatedAt),
-                        time: DateFormat('HH:mm').format(request.updatedAt),
-                        isActive: request.status == "cancelled" ||
-                            request.status == "arrived",
-                      ),
-                      CustomTimelineTile(
-                        title: "Request Delivered",
-                        subtitle: "Check your notification",
-                        date:
-                            DateFormat('d MMM yyyy').format(request.updatedAt),
-                        time: DateFormat('HH:mm').format(request.updatedAt),
-                        isLast: true,
-                        isActive: request.status == "completed",
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+
+Container(
+  decoration: BoxDecoration(
+    color: btngrey,
+    borderRadius: BorderRadius.circular(10),
+  ),
+  child: Padding(
+    padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
+    child: Column(
+      children: [
+        CustomTimelineTile(
+          title: "Request Placed",
+          subtitle: "We have received your request",
+          date: DateFormat('d MMM yyyy').format(request.createdAt),
+          time: DateFormat('HH:mm').format(request.createdAt),
+          isFirst: true,
+          isActive: request.status == "placed" ||
+                    request.status == "processing" ||
+                    request.status == "delivered",
+        ),
+        CustomTimelineTile(
+          title: "Request Processed",
+          subtitle: "We will soon give you feedback",
+          date: DateFormat('d MMM yyyy').format(request.updatedAt),
+          time: DateFormat('HH:mm').format(request.updatedAt),
+          isActive: request.status == "processing" ||
+                    request.status == "delivered",
+        ),
+        CustomTimelineTile(
+          title: "Request Delivered",
+          subtitle: "Check your notification",
+          date: DateFormat('d MMM yyyy').format(request.updatedAt),
+          time: DateFormat('HH:mm').format(request.updatedAt),
+          isLast: true,
+          isActive: request.status == "delivered",
+        ),
+      ],
+    ),
+  ),
+),
+
+
+
               SizedBox(height: 2.h),
               CustomText(
                 text: "Request Details",

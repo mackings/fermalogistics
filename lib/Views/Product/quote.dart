@@ -16,6 +16,7 @@ class Getquote extends ConsumerStatefulWidget {
 }
 
 class _GetquoteState extends ConsumerState<Getquote> {
+  
   TextEditingController sender = TextEditingController();
   TextEditingController destination = TextEditingController();
   TextEditingController weight = TextEditingController();
@@ -114,11 +115,11 @@ CustomButton(
   onPressed: () {
     showModalBottomSheet(
       backgroundColor: Colors.white,
-      isScrollControlled: true, // This is important to make the bottom sheet take more height
+      isScrollControlled: true,
       context: context,
       builder: (BuildContext context) {
         return FractionallySizedBox(
-          heightFactor: 0.7, // Adjust the height factor as needed (0.8 means 80% of screen height)
+          heightFactor: 0.7,
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Container(
@@ -163,6 +164,7 @@ CustomButton(
                         ),
                       ],
                     ),
+
                     SizedBox(height: 2.h),
                     Divider(color: Colors.grey),
                     SizedBox(height: 2.h),
@@ -202,6 +204,7 @@ CustomButton(
                         ),
                       ],
                     ),
+
                     SizedBox(height: 2.h),
 
                     Divider(color: Colors.grey),

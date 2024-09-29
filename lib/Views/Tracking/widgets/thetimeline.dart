@@ -47,6 +47,8 @@ class CustomTimelineTile extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
+
             Expanded(
               flex: 2,
               child: Column(
@@ -57,6 +59,7 @@ class CustomTimelineTile extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                   SizedBox(height: 4.0),
+                  
                   CustomText(
                     text: subtitle,
                     fontSize: 6.sp,
@@ -64,6 +67,8 @@ class CustomTimelineTile extends StatelessWidget {
                 ],
               ),
             ),
+
+
             Expanded(
               flex: 1,
               child: Column(
@@ -75,13 +80,17 @@ class CustomTimelineTile extends StatelessWidget {
                     fontWeight: FontWeight.w600,
                   ),
                   SizedBox(height: 4.0),
+
                   CustomText(
                     text: time,
                     fontSize: 6.sp,
                   ),
+
                 ],
               ),
             ),
+
+
           ],
         ),
       ),

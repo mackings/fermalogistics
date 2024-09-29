@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:intl/intl.dart';
 
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:sizer/sizer.dart';
-
 class RequestCard extends StatelessWidget {
   final String title;
   final String subtitle;
