@@ -8,6 +8,7 @@ import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+
 class StepForm2 extends StatefulWidget {
   final void Function(Map<String, dynamic> data) onComplete;
 

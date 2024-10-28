@@ -1,5 +1,7 @@
 import 'package:fama/Views/Home/dashboard.dart';
 import 'package:fama/Views/Send%20Product/send.dart';
+import 'package:fama/Views/Shipments/Views/shipmentHome.dart';
+import 'package:fama/Views/Stock/Views/Stockhome.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,8 +28,10 @@ class _HomePageState extends State<HomePage> {
   void _initializePages() {
     
     _pages = [
+      
       Dashboard(),
-      SendProduct(),
+      ShipmentsHome(),
+      StockHome(),
       SendProduct(),
       SendProduct()
 

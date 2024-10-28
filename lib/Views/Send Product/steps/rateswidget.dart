@@ -179,25 +179,36 @@ class RatesModal extends StatelessWidget {
 }
 
 // To show the modal bottom sheet, you can call the following function:
-void showRatesModal(BuildContext context, {
-  required String pickupLocation,
-  required String destinationLocation,
-  required String cargoPrice,
-  required String expressPrice,
-  required Function(String title, String price) onRateSelected,
-}) {
-  showModalBottomSheet(
-    backgroundColor: Colors.white,
-    isScrollControlled: true,
+void showRatesModal(
+    BuildContext context, {
+      required String pickupLocation,
+      required String destinationLocation,
+      required String cargoPrice,
+      required String expressPrice,
+      required Function(String title, String price) onRateSelected,
+    }) {
+  showDialog(
     context: context,
-    builder: (BuildContext context) {
-      return RatesModal(
-        pickupLocation: pickupLocation,
-        destinationLocation: destinationLocation,
-        cargoPrice: cargoPrice,
-        expressPrice: expressPrice,
-        onRateSelected: onRateSelected,
+    builder: (context) {
+      return AlertDialog(
+        title: Text('Select Rate'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text('Cargo'),
+              subtitle: Text('Price: $cargoPrice'),
+              onTap: () => onRateSelected('Cargo', cargoPrice),
+            ),
+            ListTile(
+              title: Text('Express'),
+              subtitle: Text('Price: $expressPrice'),
+              onTap: () => onRateSelected('Express', expressPrice),
+            ),
+          ],
+        ),
       );
     },
   );
 }
+

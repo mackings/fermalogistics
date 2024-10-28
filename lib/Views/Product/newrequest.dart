@@ -83,7 +83,7 @@ class _NewrequestState extends ConsumerState<Newrequest> {
 
       final response = await request.send();
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 201) {
         // Handle the response, decode it if needed
         final responseBody = await response.stream.bytesToString();
         final decodedResponse = json.decode(responseBody);

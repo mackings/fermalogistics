@@ -1,5 +1,6 @@
 import 'package:fama/Views/Address/createaddress.dart';
 import 'package:fama/Views/Send%20Product/steps/paymentwidget.dart';
+import 'package:fama/Views/Send%20Product/widgets/pininput.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/countrycode.dart';
@@ -31,6 +32,21 @@ class _StepForm4State extends State<StepForm4> {
       selectedMethod = method;
       print(selectedMethod);
     });
+  }
+
+  void _showPinInputModal(BuildContext context) {
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: PinInputModal(),
+      ),
+    );
   }
 
   @override
@@ -96,9 +112,11 @@ class _StepForm4State extends State<StepForm4> {
             CustomButton(
               text: 'Continue',
               onPressed: () {
-                widget.onComplete({
-                  'paymentMethod': selectedMethod, // Add payment method
-                });
+                _showPinInputModal(context);
+
+                // widget.onComplete({
+                //   'paymentMethod': selectedMethod, // Add payment method
+                // });
               },
             )
           ],

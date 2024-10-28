@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fama/Views/Send%20Product/Api/shipmentclass.dart';
 import 'package:fama/Views/Send%20Product/steps/step1.dart';
 import 'package:fama/Views/Send%20Product/steps/step2.dart';
 import 'package:fama/Views/Send%20Product/steps/step3.dart';
@@ -13,6 +14,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+
+
 
 class SendProduct extends ConsumerStatefulWidget {
   const SendProduct({super.key});
@@ -83,6 +86,7 @@ class _SendProductState extends ConsumerState<SendProduct> {
 
         // Pass API response data to the modal
         _showShipmentSummary(context, responseData['shipment']);
+
       } else {
         // Handle failure
         print("Failed to create shipment: ${response.body}");
@@ -148,6 +152,7 @@ class _SendProductState extends ConsumerState<SendProduct> {
     );
   }
 
+
   Widget _getFormForStep(int step) {
     switch (step) {
       case 0:
@@ -155,13 +160,18 @@ class _SendProductState extends ConsumerState<SendProduct> {
       case 1:
         return StepForm2(onComplete: _completeStep);
       case 2:
-        return StepForm3(onComplete: _completeStep);
+        return StepForm3(
+          onComplete: _completeStep,
+          previousData: formData,
+          );
+
       case 3:
         return StepForm4(onComplete: _completeStep);
       default:
         return Container();
     }
   }
+
 
 void _showShipmentSummary(BuildContext context, Map<String, dynamic> shipmentData) {
   showModalBottomSheet(
@@ -223,7 +233,7 @@ void _showShipmentSummary(BuildContext context, Map<String, dynamic> shipmentDat
                   SizedBox(height: 5.h),
 
                   CustomButton(text: "Confirm Order", onPressed: () {
-                    Navigator.pop(context);
+                   // Navigator.pop(context);
                   })
                 ],
               ),

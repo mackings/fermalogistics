@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/src/services/text_formatter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
@@ -14,7 +15,8 @@ class CustomTextFormField extends StatelessWidget {
     required this.hintText,
     required this.controller,
     required this.onChanged,
-    this.suffix
+    this.suffix, 
+   List<TextInputFormatter>? inputFormatters
   });
 
   @override

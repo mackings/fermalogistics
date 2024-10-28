@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:fama/Views/Auth/attachimg.dart';
+import 'package:fama/Views/Profile/Views/Profilehome.dart';
 import 'package:fama/Views/Tracking/widgets/searchcard.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/homecard.dart';
@@ -21,6 +22,8 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+
+  
   dynamic userToken;
   dynamic userImage;
 
@@ -167,14 +170,23 @@ Row(
     ),
 
     // Notification Icon Container
-    Container(
-      height: 6.h,
-      width: 12.w,
-      decoration: BoxDecoration(
-        color: btngrey,
-        borderRadius: BorderRadius.circular(8),
+    GestureDetector(
+      onTap: () {
+      
+     Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => ProfileHome()),
+        );
+      },
+      child: Container(
+        height: 6.h,
+        width: 12.w,
+        decoration: BoxDecoration(
+          color: btngrey,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Icon(Icons.notifications_outlined, size: 20.sp),
       ),
-      child: Icon(Icons.notifications_outlined, size: 20.sp),
     ),
   ],
 ),

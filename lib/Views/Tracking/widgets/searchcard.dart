@@ -66,7 +66,6 @@ class _SearchCardState extends State<SearchCard> {
                   ),
 
                   SizedBox(height: 2.h),
-                  //Timelines(),
 
                   Timelines(
                     firstTile: TimelineData(

@@ -1,4 +1,5 @@
 import 'package:fama/Views/Product/Model/requests.dart';
+import 'package:fama/Views/Tracking/widgets/requestTimeline.dart';
 import 'package:fama/Views/Tracking/widgets/thetimeline.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/colors.dart';
@@ -49,7 +50,7 @@ Container(
     padding: const EdgeInsets.only(left: 15, right: 15, top: 10, bottom: 10),
     child: Column(
       children: [
-        CustomTimelineTile(
+        CustomRequestTimelineTile(
           title: "Request Placed",
           subtitle: "We have received your request",
           date: DateFormat('d MMM yyyy').format(request.createdAt),
@@ -59,7 +60,7 @@ Container(
                     request.status == "processing" ||
                     request.status == "delivered",
         ),
-        CustomTimelineTile(
+        CustomRequestTimelineTile(
           title: "Request Processed",
           subtitle: "We will soon give you feedback",
           date: DateFormat('d MMM yyyy').format(request.updatedAt),
@@ -67,7 +68,7 @@ Container(
           isActive: request.status == "processing" ||
                     request.status == "delivered",
         ),
-        CustomTimelineTile(
+        CustomRequestTimelineTile(
           title: "Request Delivered",
           subtitle: "Check your notification",
           date: DateFormat('d MMM yyyy').format(request.updatedAt),
