@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:fama/Views/Auth/addaddress.dart';
+import 'package:fama/Views/Stock/Api/stockservice.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,8 @@ class AttachImg extends ConsumerStatefulWidget {
 
 class _AttachImgState extends ConsumerState<AttachImg> {
   XFile? _pickedImage;
+  dynamic userToken;
+  final ApiService apiService = ApiService();
 
   Future<void> _pickImage() async {
     final ImagePicker _picker = ImagePicker();
@@ -28,6 +31,15 @@ class _AttachImgState extends ConsumerState<AttachImg> {
     setState(() {
       _pickedImage = image;
     });
+  }
+
+  Future<void> _retrieveUserData() async {
+    userToken = await apiService.retrieveUserData();
+    if (userToken != null) {
+      setState(() {
+        print(userToken);
+      });
+    }
   }
 
   Future<void> _uploadImage() async {
@@ -41,11 +53,10 @@ class _AttachImgState extends ConsumerState<AttachImg> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? token = prefs.getString('token');
 
-
     final Uri url = Uri.parse(
         "https://fama-logistics.onrender.com/api/v1/user/uploadProfilePicture");
     final request = http.MultipartRequest('PUT', url)
-      ..headers['Authorization'] = 'Bearer $token'
+      ..headers['Authorization'] = 'Bearer $userToken'
       ..files.add(
           await http.MultipartFile.fromPath('picture', _pickedImage!.path));
 
@@ -77,6 +88,12 @@ class _AttachImgState extends ConsumerState<AttachImg> {
         SnackBar(content: Text('An error occurred: $e')),
       );
     }
+  }
+
+  @override
+  void initState() {
+    _retrieveUserData();
+    super.initState();
   }
 
   @override

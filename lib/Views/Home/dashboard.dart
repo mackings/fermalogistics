@@ -123,33 +123,41 @@ Row(
         );
       },
       child: CircleAvatar(
-        radius: 18, 
-        backgroundColor: Colors.grey[200], // Background color when no image is present
-        child: userImage != null && userImage.isNotEmpty
-            ? ClipOval(
-                child: Image.network(
-                  userImage,
-                  width: 50,
-                  height: 50, 
-                  fit: BoxFit.cover,
-                ),
-              )
-            : Icon(Icons.person, size: 24.sp),
-      ),
+  radius: 18,
+  backgroundColor: Colors.grey[200],
+  child: userImage != null && userImage.isNotEmpty && Uri.tryParse(userImage)?.hasAbsolutePath == true
+      ? ClipOval(
+          child: Image.network(
+            userImage,
+            width: 50,
+            height: 50,
+            fit: BoxFit.cover,
+          ),
+        )
+      : Icon(
+          Icons.person,
+          size: 24,
+          color: Colors.grey,
+        ),
+),
+
+
     ),
 
-    // Current Location Column
+
     Expanded(
       flex: 2,
       child: Column(
-       // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+
           CustomText(
             text: 'Current Location',
             fontSize: 7.sp,
             color: Colors.grey,
           ),
+
           SizedBox(height: 4), 
+
           Row(
             children: [
               //Icon(Icons.location_on, size: 18.sp), 

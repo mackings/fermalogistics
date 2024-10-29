@@ -6,6 +6,7 @@ import 'package:sizer/sizer.dart';
 
 
 class PaymentMethodContainer extends StatelessWidget {
+  
   final String svgPath;
   final String paymentMethod;
   final bool isSelected;

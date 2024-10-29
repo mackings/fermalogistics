@@ -1,14 +1,14 @@
-
 import 'package:fama/Views/Stock/Api/stockservice.dart';
 import 'package:fama/Views/Stock/Model/allproducts.dart';
 import 'package:fama/Views/Stock/Model/category.dart';
+import 'package:fama/Views/Stock/Views/Cart/Pages/cartpage.dart';
+import 'package:fama/Views/Stock/Widgets/Product%20Details/productdetails.dart';
 import 'package:fama/Views/Stock/Widgets/location.dart';
 import 'package:fama/Views/Stock/Widgets/productcard.dart';
 import 'package:fama/Views/Stock/Widgets/searchfield.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart' as loc;
-
 
 class StockHome extends StatefulWidget {
   const StockHome({super.key});
@@ -40,6 +40,8 @@ class _StockHomeState extends State<StockHome> {
     }
   }
 
+
+
   Future<void> getCurrentLocation() async {
     currentLocation = await apiService.getCurrentLocation();
     if (currentLocation != null) {
@@ -66,6 +68,8 @@ class _StockHomeState extends State<StockHome> {
     }
   }
 
+
+
   Future<void> fetchCategories() async {
     try {
       final fetchedCategories = await apiService.fetchCategories();
@@ -84,7 +88,7 @@ class _StockHomeState extends State<StockHome> {
         products = fetchedProducts;
       });
     } catch (error) {
-      print('Failed to load products: $error');
+      print('Failed to load my products: $error');
     }
   }
 
@@ -93,7 +97,8 @@ class _StockHomeState extends State<StockHome> {
       if (category == 'All') {
         await fetchProducts();
       } else {
-        final fetchedProducts = await apiService.fetchProductsByCategory(category);
+        final fetchedProducts =
+            await apiService.fetchProductsByCategory(category);
         setState(() {
           products = fetchedProducts;
         });
@@ -124,7 +129,11 @@ class _StockHomeState extends State<StockHome> {
               LocationDisplay(
                 currentAddress: currentAddress,
                 onRefresh: () {},
-                onSettings: () {},
+                onSettings: () {
+
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CartScreen()));
+                },
               ),
               const SizedBox(height: 20),
               SearchTextField(
@@ -142,7 +151,9 @@ class _StockHomeState extends State<StockHome> {
                       label: Text(
                         'All',
                         style: GoogleFonts.montserrat(
-                          color: selectedCategory == 'All' ? Colors.white : Colors.black,
+                          color: selectedCategory == 'All'
+                              ? Colors.white
+                              : Colors.black,
                         ),
                       ),
                       selected: selectedCategory == 'All',
@@ -160,7 +171,6 @@ class _StockHomeState extends State<StockHome> {
                       checkmarkColor: Colors.white,
                     ),
                     SizedBox(width: 8),
-                    
                     ...categories.map((category) => Padding(
                           padding: const EdgeInsets.only(right: 8.0),
                           child: FilterChip(
@@ -191,20 +201,83 @@ class _StockHomeState extends State<StockHome> {
                 ),
               ),
               SizedBox(height: 30),
+              ListView.builder(
+                padding: EdgeInsets.symmetric(horizontal: 2),
+                physics: NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: (products.length / 2).ceil(),
+                itemBuilder: (context, index) {
+                  final int firstProductIndex = index * 2;
+                  final int secondProductIndex = firstProductIndex + 1;
 
-              Wrap(
-                spacing: 25,
-                runSpacing: 15,
-                children: products.map((product) {
-                  return ProductCard(
-                    productName: product.productName,
-                    price: 'N${product.price}',
-                    rating: 4.5,
-                    imageUrl: product.productImages.isNotEmpty
-                        ? product.productImages[0]
-                        : 'https://via.placeholder.com/150',
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // First Product Card (Left Side)
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ProductDetailsPage(
+                                    product: products[firstProductIndex],
+                                  ),
+                                ),
+                              );
+                              print(products[firstProductIndex].description);
+                            },
+                            child: ProductCard(
+                              productName:
+                                  products[firstProductIndex].productName,
+                              price: 'N${products[firstProductIndex].price}',
+                              rating: 4.5,
+                              imageUrl: products[firstProductIndex]
+                                      .productImages
+                                      .isNotEmpty
+                                  ? products[firstProductIndex].productImages[0]
+                                  : 'https://via.placeholder.com/150',
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 20),
+
+                        // Second Product Card (Right Side), if it exists
+                        if (secondProductIndex < products.length)
+                          Expanded(
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ProductDetailsPage(
+                                      product: products[secondProductIndex],
+                                    ),
+                                  ),
+                                );
+                                print(products[secondProductIndex].description);
+                              },
+                              child: ProductCard(
+                                productName:
+                                    products[secondProductIndex].productName,
+                                price: 'N${products[secondProductIndex].price}',
+                                rating: 4.5,
+                                imageUrl: products[secondProductIndex]
+                                        .productImages
+                                        .isNotEmpty
+                                    ? products[secondProductIndex]
+                                        .productImages[0]
+                                    : 'https://via.placeholder.com/150',
+                              ),
+                            ),
+                          ),
+                        if (secondProductIndex >= products.length) Spacer(),
+                      ],
+                    ),
                   );
-                }).toList(),
+                },
               ),
             ],
           ),
@@ -213,4 +286,3 @@ class _StockHomeState extends State<StockHome> {
     );
   }
 }
-
