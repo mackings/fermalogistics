@@ -1,3 +1,4 @@
+import 'package:fama/Views/Stock/Views/Search/search.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,6 +30,18 @@ class SearchTextField extends StatelessWidget {
           contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 16), 
         ),
         style: GoogleFonts.montserrat(),
+        onChanged: (value) {
+          // if (value.isNotEmpty) {
+          //   Navigator.push(
+          //     context,
+          //     MaterialPageRoute(builder: (context) => SearchStock()),
+          //   );
+          // }
+        },
+         onTap: () {
+           Navigator.push(context,
+           MaterialPageRoute(builder: (context) => SearchStock()));
+        },
       ),
     );
   }

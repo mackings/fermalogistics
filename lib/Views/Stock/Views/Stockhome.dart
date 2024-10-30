@@ -2,6 +2,7 @@ import 'package:fama/Views/Stock/Api/stockservice.dart';
 import 'package:fama/Views/Stock/Model/allproducts.dart';
 import 'package:fama/Views/Stock/Model/category.dart';
 import 'package:fama/Views/Stock/Views/Cart/Pages/cartpage.dart';
+import 'package:fama/Views/Stock/Views/Search/search.dart';
 import 'package:fama/Views/Stock/Widgets/Product%20Details/productdetails.dart';
 import 'package:fama/Views/Stock/Widgets/location.dart';
 import 'package:fama/Views/Stock/Widgets/productcard.dart';
@@ -18,6 +19,7 @@ class StockHome extends StatefulWidget {
 }
 
 class _StockHomeState extends State<StockHome> {
+
   final ApiService apiService = ApiService();
 
   dynamic userToken;
@@ -39,7 +41,6 @@ class _StockHomeState extends State<StockHome> {
       });
     }
   }
-
 
 
   Future<void> getCurrentLocation() async {
@@ -92,6 +93,7 @@ class _StockHomeState extends State<StockHome> {
     }
   }
 
+
   Future<void> fetchProductsByCategory(String category) async {
     try {
       if (category == 'All') {
@@ -136,9 +138,15 @@ class _StockHomeState extends State<StockHome> {
                 },
               ),
               const SizedBox(height: 20),
-              SearchTextField(
-                controller: search,
-                hintText: "Search Anything",
+              GestureDetector(
+                onTap: () {
+                Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SearchStock()));
+                },
+                child: SearchTextField(
+                  controller: search,
+                  hintText: "Search Anything",
+                ),
               ),
               SizedBox(height: 13),
               Image.asset("assets/girlpng.png"),

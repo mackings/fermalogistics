@@ -137,4 +137,30 @@ Future<List<Product>> fetchProductsByCategory(String categoryName) async {
 
 
 
+   Future<List<Product>> fetchProductByName(String productName) async {
+    final url = 'https://fama-logistics.onrender.com/api/v1/cart/searchProductByName/$productName';
+    final token = await retrieveUserData();
+
+    if (token == null) {
+      throw Exception('Authorization token not found');
+    }
+
+    final response = await http.get(
+      Uri.parse(url),
+      headers: {
+        'Authorization': 'Bearer $token',
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final List productsData = data['products'];
+      return productsData.map((json) => Product.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to load products for name $productName');
+    }
+  }
+
+
 }

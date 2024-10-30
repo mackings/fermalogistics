@@ -21,9 +21,8 @@ class Newrequest extends ConsumerStatefulWidget {
 }
 
 class _NewrequestState extends ConsumerState<Newrequest> {
-
-  
   dynamic userToken;
+  bool loading = false;
 
   Future<void> _retrieveUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -58,49 +57,69 @@ class _NewrequestState extends ConsumerState<Newrequest> {
     });
   }
 
-  Future<void> _placeRequest() async {
-    final String token = userToken; // Replace with the actual token
-    final String url =
-        "https://fama-logistics.onrender.com/api/v1/request/createRequest";
+Future<void> _placeRequest() async {
+  final String token = userToken; // Replace with the actual token
+  final String url =
+      "https://fama-logistics.onrender.com/api/v1/request/createRequest";
 
-    try {
-      var request = http.MultipartRequest('POST', Uri.parse(url))
-        ..headers['Authorization'] = 'Bearer $token'
-        ..fields['productName'] = product.text
-        ..fields['quantity'] = packages.text
-        ..fields['customerName'] =
-            "Kunle Dayo" 
-        ..fields['deliveryAddress'] =
-            "45, dayo street, ojo"
-        ..fields['additionalInfo'] = info.text;
+  setState(() {
+    loading = true; // Set loading to true before starting the request
+  });
 
-      if (_pickedImage != null) {
-        request.files.add(await http.MultipartFile.fromPath(
-          'productImage',
-          _pickedImage!.path,
-        ));
-      }
+  try {
+    var request = http.MultipartRequest('POST', Uri.parse(url))
+      ..headers['Authorization'] = 'Bearer $token'
+      ..fields['productName'] = product.text
+      ..fields['quantity'] = packages.text
+      ..fields['customerName'] = "Kunle Dayo"
+      ..fields['deliveryAddress'] = "45, dayo street, ojo"
+      ..fields['additionalInfo'] = info.text;
 
-      final response = await request.send();
-
-      if (response.statusCode == 201) {
-        // Handle the response, decode it if needed
-        final responseBody = await response.stream.bytesToString();
-        final decodedResponse = json.decode(responseBody);
-        print('Success: $decodedResponse');
-        // Show a success message or navigate to another screen
-      } else {
-        // Handle errors
-        final responseBody = await response.stream.bytesToString();
-        final decodedResponse = json.decode(responseBody);
-        print('Failure: $decodedResponse');
-      }
-    } catch (e) {
-      // Handle any exceptions
-      print('Exception: $e');
-      // Show an error message to the user
+    if (_pickedImage != null) {
+      request.files.add(await http.MultipartFile.fromPath(
+        'productImage',
+        _pickedImage!.path,
+      ));
     }
+
+    final response = await request.send();
+
+    // Decode the response
+    final responseBody = await response.stream.bytesToString();
+    final decodedResponse = json.decode(responseBody);
+
+    if (response.statusCode == 201) {
+      print('Success: $decodedResponse');
+
+      // Show a success message via Snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Request sent successfully!'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+
+      // Optionally, navigate to another screen if needed
+    } else {
+      print('Failure: $decodedResponse');
+
+      // Show an error message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Request failed. Please try again.'),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  } catch (e) {
+    print('Exception: $e');
+    // Show an error message to the user
+  } finally {
+    setState(() {
+      loading = false; // Reset loading state after request completion
+    });
   }
+}
 
   @override
   void initState() {
@@ -111,7 +130,11 @@ class _NewrequestState extends ConsumerState<Newrequest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: CustomText(
+          text: "Request Product",
+        ),
+      ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: Padding(
@@ -280,11 +303,14 @@ class _NewrequestState extends ConsumerState<Newrequest> {
                   SizedBox(
                     height: 5.h,
                   ),
-                  CustomButton(
-                      text: "Place a Request",
-                      onPressed: () {
-                        _placeRequest();
-                      }),
+loading
+    ? Center(child: CircularProgressIndicator(color: btncolor,))
+    : CustomButton(
+        text: "Place a Request",
+        onPressed: () {
+          _placeRequest();
+        },
+      ),
                   SizedBox(
                     height: 4.h,
                   ),

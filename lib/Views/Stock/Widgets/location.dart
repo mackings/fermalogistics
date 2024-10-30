@@ -47,14 +47,14 @@ class LocationDisplay extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.blue, width: 2),
+                      border: Border.all(color: Colors.transparent, width: 2),
                     ),
                     child: CircleAvatar(
                       radius: 12,
                       backgroundColor: Colors.white,
                       child: Icon(
                         Icons.refresh,
-                        color: Colors.blue,
+                        color: Colors.transparent,
                         size: 15,
                       ),
                     ),
@@ -66,15 +66,15 @@ class LocationDisplay extends StatelessWidget {
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.blue, width: 2),
+                      border: Border.all(color: Colors.grey, width: 2),
                     ),
                     child: CircleAvatar(
                       radius: 12,
                       backgroundColor: Colors.white,
                       child: Icon(
-                        Icons.settings,
+                        Icons.shopping_cart,
                         size: 15,
-                        color: Colors.blue,
+                        color: Colors.black,
                       ),
                     ),
                   ),

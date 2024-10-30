@@ -122,11 +122,11 @@ class _StepForm4State extends State<StepForm4> {
             CustomButton(
               text: 'Continue',
               onPressed: () {
-                _showPinInputModal(context);
 
-                // widget.onComplete({
-                //   'paymentMethod': selectedMethod, // Add payment method
-                // });
+              //  _showPinInputModal(context);
+                widget.onComplete({
+                  'paymentMethod': selectedMethod, 
+                });
               },
             )
           ],

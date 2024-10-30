@@ -1,9 +1,11 @@
+import 'package:fama/Views/widgets/colors.dart';
+import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 
 
 
 class BalanceCard extends StatelessWidget {
-  final double balance;
+  final String balance;
   final VoidCallback onTopUp;
 
   const BalanceCard({
@@ -92,19 +94,10 @@ class BalanceCard extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  CustomText(text: "Balance",color:const Color.fromARGB(255, 230, 221, 221),),
+                                  SizedBox(height: 10,),
                                   Text(
-                                    'Balance',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11,
-                                      fontFamily: 'Inter',
-                                      fontWeight: FontWeight.w400,
-                                      height: 0.20,
-                                    ),
-                                  ),
-                                  SizedBox(height: 20,),
-                                  Text(
-                                    '\N${balance.toStringAsFixed(2)}',
+                                    '${balance.toString()}',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 18,

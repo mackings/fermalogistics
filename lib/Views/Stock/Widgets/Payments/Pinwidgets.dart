@@ -109,12 +109,13 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
           child: Text(
             _pin[index],
             style: TextStyle(fontSize: 24),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.center, 
           ),
         );
       }),
     );
   }
+
 
   Widget _buildNumberPad() {
     return Column(

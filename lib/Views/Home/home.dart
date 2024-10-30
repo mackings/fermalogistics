@@ -1,7 +1,11 @@
 import 'package:fama/Views/Home/dashboard.dart';
+import 'package:fama/Views/Profile/Views/Profilehome.dart';
 import 'package:fama/Views/Send%20Product/send.dart';
 import 'package:fama/Views/Shipments/Views/shipmentHome.dart';
 import 'package:fama/Views/Stock/Views/Stockhome.dart';
+import 'package:fama/Views/Tracking/home.dart';
+import 'package:fama/Views/Tracking/live.dart';
+import 'package:fama/Views/widgets/colors.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,8 +36,8 @@ class _HomePageState extends State<HomePage> {
       Dashboard(),
       ShipmentsHome(),
       StockHome(),
-      SendProduct(),
-      SendProduct()
+      SearchHome(),
+      ProfileHome()
 
     ];
     
@@ -48,36 +52,38 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _pages[_selectedIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.shopping_cart),
-            label: 'Cart',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history),
-            label: 'History',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.account_balance),
-            label: 'Transactions',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Account',
-          ),
-        ],
-        currentIndex: _selectedIndex,
-        //selectedItemColor: ROrange,
-        unselectedItemColor: Colors.grey,
-        onTap: _onItemTapped,
-        elevation: 0,
+  body: _pages[_selectedIndex],
+  bottomNavigationBar: BottomNavigationBar(
+    items: const <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        icon: Icon(Icons.home),
+        label: 'Home',
       ),
-    );
+      BottomNavigationBarItem(
+        icon: Icon(Icons.delivery_dining_sharp),
+        label: 'Shipping',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.inventory),
+        label: 'Stock',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.qr_code),
+        label: 'Tracking',
+      ),
+      BottomNavigationBarItem(
+        icon: Icon(Icons.person),
+        label: 'Account',
+      ),
+    ],
+    currentIndex: _selectedIndex,
+    selectedItemColor: btncolor, // Color for the selected label and icon
+    unselectedItemColor: Colors.black54, // Change this color for better visibility
+    onTap: _onItemTapped,
+    elevation: 0,
+  ),
+);
+
+
   }
 }

@@ -1,4 +1,3 @@
-
 import 'package:fama/Views/Product/request.dart';
 import 'package:fama/Views/Shipments/Api/shipmentservice.dart';
 import 'package:fama/Views/Shipments/Model/shipmentmodel.dart';
@@ -6,8 +5,9 @@ import 'package:fama/Views/Shipments/widgets/shippingData.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-
+import 'package:sizer/sizer.dart';
 
 class ShipmentsHome extends ConsumerStatefulWidget {
   const ShipmentsHome({super.key});
@@ -16,12 +16,14 @@ class ShipmentsHome extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ShipmentsHomeState();
 }
 
-class _ShipmentsHomeState extends ConsumerState<ShipmentsHome> with SingleTickerProviderStateMixin {
+class _ShipmentsHomeState extends ConsumerState<ShipmentsHome>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   int _activeIndex = 0;
   List<Shipment> allShipments = [];
   bool isLoading = true;
-  final ShipmentService shipmentService = ShipmentService(); // Initialize the service class
+  final ShipmentService shipmentService =
+      ShipmentService(); 
 
   @override
   void initState() {
@@ -124,7 +126,29 @@ class _ShipmentsHomeState extends ConsumerState<ShipmentsHome> with SingleTicker
                   isLoading
                       ? Center(child: CircularProgressIndicator())
                       : allShipments.isEmpty
-                          ? Center(child: Text('No shipments available.'))
+                          ? Column(
+                              children: [
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                SvgPicture.asset(
+                                  'assets/empty.svg',
+                                  width: 300,
+                                  height: 300,
+                                ),
+                                const SizedBox(height: 16.0),
+                                CustomText(
+                                  text: "No Shipments Available",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12.sp,
+                                ),
+                                CustomText(
+                                  text: "You haven't sent a product yet",
+                                  fontSize: 8.sp,
+                                  color: Colors.grey,
+                                )
+                              ],
+                            )
                           : ListView.builder(
                               itemCount: allShipments.length,
                               itemBuilder: (context, index) {
@@ -136,12 +160,45 @@ class _ShipmentsHomeState extends ConsumerState<ShipmentsHome> with SingleTicker
                   // Tab 2 - Active Shipments (Pending)
                   isLoading
                       ? Center(child: CircularProgressIndicator())
-                      : allShipments.where((shipment) => shipment.status == 'pending').isEmpty
-                          ? Center(child: Text('No active shipments available.'))
+                      : allShipments
+                              .where((shipment) => shipment.status == 'pending')
+                              .isEmpty
+                          ? Column(
+                              children: [
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                SvgPicture.asset(
+                                  'assets/empty.svg',
+                                  width: 300,
+                                  height: 300,
+                                ),
+                                const SizedBox(height: 16.0),
+                                CustomText(
+                                  text: "No Active Shipments Yet",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12.sp,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: CustomText(
+                                    text: "You haven't sent a product yet",
+                                    fontSize: 8.sp,
+                                    color: Colors.grey,
+                                  ),
+                                )
+                              ],
+                            )
                           : ListView.builder(
-                              itemCount: allShipments.where((shipment) => shipment.status == 'pending').length,
+                              itemCount: allShipments
+                                  .where((shipment) =>
+                                      shipment.status == 'pending')
+                                  .length,
                               itemBuilder: (context, index) {
-                                var shipment = allShipments.where((shipment) => shipment.status == 'pending').toList()[index];
+                                var shipment = allShipments
+                                    .where((shipment) =>
+                                        shipment.status == 'pending')
+                                    .toList()[index];
                                 return _buildShipmentCard(shipment);
                               },
                             ),
@@ -149,12 +206,43 @@ class _ShipmentsHomeState extends ConsumerState<ShipmentsHome> with SingleTicker
                   // Tab 3 - Delivered Shipments
                   isLoading
                       ? Center(child: CircularProgressIndicator())
-                      : allShipments.where((shipment) => shipment.status == 'delivered').isEmpty
-                          ? Center(child: Text('No delivered shipments available.'))
+                      : allShipments
+                              .where(
+                                  (shipment) => shipment.status == 'delivered')
+                              .isEmpty
+                          ? Column(
+                              children: [
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                SvgPicture.asset(
+                                  'assets/empty.svg',
+                                  width: 300,
+                                  height: 300,
+                                ),
+                                const SizedBox(height: 16.0),
+                                CustomText(
+                                  text: "No Shipments Available",
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12.sp,
+                                ),
+                                CustomText(
+                                  text: "You haven't sent a product yet",
+                                  fontSize: 8.sp,
+                                  color: Colors.grey,
+                                )
+                              ],
+                            )
                           : ListView.builder(
-                              itemCount: allShipments.where((shipment) => shipment.status == 'delivered').length,
+                              itemCount: allShipments
+                                  .where((shipment) =>
+                                      shipment.status == 'delivered')
+                                  .length,
                               itemBuilder: (context, index) {
-                                var shipment = allShipments.where((shipment) => shipment.status == 'delivered').toList()[index];
+                                var shipment = allShipments
+                                    .where((shipment) =>
+                                        shipment.status == 'delivered')
+                                    .toList()[index];
                                 return _buildShipmentCard(shipment);
                               },
                             ),
@@ -185,8 +273,10 @@ class _ShipmentsHomeState extends ConsumerState<ShipmentsHome> with SingleTicker
       child: ShippingCards(
         trackingID: shipment.trackingNumber,
         status: shipment.status,
-        fromLocation: shortenLocation(shipment.pickupAddress), // Shorten fromLocation
-        toLocation: shortenLocation(shipment.receiverAddress), // Shorten toLocation
+        fromLocation:
+            shortenLocation(shipment.pickupAddress), // Shorten fromLocation
+        toLocation:
+            shortenLocation(shipment.receiverAddress), // Shorten toLocation
         fromDate: formatDate(shipment.createdAt.toString()),
         estimatedDate: formatDate(shipment.updatedAt.toString()),
         sender: shipment.senderName,

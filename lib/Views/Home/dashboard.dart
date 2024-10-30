@@ -2,6 +2,9 @@ import 'dart:convert';
 
 import 'package:fama/Views/Auth/attachimg.dart';
 import 'package:fama/Views/Profile/Views/Profilehome.dart';
+import 'package:fama/Views/Shipments/Api/shipmentservice.dart';
+import 'package:fama/Views/Shipments/Model/shipmentmodel.dart';
+import 'package:fama/Views/Shipments/widgets/shippingData.dart';
 import 'package:fama/Views/Tracking/widgets/searchcard.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/homecard.dart';
@@ -10,6 +13,7 @@ import 'package:fama/Views/widgets/tracker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geocoding/geocoding.dart';
+import 'package:intl/intl.dart';
 import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
@@ -26,6 +30,7 @@ class _DashboardState extends State<Dashboard> {
   
   dynamic userToken;
   dynamic userImage;
+  Shipment? latestShipment;
 
   //Location
 
@@ -91,12 +96,28 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
+Future<void> fetchLatestShipment() async {
+  try {
+    List<dynamic> shipments = await ShipmentService().fetchShipments();
+    if (shipments.isNotEmpty) {
+      setState(() {
+        // Convert the first item in shipments list to a Shipment object
+        latestShipment = Shipment.fromJson(shipments.first);
+      });
+    }
+  } catch (e) {
+    print("Error fetching shipments: $e");
+  }
+}
+
+
 
   @override
   void initState() {
     super.initState();
     getCurrentLocation();
     _retrieveUserData();
+    fetchLatestShipment();
   }
 
   @override
@@ -203,8 +224,6 @@ Row(
                 height: 3.h,
               ),
 
-              // Other widgets here...
-
               ShipmentTrackingCard(),
 
               Padding(
@@ -242,10 +261,40 @@ Row(
                 height: 1.h,
               ),
 
-              SearchCard(),
+                            if (latestShipment != null) 
+                _buildShipmentCard(latestShipment!),
+
+             // SearchCard(),
             ],
           ),
         ),
+      ),
+    );
+  }
+
+
+   Widget _buildShipmentCard(Shipment shipment) {
+    String formatDate(String dateString) {
+      DateTime dateTime = DateTime.parse(dateString);
+      return DateFormat('d MMM yyyy').format(dateTime);
+    }
+
+    String shortenLocation(String location, {int maxLength = 15}) {
+      return location.length > maxLength ? '${location.substring(0, maxLength)}...' : location;
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+      child: ShippingCards(
+        trackingID: shipment.trackingNumber,
+        status: shipment.status,
+        fromLocation: shortenLocation(shipment.pickupAddress),
+        toLocation: shortenLocation(shipment.receiverAddress),
+        fromDate: formatDate(shipment.createdAt.toString()),
+        estimatedDate: formatDate(shipment.updatedAt.toString()),
+        sender: shipment.senderName,
+        weight: shipment.weightOfPackage.toString(),
+        timelineData: [],
       ),
     );
   }

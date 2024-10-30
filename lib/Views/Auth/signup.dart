@@ -69,11 +69,10 @@ class _SignupState extends ConsumerState<Signup> {
       "fullName": fullname.text,
       "phoneNumber": countrycode.text,
       "email": email.text,
-      "password": password.text,
-      // Optional
-      "country": "Nigeria",
-      "roles": "deliveryPersonnel",
-      "address": "56, Hugh street, Yaba, Lagos"
+      "password": password.text,  
+       "country": "",
+       "roles": "",
+       "address": ""
     };
 
     // API URL
@@ -98,7 +97,6 @@ class _SignupState extends ConsumerState<Signup> {
         // Save email to SharedPreferences
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('email', responseData['user']['email']);
-
         // Show success snackbar
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -106,6 +104,7 @@ class _SignupState extends ConsumerState<Signup> {
         );
 
        Navigator.push(context, MaterialPageRoute(builder: (context) => Verification()));
+
       } else {
         final responseData = jsonDecode(response.body);
 
@@ -200,8 +199,8 @@ ScaffoldMessenger.of(context).showSnackBar(
                     hintText: "8137159066",
                     controller: countrycode,
                     onChanged: (value) {},
-                    countryCodes: ['+1', '+91', '+44'],
-                    selectedCountryCode: '+91',
+                    countryCodes: ['+1', '+234', '+44'],
+                    selectedCountryCode: '+234',
                   ),
                   SizedBox(height: 2.h),
                   TermsAndConditionsWidget(

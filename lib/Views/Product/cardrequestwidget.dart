@@ -1,3 +1,4 @@
+import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -32,8 +33,7 @@ class RequestCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border.all(width: 0.5),
+        color: btngrey,
         borderRadius: BorderRadius.circular(10),
       ),
       child: Padding(
@@ -72,7 +72,7 @@ class RequestCard extends StatelessWidget {
                   ),
                 ),
               ),
-              Divider(),
+              Divider(color: Colors.white,),
               Padding(
                 padding: const EdgeInsets.only(left: 18, right: 18, top: 5),
                 child: Row(

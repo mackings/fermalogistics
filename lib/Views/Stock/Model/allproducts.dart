@@ -12,7 +12,7 @@ class Product {
   final String taxClass;
   final String sku;
   final int quantity;
-  final List<String> variation;
+ // final List<String> variation;
   final double weight;
   final double height;
   final double width;
@@ -35,7 +35,7 @@ class Product {
     required this.taxClass,
     required this.sku,
     required this.quantity,
-    required this.variation,
+   // required this.variation,
     required this.weight,
     required this.height,
     required this.width,
@@ -60,7 +60,7 @@ class Product {
       taxClass: json['taxClass'],
       sku: json['sku'],
       quantity: json['quantity'],
-      variation: List<String>.from(json['variation'].map((v) => v.toString())),
+     // variation: List<String>.from(json['variation'].map((v) => v.toString())),
       weight: json['weight'].toDouble(),
       height: json['height'].toDouble(),
       width: json['width'].toDouble(),
