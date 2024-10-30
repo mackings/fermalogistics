@@ -5,14 +5,11 @@ import 'package:fama/Views/Profile/Views/Profilehome.dart';
 import 'package:fama/Views/Shipments/Api/shipmentservice.dart';
 import 'package:fama/Views/Shipments/Model/shipmentmodel.dart';
 import 'package:fama/Views/Shipments/widgets/shippingData.dart';
-import 'package:fama/Views/Tracking/widgets/searchcard.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/homecard.dart';
 import 'package:fama/Views/widgets/texts.dart';
-import 'package:fama/Views/widgets/tracker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:geocoding/geocoding.dart';
+import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:intl/intl.dart';
 import 'package:location/location.dart' as loc;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -26,8 +23,6 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
-  
   dynamic userToken;
   dynamic userImage;
   Shipment? latestShipment;
@@ -43,36 +38,44 @@ class _DashboardState extends State<Dashboard> {
     bool _serviceEnabled;
     loc.PermissionStatus _permissionGranted;
 
+    // Check if location services are enabled
     _serviceEnabled = await location.serviceEnabled();
     if (!_serviceEnabled) {
       _serviceEnabled = await location.requestService();
       if (!_serviceEnabled) {
-        return;
+        return; // Location services are not enabled
       }
     }
 
+    // Check for location permissions
     _permissionGranted = await location.hasPermission();
     if (_permissionGranted == loc.PermissionStatus.denied) {
       _permissionGranted = await location.requestPermission();
       if (_permissionGranted != loc.PermissionStatus.granted) {
-        return;
+        return; // Location permission denied
       }
     }
 
+    // Get the current location
     currentLocation = await location.getLocation();
 
-    // Convert the coordinates to an address
-    List<Placemark> placemarks = await placemarkFromCoordinates(
+    // Use the geocoding package to get placemarks
+    List<geocoding.Placemark> placemarks =
+        await geocoding.placemarkFromCoordinates(
       currentLocation!.latitude!,
       currentLocation!.longitude!,
     );
 
-    Placemark place = placemarks[0];
-    setState(() {
-      currentAddress = "${place.locality}, ${place.country}";
-    });
+    // Check if placemarks are available
+    if (placemarks.isNotEmpty) {
+      geocoding.Placemark place = placemarks[0];
+      setState(() {
+        // Construct a detailed address
+        currentAddress =
+            "${place.name}, ${place.locality}, ${place.subAdministrativeArea}, ${place.administrativeArea}, ${place.country}";
+      });
+    }
   }
-
 
   Future<void> _retrieveUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -96,21 +99,19 @@ class _DashboardState extends State<Dashboard> {
     }
   }
 
-Future<void> fetchLatestShipment() async {
-  try {
-    List<dynamic> shipments = await ShipmentService().fetchShipments();
-    if (shipments.isNotEmpty) {
-      setState(() {
-        // Convert the first item in shipments list to a Shipment object
-        latestShipment = Shipment.fromJson(shipments.first);
-      });
+  Future<void> fetchLatestShipment() async {
+    try {
+      List<dynamic> shipments = await ShipmentService().fetchShipments();
+      if (shipments.isNotEmpty) {
+        setState(() {
+          // Convert the first item in shipments list to a Shipment object
+          latestShipment = Shipment.fromJson(shipments.first);
+        });
+      }
+    } catch (e) {
+      print("Error fetching shipments: $e");
     }
-  } catch (e) {
-    print("Error fetching shipments: $e");
   }
-}
-
-
 
   @override
   void initState() {
@@ -132,93 +133,88 @@ Future<void> fetchLatestShipment() async {
               SizedBox(
                 height: 5.h,
               ),
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    // User Image or Icon in CircleAvatar
-    GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => AttachImg()),
-        );
-      },
-      child: CircleAvatar(
-  radius: 18,
-  backgroundColor: Colors.grey[200],
-  child: userImage != null && userImage.isNotEmpty && Uri.tryParse(userImage)?.hasAbsolutePath == true
-      ? ClipOval(
-          child: Image.network(
-            userImage,
-            width: 50,
-            height: 50,
-            fit: BoxFit.cover,
-          ),
-        )
-      : Icon(
-          Icons.person,
-          size: 24,
-          color: Colors.grey,
-        ),
-),
-
-
-    ),
-
-
-    Expanded(
-      flex: 2,
-      child: Column(
-        children: [
-
-          CustomText(
-            text: 'Current Location',
-            fontSize: 7.sp,
-            color: Colors.grey,
-          ),
-
-          SizedBox(height: 4), 
-
-          Row(
-            children: [
-              //Icon(Icons.location_on, size: 18.sp), 
-              SizedBox(width: 2.w), 
-              Expanded(
-                child: Center(
-                  child: CustomText(
-                    text: currentAddress ?? 'Updating Loc..',
-                    fontWeight: FontWeight.w600,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // User Image or Icon in CircleAvatar
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => AttachImg()),
+                      );
+                    },
+                    child: CircleAvatar(
+                      radius: 18,
+                      backgroundColor: Colors.grey[200],
+                      child: userImage != null &&
+                              userImage.isNotEmpty &&
+                              Uri.tryParse(userImage)?.hasAbsolutePath == true
+                          ? ClipOval(
+                              child: Image.network(
+                                userImage,
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              ),
+                            )
+                          : Icon(
+                              Icons.person,
+                              size: 24,
+                              color: Colors.grey,
+                            ),
+                    ),
                   ),
-                ),
-              ),
-              Icon(Icons.arrow_drop_down_outlined, size: 18.sp),
-            ],
-          ),
-        ],
-      ),
-    ),
 
-    // Notification Icon Container
-    GestureDetector(
-      onTap: () {
-      
-     Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => ProfileHome()),
-        );
-      },
-      child: Container(
-        height: 6.h,
-        width: 12.w,
-        decoration: BoxDecoration(
-          color: btngrey,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(Icons.notifications_outlined, size: 20.sp),
-      ),
-    ),
-  ],
-),
+                  Expanded(
+                    flex: 2,
+                    child: Column(
+                      children: [
+                        CustomText(
+                          text: 'Current Location',
+                          fontSize: 7.sp,
+                          color: Colors.grey,
+                        ),
+                        SizedBox(height: 4),
+                        Row(
+                          children: [
+                            //Icon(Icons.location_on, size: 18.sp),
+                            SizedBox(width: 2.w),
+                            Expanded(
+                              child: Center(
+                                child: CustomText(
+                                  text: currentAddress ?? 'Updating Loc..',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                            Icon(Icons.arrow_drop_down_outlined, size: 18.sp),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Notification Icon Container
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ProfileHome()),
+                      );
+                    },
+                    child: Container(
+                      height: 6.h,
+                      width: 12.w,
+                      decoration: BoxDecoration(
+                        color: btngrey,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(Icons.notifications_outlined, size: 20.sp),
+                    ),
+                  ),
+                ],
+              ),
 
               SizedBox(
                 height: 3.h,
@@ -261,10 +257,9 @@ Row(
                 height: 1.h,
               ),
 
-                            if (latestShipment != null) 
-                _buildShipmentCard(latestShipment!),
+              if (latestShipment != null) _buildShipmentCard(latestShipment!),
 
-             // SearchCard(),
+              // SearchCard(),
             ],
           ),
         ),
@@ -272,15 +267,16 @@ Row(
     );
   }
 
-
-   Widget _buildShipmentCard(Shipment shipment) {
+  Widget _buildShipmentCard(Shipment shipment) {
     String formatDate(String dateString) {
       DateTime dateTime = DateTime.parse(dateString);
       return DateFormat('d MMM yyyy').format(dateTime);
     }
 
     String shortenLocation(String location, {int maxLength = 15}) {
-      return location.length > maxLength ? '${location.substring(0, maxLength)}...' : location;
+      return location.length > maxLength
+          ? '${location.substring(0, maxLength)}...'
+          : location;
     }
 
     return Padding(
