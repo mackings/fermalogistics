@@ -162,5 +162,4 @@ Future<List<Product>> fetchProductsByCategory(String categoryName) async {
     }
   }
 
-
 }

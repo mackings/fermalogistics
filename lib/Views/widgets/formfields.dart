@@ -24,6 +24,7 @@ class CustomTextFormField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         Text(
           labelText,
           style: GoogleFonts.plusJakartaSans(
@@ -32,11 +33,13 @@ class CustomTextFormField extends StatelessWidget {
             color: Colors.black,
           ),
         ),
+
         SizedBox(height: 1.h),
+
         Container(
           padding: EdgeInsets.symmetric(horizontal: 4.w, vertical: 0.5.h),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
+            border: Border.all(color: const Color.fromARGB(255, 54, 50, 50)),
             borderRadius: BorderRadius.circular(2.w),
           ),
           child: TextFormField(
@@ -57,6 +60,7 @@ class CustomTextFormField extends StatelessWidget {
             ),
           ),
         ),
+        
       ],
     );
   }

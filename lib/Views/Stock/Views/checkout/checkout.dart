@@ -95,6 +95,7 @@ class _ShippingCheckoutState extends State<ShippingCheckout> {
                 final item = cartItems[index];
                 return Column(
                   children: [
+                    
                     CartProductWidget(
                       productName: item['productName'],
                       productImage: item['productImages'][0],

@@ -1,9 +1,7 @@
 import 'package:fama/Views/Address/createaddress.dart';
 import 'package:fama/Views/widgets/button.dart';
-import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/countrycode.dart';
 import 'package:fama/Views/widgets/formfields.dart';
-import 'package:fama/Views/widgets/terms.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -105,10 +103,10 @@ CustomButton(
   text: 'Continue',
   onPressed: () {
     widget.onComplete({
-      'recieverName': senderName.text,
-      'recieverPhoneNumber': senderPhone.text,
-      'recieverAddress': pickupAddress.text,
-      'recieverEmailAddress': pickupEmail.text,
+      'receiverName': senderName.text,
+      'receiverPhoneNumber': senderPhone.text,
+      'receiverAddress': pickupAddress.text,
+      'receiverEmailAddress': pickupEmail.text,
     });
   },
 )

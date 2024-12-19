@@ -127,24 +127,30 @@ class _StepForm3State extends State<StepForm3> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 5.h),
+
             CustomText(
               text: "Package details",
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,
             ),
+
             CustomText(
               text: "Please enter the correct details ",
               fontSize: 8.sp,
               fontWeight: FontWeight.w400,
             ),
+
             SizedBox(height: 5.h),
+
             CustomTextFormField(
               labelText: "Item Name *",
               hintText: "Enter your Item name",
               controller: itemName,
               onChanged: (p0) {},
             ),
+
             SizedBox(height: 2.h),
+
             TwoFieldsRow(controller1: weight, controller2: length),
             SizedBox(height: 2.h),
             TwoFieldsRow2(controller1: width, controller2: height),
@@ -161,6 +167,7 @@ class _StepForm3State extends State<StepForm3> {
                 });
               },
             ),
+            
             SizedBox(height: 2.h),
 
             CustomTextFormField(
@@ -182,19 +189,9 @@ class _StepForm3State extends State<StepForm3> {
                   selectedCategory2 = newValue ?? '';
                 });
 
-                // Make sure you have access to data from Step 1 and Step 2
-                // Map<String, dynamic> dataToSend = {
-                // // 'recieverAddress': widget.recieverAddress, // from Step 2
-                //  // 'pickupAddress': widget.pickupAddress, // from Step 1
-                //   'weightOfPackage': int.tryParse(weight.text) ?? 0,
-                //   'numberOfPackages': int.tryParse(noofPackages.text) ?? 0,
-                //   'height': int.tryParse(height.text) ?? 0,
-                //   'width': int.tryParse(width.text) ?? 0,
-                //   'length': double.tryParse(length.text) ?? 0.0,
-                // };
 
                 Map<String, dynamic> dataToSend = {
-                  'recieverAddress': widget.previousData['recieverAddress'],
+                  'receiverAddress': widget.previousData['receiverAddress'],
                   'pickupAddress': widget.previousData['pickupAddress'],
                   'weightOfPackage': int.tryParse(weight.text) ?? 0,
                   'numberOfPackages': int.tryParse(noofPackages.text) ?? 0,
@@ -295,7 +292,7 @@ try {
 
                     SizedBox(height: 3.h),
 
-                    // Express Rate Section
+                  
                     Container(
                       height: 10.h,
                       width: MediaQuery.of(context).size.width,
@@ -323,6 +320,7 @@ try {
                         ),
                       ),
                     ),
+                    
 
                     SizedBox(height: 2.h),
                   ],
@@ -365,6 +363,11 @@ try {
     );
   }
 }
+
+
+
+
+
 
 class TwoFieldsRow extends StatelessWidget {
   final TextEditingController controller1;

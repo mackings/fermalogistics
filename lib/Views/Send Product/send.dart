@@ -1,10 +1,9 @@
 import 'dart:convert';
-
-import 'package:fama/Views/Send%20Product/Api/shipmentclass.dart';
 import 'package:fama/Views/Send%20Product/steps/step1.dart';
 import 'package:fama/Views/Send%20Product/steps/step2.dart';
 import 'package:fama/Views/Send%20Product/steps/step3.dart';
 import 'package:fama/Views/Send%20Product/steps/step4.dart';
+import 'package:fama/Views/Stock/Widgets/Payments/Pinwidgets.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
@@ -14,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+
 
 
 
@@ -33,13 +33,6 @@ class _SendProductState extends ConsumerState<SendProduct> {
 
     if (userDataString != null) {
       Map<String, dynamic> userData = jsonDecode(userDataString);
-
-      String? token = userData['token'];
-      Map<String, dynamic> user = userData['user'];
-
-      String? fullName = user['fullName'];
-      String? email = user['email'];
-
       setState(() {
         userToken = userData['token'];
         print(userToken);
@@ -52,10 +45,10 @@ class _SendProductState extends ConsumerState<SendProduct> {
   bool isLoading = false;
 
   final Map<String, dynamic> formData = {};
-
+// "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet"
   Future<void> _makeApiCall() async {
     final url =
-        "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet";
+        "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/calculationInvolvedShipment";
 
     final headers = {
       'Content-Type': 'application/json',
@@ -65,7 +58,6 @@ class _SendProductState extends ConsumerState<SendProduct> {
     try {
       print("Send Datas >>> $formData");
       setState(() {
-        // Show loading state
         isLoading = true;
       });
 
@@ -86,34 +78,63 @@ class _SendProductState extends ConsumerState<SendProduct> {
 
         // Pass API response data to the modal
         _showShipmentSummary(context, responseData['shipment']);
-
       } else {
         // Handle failure
+        final responseData = json.decode(response.body);
         print("Failed to create shipment: ${response.body}");
-        // Optionally show error message
+
+        // Show error message in Snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("${responseData['message']}"),
+            backgroundColor: btncolor,
+          ),
+        );
       }
     } catch (e) {
       setState(() {
         isLoading = false;
       });
       print("Error making API call: $e");
-      // Optionally show error message
+
+      // Show generic error message in Snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error making API call: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
   void _completeStep(Map<String, dynamic> data) {
     setState(() {
       _stepsCompleted[_currentStep] = true;
-      formData.addAll(data); // Collect the form data
+      formData.addAll(data);
       if (_currentStep < 3) {
         _currentStep++;
       } else {
-        // Make API call once all steps are completed
-         _makeApiCall();
-       // _showShipmentSummary(context, formData);
+        _makeApiCall();
       }
     });
   }
+
+  void _showPinInputModal(BuildContext context, String id) {
+    showModalBottomSheet(
+      backgroundColor: Colors.white,
+      context: context,
+      isScrollControlled: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: CartPinInputModal(id: id), // Pass the ID here
+      ),
+    );
+  }
+
+
 
   @override
   void initState() {
@@ -145,13 +166,14 @@ class _SendProductState extends ConsumerState<SendProduct> {
               child: _getFormForStep(_currentStep),
             ),
             if (isLoading)
-            LinearProgressIndicator(color: btncolor,),
+              LinearProgressIndicator(
+                color: btncolor,
+              ),
           ],
         ),
       ),
     );
   }
-
 
   Widget _getFormForStep(int step) {
     switch (step) {
@@ -163,7 +185,7 @@ class _SendProductState extends ConsumerState<SendProduct> {
         return StepForm3(
           onComplete: _completeStep,
           previousData: formData,
-          );
+        );
 
       case 3:
         return StepForm4(onComplete: _completeStep);
@@ -173,78 +195,96 @@ class _SendProductState extends ConsumerState<SendProduct> {
   }
 
 
-void _showShipmentSummary(BuildContext context, Map<String, dynamic> shipmentData) {
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    builder: (context) {
+  void _showShipmentSummary(
+      BuildContext context, Map<String, dynamic> shipmentData) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return DraggableScrollableSheet(
+          expand: false,
+          builder: (_, controller) {
+            return Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+              child: SingleChildScrollView(
+                controller: controller,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
 
-      return DraggableScrollableSheet(
-        expand: false,
-        builder: (_, controller) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-            child: SingleChildScrollView(
-              controller: controller,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+                    SizedBox(height: 20),
 
-                  SizedBox(height: 20),
-
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: CircleAvatar(
-                      backgroundColor: Colors.black,
-                      child: GestureDetector(
-                        onTap: (){Navigator.pop(context);},
-                        child: Icon(Icons.close,color: Colors.white,),
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.black,
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Icon(
+                            Icons.close,
+                            color: Colors.white,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  Text(
-                    "Shipment Summary",
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w600,
+                    Text(
+                      "Shipment Summary",
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    "Here is a review of your shipment",
-                    style: GoogleFonts.plusJakartaSans(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.grey,
+                    Text(
+                      "Here is a review of your shipment",
+                      style: GoogleFonts.plusJakartaSans(
+                        fontSize: 12.sp,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  _buildSummaryRow("Sender's Name", shipmentData['senderName']),
-                  _buildSummaryRow("Phone Number", shipmentData['phoneNumber']),
-                  _buildSummaryRow("Email", shipmentData['emailAddress']),
-                  _buildSummaryRow("Pickup Address", shipmentData['pickupAddress']),
-                  Divider(),
-                  _buildSummaryRow("Receiver's Name", shipmentData['recieverName']),
-                  _buildSummaryRow("Phone Number", shipmentData['recieverPhoneNumber']),
-                  _buildSummaryRow("Email", shipmentData['recieverEmailAddress']),
-                  _buildSummaryRow("Receiver's Address", shipmentData['recieverAddress']),
-                  Divider(),
-                  _buildSummaryRow("Shipping Fee", "\$${shipmentData['amount']}.00"), // Dynamic shipping fee
-                  _buildSummaryRow("Payment Method", formData['paymentMethod']),
-                  SizedBox(height: 5.h),
-
-                  CustomButton(text: "Confirm Order", onPressed: () {
-                   // Navigator.pop(context);
-                  })
-                ],
+                    SizedBox(height: 20),
+                    _buildSummaryRow(
+                        "Sender's Name", shipmentData['senderName']),
+                    _buildSummaryRow(
+                        "Phone Number", shipmentData['phoneNumber']),
+                    _buildSummaryRow("Email", shipmentData['emailAddress']),
+                    _buildSummaryRow(
+                        "Pickup Address", shipmentData['pickupAddress']),
+                    Divider(),
+                    _buildSummaryRow(
+                        "Receiver's Name", shipmentData['receiverName']),
+                    _buildSummaryRow(
+                        "Phone Number", shipmentData['receiverPhoneNumber']),
+                    _buildSummaryRow(
+                        "Email", shipmentData['receiverEmailAddress']),
+                    _buildSummaryRow(
+                        "Receiver's Address", shipmentData['receiverAddress']),
+                    Divider(),
+                    _buildSummaryRow(
+                        "Shipping Fee", "\$${shipmentData['amount']}.00"),
+                    _buildSummaryRow(
+                        "Payment Method", formData['paymentMethod']),
+                    SizedBox(height: 5.h),
+                    CustomButton(
+                      text: "Confirm Order",
+                      onPressed: () {
+                        _showPinInputModal(context,
+                            shipmentData['_id']); 
+                        print(shipmentData['_id']);
+                      },
+                    )
+                  ],
+                ),
               ),
-            ),
-          );
-        },
-      );
-    },
-  );
-}
-
+            );
+          },
+        );
+      },
+    );
+  }
 
   Widget _buildSummaryRow(String label, String value) {
     return Padding(

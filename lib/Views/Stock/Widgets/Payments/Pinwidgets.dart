@@ -1,15 +1,37 @@
-
+import 'dart:convert';
+import 'package:fama/Views/Auth/Pin/Createpin.dart';
+import 'package:fama/Views/Stock/Widgets/Payments/recipt.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 
 class CartPinInputModal extends StatefulWidget {
+  late final String id;
+
+  CartPinInputModal({required this.id});
   @override
   _CartPinInputModalState createState() => _CartPinInputModalState();
 }
 
-
 class _CartPinInputModalState extends State<CartPinInputModal> {
+  dynamic userToken;
+
+  Future<void> _retrieveUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userDataString = prefs.getString('userData');
+
+    if (userDataString != null) {
+      Map<String, dynamic> userData = jsonDecode(userDataString);
+      setState(() {
+        userToken = userData['token'];
+        print(userToken);
+      });
+    }
+  }
 
   final List<String> _pin = ['', '', '', ''];
   int _currentIndex = 0;
@@ -27,18 +49,269 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
           _currentIndex++;
 
           if (_currentIndex == 4) {
-            _onPinComplete();
+            _onPinComplete(widget.id);
           }
         }
       }
     });
   }
 
-    void _onPinComplete() {
-    String enteredPin = _pin.join('');
-    print("Entered PIN: $enteredPin");
 
 
+void _onPinComplete(String id) async {
+  String enteredPin = _pin.join('');
+  print("Entered PIN: $enteredPin");
+
+  // API URL
+  final String url =
+      "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet/$id";
+
+  // Request body
+  final Map<String, dynamic> requestBody = {"pin": enteredPin};
+
+  try {
+    // Make the API call
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer $userToken',
+      },
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      // Successful response
+      final responseData = jsonDecode(response.body);
+      print("Success: $responseData");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Payment Successful!')),
+      );
+
+      // Navigate to the success page
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SuccessDetailsPage(
+            senderName: responseData['shipment']['senderName'],
+            phoneNumber: responseData['shipment']['phoneNumber'],
+            email: responseData['shipment']['emailAddress'],
+            pickupAddress: responseData['shipment']['pickupAddress'],
+            receiverName: responseData['shipment']['receiverName'],
+            receiverPhoneNumber: responseData['shipment']['receiverPhoneNumber'],
+            receiverEmail: responseData['shipment']['receiverEmailAddress'],
+            receiverAddress: responseData['shipment']['receiverAddress'],
+            shippingFee: responseData['shipment']['amount'],
+            status: responseData['shipment']['status'],
+            trackingNumber: responseData['shipment']['trackingNumber'],
+          ),
+        ),
+      );
+    } else {
+      // Error from API
+      final responseData = jsonDecode(response.body);
+      String errorMessage = responseData['message'];
+      print("Error: $errorMessage");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(errorMessage)),
+      );
+
+      if (errorMessage == "PIN does not exist. Please create a new PIN.") {
+        _showCreatePinErrorModal();
+      }
+    }
+  } catch (e) {
+    // Handle exceptions
+    print("Exception: $e");
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An error occurred: $e')),
+    );
+  }
+}
+
+
+
+// void _onPinComplete(String id) async {
+
+//   String enteredPin = _pin.join('');
+//   print("Entered PIN: $enteredPin");
+
+//   // API URL
+//   final String url =
+//       "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet/$id";
+
+//   // Request body
+//   final Map<String, dynamic> requestBody = {"pin": enteredPin};
+
+//   try {
+//     // Make the API call
+//     final response = await http.post(
+//       Uri.parse(url),
+//       headers: {
+//         "Content-Type": "application/json",
+//         'Authorization': 'Bearer $userToken'
+//       },
+//       body: jsonEncode(requestBody),
+//     );
+
+//     if (response.statusCode == 200 || response.statusCode == 201) {
+//       final responseData = jsonDecode(response.body);
+//       print("Success: $responseData");
+
+//       ScaffoldMessenger.of(context).showSnackBar(
+//         SnackBar(content: Text('Payment Successful!')),
+//       );
+
+//       Navigator.of(context).pop();
+
+//     } else {
+
+//       // Error from API
+//       final responseData = jsonDecode(response.body);
+//       String errorMessage = responseData['message'];
+//       print("Errors: $errorMessage");
+
+//        ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text(errorMessage)),
+//         );
+
+//       if (errorMessage == "PIN does not exist. Please create a new PIN.") {
+
+//         _showCreatePinErrorModal();
+//       } else {
+//         ScaffoldMessenger.of(context).showSnackBar(
+//           SnackBar(content: Text(errorMessage)),
+//         );
+//       }
+//     }
+//   } catch (e) {
+//     print("Exception: $e");
+//     ScaffoldMessenger.of(context).showSnackBar(
+//       SnackBar(content: Text('An error occurred: $e')),
+//     );
+//   }
+// }
+
+
+
+
+void _showCreatePinErrorModal() {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: CustomText(
+          text: "Create New Pin",
+          fontWeight: FontWeight.w600,
+        ),
+        content: CustomText(
+          text: "PIN does not exist. Please create a new PIN",
+        ),
+        actions: [
+          // Cancel Button
+          GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: CustomText(
+                text: "Cancel",
+                color: Colors.white,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          SizedBox(width: 10), // Add space between buttons
+          // Create PIN Button
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop(); // Close the modal
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const CreatePin(),
+                ),
+              );
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: CustomText(
+                text: "Create PIN",
+                color: Colors.black,
+                fontSize: 14,
+              ),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
+
+  // void _onPinComplete(String id) async {
+  //   String enteredPin = _pin.join('');
+  //   print("Entered PIN: $enteredPin");
+
+  //   // API URL
+  //   final String url =
+  //       "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet/$id";
+
+  //   // Request body
+  //   final Map<String, dynamic> requestBody = {"pin": enteredPin};
+
+  //   try {
+  //     // Make the API call
+  //     final response = await http.post(
+  //       Uri.parse(url),
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         'Authorization': 'Bearer $userToken'
+  //       },
+  //       body: jsonEncode(requestBody),
+  //     );
+
+  //     // Handle response
+  //     if (response.statusCode == 200 || response.statusCode == 201) {
+  //       // Successful API response
+  //       final responseData = jsonDecode(response.body);
+  //       print("Success: $responseData");
+
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text('Payment Successful!')),
+  //       );
+  //     } else {
+  //       // Error from API
+  //       final responseData = jsonDecode(response.body);
+  //       print("Errors: ${responseData['message']}");
+
+  //       ScaffoldMessenger.of(context).showSnackBar(
+  //         SnackBar(content: Text(responseData['message'])),
+  //       );
+  //     }
+  //   } catch (e) {
+  //     // Handle any exceptions
+  //     print("Exception: $e");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('An error occurred: $e')),
+  //     );
+  //   }
+  // }
+
+  @override
+  void initState() {
+    _retrieveUserData();
+    super.initState();
   }
 
   @override
@@ -57,9 +330,7 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
           _buildPinFields(),
           SizedBox(height: 10),
           TextButton(
-            onPressed: () {
-
-            },
+            onPressed: () {},
             child: CustomText(text: "Forgot Payment PIN?", fontSize: 11),
           ),
           SizedBox(height: 20),
@@ -74,7 +345,7 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        SizedBox(width: 24), 
+        SizedBox(width: 24),
         Expanded(
           child: Center(
             child: CustomText(
@@ -92,7 +363,6 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
     );
   }
 
-
   Widget _buildPinFields() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -109,13 +379,12 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
           child: Text(
             _pin[index],
             style: TextStyle(fontSize: 24),
-            textAlign: TextAlign.center, 
+            textAlign: TextAlign.center,
           ),
         );
       }),
     );
   }
-
 
   Widget _buildNumberPad() {
     return Column(
@@ -130,16 +399,14 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
                 ),
             ],
           ),
-
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(child: SizedBox()), 
-            Expanded(child: _buildNumberButton('0')), 
+            Expanded(child: SizedBox()),
+            Expanded(child: _buildNumberButton('0')),
             Expanded(child: _buildNumberButton('delete', isDelete: true)),
           ],
         ),
-
       ],
     );
   }

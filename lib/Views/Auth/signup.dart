@@ -10,10 +10,14 @@ import 'package:fama/Views/widgets/terms.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+
+
 
 class Signup extends ConsumerStatefulWidget {
   const Signup({super.key});
@@ -27,11 +31,28 @@ class _SignupState extends ConsumerState<Signup> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController countrycode = TextEditingController();
+  TextEditingController phonenumber = TextEditingController();
 
   bool hasUpperCase = false;
   bool hasLowerCase = false;
   bool hasNumber = false;
   bool hasSpecialChar = false;
+
+  String selectedCountry = ''; // Selected country name
+
+  // Map of country codes and names
+  final Map<String, String> countryCodes = {
+    '+234': 'Nigeria',
+    '+233': 'Ghana',
+    '+245': 'Guinea-Bissau',
+    '+86': 'China',
+    '+254': 'Kenya',
+    '+27': 'South Africa',
+    '+225': 'Ivory Coast',
+    '+237': 'Cameroon',
+    '+211': 'South Sudan',
+    '+212': 'Morocco',
+  };
 
   void _checkPasswordRequirements(String password) {
     setState(() {
@@ -56,76 +77,72 @@ class _SignupState extends ConsumerState<Signup> {
     }
   }
 
-  List<String> Country = ['+234', '+233', '+245'];
-
   bool isLoading = false;
 
-  Future<void> signUp() async {
-    setState(() {
-      isLoading = true;
-    });
-
-    final Map<String, dynamic> requestData = {
-      "fullName": fullname.text,
-      "phoneNumber": countrycode.text,
-      "email": email.text,
-      "password": password.text,  
-       "country": "",
-       "roles": "",
-       "address": ""
-    };
-
-    // API URL
-    final String url =
-        "https://fama-logistics.onrender.com/api/v1/user/userSignUp";
-
-    try {
-      // Make the POST request
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(requestData),
-      );
-      print(requestData);
-
-      // Check if the request was successful
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Parse the API response
-        final responseData = jsonDecode(response.body);
-        print(responseData);
-
-        // Save email to SharedPreferences
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('email', responseData['user']['email']);
-        // Show success snackbar
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-              content: Text('Signup Successful: ${responseData['message']}')),
-        );
-
-       Navigator.push(context, MaterialPageRoute(builder: (context) => Verification()));
-
-      } else {
-        final responseData = jsonDecode(response.body);
-
-ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(content: Text(responseData['message'])),
-);
 
 
-        print(response.body);
-      }
-    } catch (e) {
+Future<void> signUp() async {
+  setState(() {
+    isLoading = true;
+  });
+
+  final Map<String, dynamic> requestData = {
+    "fullName": fullname.text,
+    "phoneNumber": "${countrycode.text}${phonenumber.text}", // Combine country code and phone number
+    "email": email.text,
+    "password": password.text,
+    "country": selectedCountry, // Use mapped country name
+  };
+
+  // API URL
+  final String url = "https://fama-logistics.onrender.com/api/v1/user/userSignUp";
+
+  try {
+    // Make the POST request
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestData),
+    );
+    print(requestData);
+
+    // Handle response
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      final responseData = jsonDecode(response.body);
+      print(responseData);
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('email', responseData['user']['email']);
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
+        SnackBar(content: Text('Signup Successful: ${responseData['message']}')),
       );
-      print(e);
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => Verification()),
+      );
+    } else {
+      final responseData = jsonDecode(response.body);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(responseData['message'])),
+      );
+      print(response.body);
     }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An error occurred: $e')),
+    );
+    print(e);
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
   }
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -148,75 +165,117 @@ ScaffoldMessenger.of(context).showSnackBar(
                     fontSize: 8.sp,
                     fontWeight: FontWeight.w400,
                   ),
-                  SizedBox(
-                    height: 2.h,
-                  ),
+                  SizedBox(height: 2.h),
                   CustomTextFormField(
-                    labelText: "full name",
+                    labelText: "Full Name",
                     hintText: "Enter your full name",
                     controller: fullname,
                     onChanged: (p0) {},
                   ),
-                  SizedBox(
-                    height: 2.h,
-                  ),
+                  SizedBox(height: 2.h),
                   CustomTextFormField(
-                    labelText: "email",
+                    labelText: "Email",
                     hintText: "Enter your email",
                     controller: email,
                     onChanged: (p0) {},
                   ),
-                  SizedBox(
-                    height: 2.h,
-                  ),
+                  SizedBox(height: 2.h),
                   CustomTextFormField(
-                    labelText: "password",
+                    labelText: "Password",
                     hintText: "Enter your password",
                     controller: password,
                     onChanged: _checkPasswordRequirements,
                   ),
-                  SizedBox(
-                    height: 2.h,
-                  ),
+                  SizedBox(height: 2.h),
                   PasswordStrengthIndicator(
                     hasUpperCase: hasUpperCase,
                     hasLowerCase: hasLowerCase,
                     hasNumber: hasNumber,
                     hasSpecialChar: hasSpecialChar,
                   ),
-                  SizedBox(
-                    height: 2.h,
-                  ),
-                  CustomTextFormField(
-                    labelText: "confirm password",
-                    hintText: "Confirm Password ",
-                    controller: password,
-                    onChanged: _checkPasswordRequirements,
-                  ),
                   SizedBox(height: 2.h),
-                  CountryCodeTextFormField(
-                    labelText: 'Country code',
-                    hintText: "8137159066",
-                    controller: countrycode,
-                    onChanged: (value) {},
-                    countryCodes: ['+1', '+234', '+44'],
-                    selectedCountryCode: '+234',
-                  ),
-                  SizedBox(height: 2.h),
-                  TermsAndConditionsWidget(
-                      buttonColor: btncolor, onPressed: () {}),
-                  SizedBox(height: 1.h),
+
+
+
+Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    CustomText(text: "Phone Number"),
+    SizedBox(height: 1.h),
+    Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.black),
+        borderRadius: BorderRadius.circular(8.0),
+      ),
+      padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 3.0),
+      child: Row(
+        children: [
+          // Dropdown for selecting country code
+          Expanded(
+            flex: 3,
+            child: DropdownButtonFormField<String>(
+              isExpanded: true,
+              decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+              ),
+              items: countryCodes.keys.map((code) {
+                return DropdownMenuItem<String>(
+                  value: code,
+                  child: Text(code),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  countrycode.text = value!; // Store only the country code
+                  selectedCountry = countryCodes[value]!; // Map to the country name
+                });
+              },
+              value: countrycode.text.isEmpty
+                  ? countryCodes.keys.first
+                  : countrycode.text, // Default or selected value
+              dropdownColor: Colors.white,
+              icon: Icon(Icons.arrow_drop_down, color: Colors.black),
+            ),
+          ),
+          SizedBox(width: 8.0),
+          // Text field for phone number
+
+          Expanded(
+            flex: 13,
+            child: TextFormField(
+              controller: phonenumber, // Assign the phonenumber controller
+              decoration: InputDecoration(
+                hintText: "Enter Phone Number",
+                border: InputBorder.none,
+              ),
+              keyboardType: TextInputType.phone,
+              style: GoogleFonts.inter(),
+            ),
+          ),
+
+          
+        ],
+      ),
+    ),
+  ],
+),
+
+
+
+
+
+
+
+                  SizedBox(height: 3.h),
                   isLoading
                       ? Center(
-                        child: CircularProgressIndicator(
-                            color: btncolor,
-                          ),
-                      )
+                          child: CircularProgressIndicator(color: btncolor),
+                        )
                       : CustomButton(
                           text: "Continue with Email",
-                          onPressed: () {
-                            _onSignUpButtonPressed();
-                          }),
+                          onPressed: _onSignUpButtonPressed,
+                        ),
                   SizedBox(height: 1.h),
                   AlreadyHaveAccountWidget(
                     buttonColor: btncolor,
@@ -234,3 +293,4 @@ ScaffoldMessenger.of(context).showSnackBar(
     );
   }
 }
+

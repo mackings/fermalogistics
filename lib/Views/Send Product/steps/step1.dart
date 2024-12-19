@@ -1,14 +1,16 @@
 import 'package:fama/Views/Address/createaddress.dart';
 import 'package:fama/Views/widgets/button.dart';
-import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/countrycode.dart';
 import 'package:fama/Views/widgets/formfields.dart';
-import 'package:fama/Views/widgets/terms.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
+
+
+
 class StepForm1 extends StatefulWidget {
+  
   final void Function(Map<String, dynamic> data) onComplete;
 
   const StepForm1({required this.onComplete, Key? key}) : super(key: key);

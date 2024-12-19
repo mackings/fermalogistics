@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:fama/Views/Auth/attachimg.dart';
+import 'package:fama/Views/Drivers/DriverHome.dart';
 import 'package:fama/Views/Profile/Views/Profilehome.dart';
 import 'package:fama/Views/Shipments/Api/shipmentservice.dart';
 import 'package:fama/Views/Shipments/Model/shipmentmodel.dart';
@@ -198,10 +199,16 @@ class _DashboardState extends State<Dashboard> {
                   // Notification Icon Container
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
+
+                     Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ProfileHome()),
+                        MaterialPageRoute(builder: (context) => DriverHome()),
                       );
+
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => ProfileHome()),
+                      // );
                     },
                     child: Container(
                       height: 6.h,
