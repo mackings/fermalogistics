@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 
 
@@ -12,7 +13,7 @@ class FileUploadWidget extends StatefulWidget {
   const FileUploadWidget({
     Key? key,
     required this.title,
-    required this.subtitle,
+    required this.subtitle, 
     required this.onFileSelected,
   }) : super(key: key);
 
@@ -21,8 +22,9 @@ class FileUploadWidget extends StatefulWidget {
 
 }
 
-class _FileUploadWidgetState extends State<FileUploadWidget> {
 
+class _FileUploadWidgetState extends State<FileUploadWidget> {
+  
   PlatformFile? _selectedFile;
 
   Future<void> _pickFile() async {
@@ -44,55 +46,70 @@ class _FileUploadWidgetState extends State<FileUploadWidget> {
     }
   }
 
-
-
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _pickFile,
-      child: Container(
-        padding: const EdgeInsets.all(16.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
-          border: Border.all(color: Colors.grey.shade300),
-          color: Colors.grey.shade100,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Title above the card
+        Text(
+          widget.title,
+          style: const TextStyle(
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.upload_file,
-              size: 48.0,
-              color: Colors.grey.shade500,
+        const SizedBox(height: 8.0),
+        GestureDetector(
+          onTap: _pickFile,
+          child: Container(
+            padding: const EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8.0),
+              border: Border.all(color: Colors.grey.shade300),
+              color: Colors.grey.shade100,
             ),
-            const SizedBox(height: 8.0),
-            Text(
-              widget.title,
-              style: const TextStyle(
-                fontSize: 16.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 4.0),
-            Text(
-              widget.subtitle,
-              style: TextStyle(
-                fontSize: 14.0,
-                color: Colors.grey.shade600,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 16.0),
-            TextButton(
-              onPressed: _pickFile,
-              child: const Text(
-                '+ Upload file',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-          ],
-        ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [ 
+                    Expanded(
+                      child: Text(
+                        widget.subtitle,
+                        style: GoogleFonts.inter(),
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 16.0),
+
+Align(
+  alignment: Alignment.centerLeft,
+  child: Container(
+    decoration: BoxDecoration(
+      border: Border.all(width: 0.5),
+      borderRadius: BorderRadius.circular(15)
+    ),
+    child: TextButton(
+      onPressed: _pickFile,
+      child: Text(
+        _selectedFile == null ? '+ Upload File' : 'File Uploaded',
+        style: GoogleFonts.inter(color: Colors.red),
       ),
+    ),
+  ),
+)
+
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
+
+

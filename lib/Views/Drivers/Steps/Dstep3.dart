@@ -45,7 +45,7 @@ class _DStepForm3State extends State<DStepForm3> {
             ),
             SizedBox(height: 2.h),
             FileUploadWidget(
-              title: "Rider's Card (for motorbike couriers only)",
+              title: "Rider's Card (Motorbikers only)",
               subtitle: 'Upload your government-issued rider\'s card here',
               onFileSelected: (file) {
                 if (file != null) {
@@ -55,6 +55,9 @@ class _DStepForm3State extends State<DStepForm3> {
                 }
               },
             ),
+
+            SizedBox(height: 5.h),
+
             CustomButton(
               text: 'Continue',
               onPressed: () {
