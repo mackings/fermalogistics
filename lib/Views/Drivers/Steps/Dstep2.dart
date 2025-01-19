@@ -21,9 +21,7 @@ class DStepForm2 extends StatefulWidget {
 }
 
 class _DStepForm2State extends State<DStepForm2> {
-
   TextEditingController licsense = TextEditingController();
-
 
   @override
   Widget build(BuildContext context) {
@@ -38,37 +36,31 @@ class _DStepForm2State extends State<DStepForm2> {
               height: 5.h,
             ),
             CustomText(
-              text: "Private & Licsensing details",
+              text: "Private & Licensing Details",
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,
             ),
             CustomText(
-              text:
-                  "Your Details are not shared to third party",
+              text: "Your details are not shared with third parties",
               fontSize: 7.sp,
               fontWeight: FontWeight.w400,
             ),
-
             SizedBox(height: 2.h),
-
             CustomTextFormField(
-              labelText: "Driver Licsense / JTB Number *",
-              hintText: "Enter Details on your document",
+              labelText: "Driver License / JTB Number *",
+              hintText: "Enter details on your document",
               controller: licsense,
               onChanged: (p0) {},
             ),
-
             SizedBox(
               height: 45.h,
             ),
             CustomButton(
               text: 'Continue',
               onPressed: () {
+                // Pass the form data to the parent widget
                 widget.onComplete({
-                  // 'senderName': senderName.text,
-                  // 'phoneNumber': senderPhone.text,
-                  // 'pickupAddress': pickupAddress.text,
-                  // 'emailAddress': pickupEmail.text,
+                  'driverLicense': licsense.text,
                 });
               },
             )
@@ -78,3 +70,4 @@ class _DStepForm2State extends State<DStepForm2> {
     );
   }
 }
+

@@ -10,7 +10,6 @@ import 'package:sizer/sizer.dart';
 
 
 
-
 class DStepForm1 extends StatefulWidget {
   final void Function(Map<String, dynamic> data) onComplete;
 
@@ -152,17 +151,21 @@ class _DStepForm1State extends State<DStepForm1> {
             SizedBox(
               height: 5.h,
             ),
-            CustomButton(
-              text: 'Continue',
-              onPressed: () {
-                widget.onComplete({
-                  // 'senderName': senderName.text,
-                  // 'phoneNumber': senderPhone.text,
-                  // 'pickupAddress': pickupAddress.text,
-                  // 'emailAddress': pickupEmail.text,
-                });
-              },
-            )
+
+
+CustomButton(
+  text: 'Continue',
+  onPressed: () {
+    widget.onComplete({
+      'gender': selectedCategory,
+      'licenseType': selectedLiscense,
+      'vehicleYear': selectedYear,
+      'vehicleColor': selectedColor,
+      'plateNumber': PlateNumber.text,
+    });
+  },
+)
+
           ],
         ),
       ),

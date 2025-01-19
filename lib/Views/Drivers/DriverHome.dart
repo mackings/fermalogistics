@@ -1,14 +1,16 @@
-
 import 'dart:convert';
 import 'package:fama/Views/Drivers/Steps/Dstep1.dart';
 import 'package:fama/Views/Drivers/Steps/Dstep2.dart';
 import 'package:fama/Views/Drivers/Steps/Dstep3.dart';
+import 'package:fama/Views/Drivers/Steps/Dstep4.dart';
+import 'package:fama/Views/Drivers/widgets/facialphoto.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
+
 
 
 
@@ -41,7 +43,6 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
   bool isLoading = false;
 
   final Map<String, dynamic> formData = {};
-// "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet"
   Future<void> _makeApiCall() async {
     final url =
         "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/calculationInvolvedShipment";
@@ -70,7 +71,7 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
       if (response.statusCode == 201) {
         final responseData = json.decode(response.body);
         print("Shipment created successfully: $responseData");
-      //  _showShipmentSummary(context, responseData['shipment']);
+        //  _showShipmentSummary(context, responseData['shipment']);
       } else {
         // Handle failure
         final responseData = json.decode(response.body);
@@ -100,17 +101,17 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
     }
   }
 
-  void _completeStep(Map<String, dynamic> data) {
-    setState(() {
-      _stepsCompleted[_currentStep] = true;
-      formData.addAll(data);
-      if (_currentStep < 3) {
-        _currentStep++;
-      } else {
-        _makeApiCall();
-      }
-    });
-  }
+void _completeStep(Map<String, dynamic> data) {
+  setState(() {
+    _stepsCompleted[_currentStep] = true;
+    formData.addAll(data); // Merge the new data with the existing formData
+    if (_currentStep < 3) {
+      _currentStep++;
+    } else {
+      _makeApiCall();
+    }
+  });
+}
 
 
 
@@ -153,22 +154,25 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
     );
   }
 
-  Widget _getFormForStep(int step) {
-    switch (step) {
-      case 0:
-        return DStepForm1(onComplete: _completeStep);
-      case 1:
-        return DStepForm2(onComplete: _completeStep);
-      case 2:
-        return DStepForm3(
-          onComplete: _completeStep,
-          //previousData: formData,
-        );
-
-      case 3:
-       // return StepForm4(onComplete: _completeStep);
-      default:
-        return Container();
-    }
+Widget _getFormForStep(int step) {
+  switch (step) {
+    case 0:
+      return DStepForm1(onComplete: _completeStep);
+    case 1:
+      return DStepForm2(onComplete: _completeStep);
+    case 2:
+      return DStepForm3(
+        onComplete: _completeStep,
+      );
+    case 3:
+      return FacialVerificationWidget(
+        formData: formData, // Pass the collected formData here
+        onComplete: _completeStep,
+      );
+    default:
+      return Container();
   }
 }
+
+}
+ 
