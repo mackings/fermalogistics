@@ -6,6 +6,7 @@ import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 
 class MainTrackingDetails extends StatelessWidget {
@@ -158,7 +159,11 @@ class MainTrackingDetails extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text('Tracking Details'),
+        title: CustomText(
+           text: "Tracking ID",
+           fontSize: 10.sp,
+       ), 
+
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -199,19 +204,30 @@ class MainTrackingDetails extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            CustomText(text: trackingID),
-                            SizedBox(width: 2.w),
-                            const Icon(
-                              Icons.copy_all_outlined,
-                              color: Colors.black,
-                            ),
-                          ],
-                        ),
-                      ),
+Align(
+      alignment: Alignment.centerLeft,
+      child: Row(
+        children: [
+          CustomText(text: trackingID), // Assuming CustomText is your custom widget
+          SizedBox(width: 2.w),
+          GestureDetector(
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: trackingID));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('Tracking ID copied!'),
+                  duration: const Duration(seconds: 2),
+                ),
+              );
+            },
+            child: const Icon(
+              Icons.copy_all_outlined,
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    ),
                       SizedBox(height: 2.h),
                       Timelines(
                         firstTile: timelineData[0], // Use dynamic timeline data

@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
+
 class SearchHome extends StatefulWidget {
   const SearchHome({super.key});
 
@@ -63,6 +64,7 @@ class _SearchHomeState extends State<SearchHome> {
     });
 
     String trackingCode = searchController.text;
+
     final result = await trackingApiService.fetchShipment(trackingCode);
 
     setState(() {
@@ -179,9 +181,9 @@ class _SearchHomeState extends State<SearchHome> {
       padding: const EdgeInsets.symmetric(vertical: 20),
       child: ShippingCards(
         trackingID: shipment.trackingNumber,
-        status: shipment.status,
-        fromLocation: shortenLocation(shipment.pickupAddress),
-        toLocation: shortenLocation(shipment.receiverAddress),
+        status: shipment.status.toString(),
+        fromLocation: shortenLocation(shipment.pickupAddress.toString()),
+        toLocation: shortenLocation(shipment.receiverAddress.toString()),
         fromDate: formatDate(shipment.createdAt.toString()),
         estimatedDate: formatDate(shipment.updatedAt.toString()),
         sender: shipment.senderName,
