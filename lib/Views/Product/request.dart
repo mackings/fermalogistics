@@ -48,6 +48,8 @@ class _RequestproductState extends ConsumerState<Requestproduct>
     }
   }
 
+
+
   Future<List<Request>> fetchRequests() async {
     final response = await http.get(
       Uri.parse(
@@ -58,7 +60,7 @@ class _RequestproductState extends ConsumerState<Requestproduct>
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      print("Success Request ${response.body}");
       final List<dynamic> data = json.decode(response.body)['request'];
       return data.map((json) => Request.fromJson(json)).toList();
     } else {
@@ -66,6 +68,8 @@ class _RequestproductState extends ConsumerState<Requestproduct>
       throw Exception('Failed to load requests');
     }
   }
+
+
 
   @override
   void initState() {
@@ -151,27 +155,23 @@ class _RequestproductState extends ConsumerState<Requestproduct>
             ? TabBarView(
                 controller: _tabController,
                 children: [
-
                   //Tab1
 
                   FutureBuilder<List<Request>>(
                     // future: _futureRequests,
-                    future: _futureRequests != null
-                        ? _futureRequests
-                        : Future.value([]),
+                    future: _futureRequests ?? Future.value([]),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.waiting) {
                         return Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return ImageWithText(
                           title: "No Requests Yet",
-                          bodyText1:
-                              "You don't have any requests yet.",
+                          bodyText1: "You don't have any requests yet.",
                           bodyText2: "requests will appear here.",
-                          svgPath:
-                              '', // Update with appropriate image path if needed
+                          svgPath: '',
                         );
                       } else if (snapshot.hasData) {
+                        print("Snapshot ${snapshot.data}");
                         if (snapshot.data!.isEmpty) {
                           return Column(
                             children: [
@@ -229,8 +229,7 @@ class _RequestproductState extends ConsumerState<Requestproduct>
                       } else if (snapshot.hasError) {
                         return ImageWithText(
                           title: "No  Cancelled Requests Yet",
-                          bodyText1:
-                              "Cancelled requests will appear here.",
+                          bodyText1: "Cancelled requests will appear here.",
                           bodyText2: "",
                           svgPath:
                               '', // Update with appropriate image path if needed

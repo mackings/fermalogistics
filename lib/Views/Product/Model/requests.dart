@@ -1,7 +1,9 @@
+
 class Request {
   String id;
   User user;
   String customerName;
+  String productName; // Added to match API response
   int quantity;
   String productImage;
   String deliveryAddress;
@@ -15,6 +17,7 @@ class Request {
     required this.id,
     required this.user,
     required this.customerName,
+    required this.productName, // Added to constructor
     required this.quantity,
     required this.productImage,
     required this.deliveryAddress,
@@ -30,6 +33,7 @@ class Request {
       id: json['_id'],
       user: User.fromJson(json['userId']),
       customerName: json['customerName'],
+      productName: json['productName'], // Parse productName
       quantity: json['quantity'],
       productImage: json['productImage'],
       deliveryAddress: json['deliveryAddress'],
@@ -45,14 +49,14 @@ class Request {
 class User {
   String id;
   String fullName;
-  String address;
+  String address; // Optional: Include if required
   String country;
-  int phoneNumber;
+  String phoneNumber; // Changed to String to handle large numbers
 
   User({
     required this.id,
     required this.fullName,
-    required this.address,
+    this.address = "", // Set default if not always provided
     required this.country,
     required this.phoneNumber,
   });
@@ -61,9 +65,8 @@ class User {
     return User(
       id: json['_id'],
       fullName: json['fullName'],
-      address: json['address'],
       country: json['country'],
-      phoneNumber: json['phoneNumber'],
+      phoneNumber: json['phoneNumber'].toString(), // Ensure String conversion
     );
   }
 }
