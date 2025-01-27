@@ -4,8 +4,11 @@ import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 
-class DStepForm3 extends StatefulWidget {
 
+
+
+
+class DStepForm3 extends StatefulWidget {
   final void Function(Map<String, dynamic> data) onComplete;
 
   const DStepForm3({required this.onComplete, Key? key}) : super(key: key);
@@ -45,23 +48,24 @@ class _DStepForm3State extends State<DStepForm3> {
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["Rider's Card"] = file;
+                    selectedFiles["ridersCard"] = file.path;  // Store file path instead of PlatformFile
                   } else {
-                    selectedFiles.remove("Rider's Card");
+                    selectedFiles.remove("ridersCard");
                   }
                 });
               },
             ),
             SizedBox(height: 2.h),
+            
             FileUploadWidget(
               title: "MOT License (Motorbikers only)",
               subtitle: 'Upload your government-issued rider\'s card here',
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["MOT License"] = file;
+                    selectedFiles["motLicense"] = file.path;  // Store file path instead of PlatformFile
                   } else {
-                    selectedFiles.remove("MOT License");
+                    selectedFiles.remove("motLicense");
                   }
                 });
               },
@@ -73,13 +77,14 @@ class _DStepForm3State extends State<DStepForm3> {
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["Driver's License"] = file;
+                    selectedFiles["driverLicense"] = file.path;  // Store file path instead of PlatformFile
                   } else {
-                    selectedFiles.remove("Driver's License");
+                    selectedFiles.remove("driverLicense");
                   }
                 });
               },
             ),
+
             SizedBox(height: 2.h),
             FileUploadWidget(
               title: "Exterior car photo",
@@ -87,7 +92,7 @@ class _DStepForm3State extends State<DStepForm3> {
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["Exterior car photo"] = file;
+                    selectedFiles["exteriorPhotoOfYourCar"] = file.path;  // Store file path instead of PlatformFile
                   } else {
                     selectedFiles.remove("Exterior car photo");
                   }
@@ -101,7 +106,7 @@ class _DStepForm3State extends State<DStepForm3> {
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["Interior car photo"] = file;
+                    selectedFiles["interiorPhotoOfYourCar"] = file.path;  // Store file path instead of PlatformFile
                   } else {
                     selectedFiles.remove("Interior car photo");
                   }
@@ -115,9 +120,9 @@ class _DStepForm3State extends State<DStepForm3> {
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["Proof of ownership"] = file;
+                    selectedFiles["proofOfOwnerCertification"] = file.path;  // Store file path instead of PlatformFile
                   } else {
-                    selectedFiles.remove("Proof of ownership");
+                    selectedFiles.remove("proofOfOwnerCertification");
                   }
                 });
               },
@@ -129,9 +134,9 @@ class _DStepForm3State extends State<DStepForm3> {
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["Certificate of roadworthiness"] = file;
+                    selectedFiles["certificateOfRoadWorthiness"] = file.path;  // Store file path instead of PlatformFile
                   } else {
-                    selectedFiles.remove("Certificate of roadworthiness");
+                    selectedFiles.remove("certificateOfRoadWorthiness");
                   }
                 });
               },
@@ -143,9 +148,9 @@ class _DStepForm3State extends State<DStepForm3> {
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["Vehicle insurance certificate"] = file;
+                    selectedFiles["insuranceCertification"] = file.path;  // Store file path instead of PlatformFile
                   } else {
-                    selectedFiles.remove("Vehicle insurance certificate");
+                    selectedFiles.remove("insuranceCertification");
                   }
                 });
               },
@@ -157,9 +162,9 @@ class _DStepForm3State extends State<DStepForm3> {
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["LASRRA Card"] = file;
+                    selectedFiles["LASRRACard"] = file.path;  // Store file path instead of PlatformFile
                   } else {
-                    selectedFiles.remove("LASRRA Card");
+                    selectedFiles.remove("LASRRACard");
                   }
                 });
               },
@@ -171,30 +176,31 @@ class _DStepForm3State extends State<DStepForm3> {
               onFileSelected: (file) {
                 setState(() {
                   if (file != null) {
-                    selectedFiles["LASDRI Card"] = file;
+                    selectedFiles["LASDRICard"] = file.path;  // Store file path instead of PlatformFile
                   } else {
-                    selectedFiles.remove("LASDRI Card");
+                    selectedFiles.remove("LASDRICard");
                   }
                 });
               },
             ),
+            
             SizedBox(height: 5.h),
 
-CustomButton(
-  text: 'Continue',
-  onPressed: () {
-    print('All selected files:');
-    selectedFiles.forEach((key, value) {
-      print('$key: ${value.name}');
-    });
-    // Pass selected files to the parent
-    widget.onComplete(selectedFiles);
-  },
-),
-
+            CustomButton(
+              text: 'Continue',
+              onPressed: () {
+                print('All selected files:');
+                selectedFiles.forEach((key, value) {
+                  print('$key: $value');  // Print the file path (not name, since you are storing paths now)
+                });
+                // Pass selected files as paths
+                widget.onComplete(selectedFiles);
+              },
+            ),
           ],
         ),
       ),
     );
   }
 }
+

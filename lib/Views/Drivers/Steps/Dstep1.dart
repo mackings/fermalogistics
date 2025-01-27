@@ -100,9 +100,10 @@ class _DStepForm1State extends State<DStepForm1> {
               },
             ),
             SizedBox(height: 2.h),
+            
             CustomDropdownFormField(
               labelText: "Licsense Type *",
-              hintText: "Select your Gender",
+              hintText: "Select your License type",
               value: selectedLiscense,
               items: Licsenses,
               onChanged: (newValue) {
@@ -161,7 +162,7 @@ CustomButton(
       'licenseType': selectedLiscense,
       'vehicleYear': selectedYear,
       'vehicleColor': selectedColor,
-      'plateNumber': PlateNumber.text,
+      'licensePlateNumber': PlateNumber.text,
     });
   },
 )

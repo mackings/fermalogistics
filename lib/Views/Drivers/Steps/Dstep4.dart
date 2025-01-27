@@ -1,13 +1,18 @@
+import 'dart:convert';
 import 'dart:io';
+import 'package:fama/Views/Drivers/widgets/modal.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
+
+
 class FacialVerificationWidget extends StatefulWidget {
-  final Map<String, dynamic> formData; // Receive the gathered data here
+  final Map<String, dynamic> formData;
   final void Function(Map<String, dynamic> data) onComplete;
 
   const FacialVerificationWidget({
@@ -22,13 +27,14 @@ class FacialVerificationWidget extends StatefulWidget {
 }
 
 class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
+
   File? _uploadedImage;
   final ImagePicker _picker = ImagePicker();
+  bool isLoading = false; // Track loading state
 
   // Function to pick an image from the camera
   Future<void> _takePhoto() async {
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.camera);
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.camera);
     if (pickedFile != null) {
       setState(() {
         _uploadedImage = File(pickedFile.path);
@@ -38,8 +44,7 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
 
   // Function to pick an image from the gallery
   Future<void> _retakePhoto() async {
-    final XFile? pickedFile =
-        await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? pickedFile = await _picker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
         _uploadedImage = File(pickedFile.path);
@@ -47,6 +52,19 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
     }
   }
 
+
+   Future<String?> _retrieveUserToken() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userDataString = prefs.getString('userData');
+
+    if (userDataString != null) {
+      Map<String, dynamic> userData = jsonDecode(userDataString);
+      return userData['token'];
+    }
+    return null;
+  }
+
+  // Submit the gathered data
   Future<void> _submitData() async {
     if (_uploadedImage == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -58,64 +76,127 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
       return;
     }
 
-    // Merge the uploaded image into formData
+    // Prepare the updated formData
     final Map<String, dynamic> updatedFormData = {
-      ...widget.formData, // Include all previously gathered data
-      'facialVerificationPhoto': _uploadedImage!, // Add uploaded photo
+      ...widget.formData, // Include previously gathered data
+      'faceVerification': _uploadedImage!.path, // Use file path instead of File/PlatformFile
     };
 
-    // Call the onComplete callback to pass the final data
+    // Log formData to verify its structure
+    print("Updated formData before API call: $updatedFormData");
+    print(_uploadedImage!.path);
+
+    // Pass formData to the onComplete callback
     widget.onComplete(updatedFormData);
 
-    // For example, print the updated data
-    print("Final form data: $updatedFormData");
+    // Start loading
+    setState(() {
+      isLoading = true;
+    });
 
     // Make the API call
     await _makeApiCall(updatedFormData);
   }
 
+  // Make API call to submit data
   Future<void> _makeApiCall(Map<String, dynamic> formData) async {
-    final url =
-        "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/calculationInvolvedShipment";
-
-    final headers = {
-      'Authorization': 'Bearer YOUR_TOKEN_HERE',
-    };
+    final url = "https://fama-logistics.onrender.com/api/v1/deliveryPersonnel/uploadDocuments";
 
     try {
+      // Retrieve token
+      final token = await _retrieveUserToken();
+      if (token == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text("Error: Token not found."),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      final headers = {
+        'Authorization': 'Bearer $token',
+      };
+
       final request = http.MultipartRequest('POST', Uri.parse(url));
       request.headers.addAll(headers);
 
-      // Add regular form data
+      // Add regular form data (strings)
       formData.forEach((key, value) {
         if (value is String) {
           request.fields[key] = value;
         }
       });
 
-      // Add uploaded photo
-      if (formData['facialVerificationPhoto'] is File) {
-        final file = formData['facialVerificationPhoto'] as File;
-        request.files.add(
-          http.MultipartFile(
-            'facialVerificationPhoto',
-            file.readAsBytes().asStream(),
-            file.lengthSync(),
-            filename: file.path.split('/').last,
-          ),
-        );
+      // Add file uploads
+      Future<void> addFileToRequest(String key, dynamic value) async {
+        if (value is String &&
+            (value.endsWith('.jpg') || value.endsWith('.png') || value.endsWith('.jpeg'))) {
+          final file = File(value);
+          if (await file.exists()) {
+            request.files.add(
+              http.MultipartFile(
+                key,
+                file.readAsBytes().asStream(),
+                file.lengthSync(),
+                filename: value.split('/').last,
+              ),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("Error: File not found at $value."),
+                backgroundColor: Colors.red,
+              ),
+            );
+            return;
+          }
+        }
+      }
+
+      if (formData.containsKey('faceVerification')) {
+        await addFileToRequest('faceVerification', formData['faceVerification']);
+      }
+      if (formData.containsKey('ridersCard')) {
+        await addFileToRequest('ridersCard', formData['ridersCard']);
+      }
+      if (formData.containsKey('motLicense')) {
+        await addFileToRequest('motLicense', formData['motLicense']);
       }
 
       // Send the request
       final response = await request.send();
 
+      // Stop loading when the response is received
+      setState(() {
+        isLoading = false;
+      });
+
       if (response.statusCode == 201) {
-        print("Data submitted successfully.");
+        final responseData = await response.stream.bytesToString();
+        showSuccessModalBottomSheet(context);
       } else {
-        print("Failed to submit data. Status: ${response.statusCode}");
+        final responseError = await response.stream.bytesToString();
+        final errorMessage = jsonDecode(responseError)['message'] ?? "Unknown error.";
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(" $errorMessage"),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     } catch (e) {
-      print("Error during API call: $e");
+      setState(() {
+        isLoading = false; // Stop loading on error
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text("Error making API call: $e"),
+          backgroundColor: Colors.red,
+        ),
+      );
     }
   }
 
@@ -185,11 +266,8 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
                 ),
               ],
             ),
-
-             SizedBox(height: 16),
-
-
-             Row(
+            SizedBox(height: 16),
+            Row(
               children: [
                 Icon(
                   Icons.error,
@@ -203,10 +281,7 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
                 ),
               ],
             ),
-
-
             SizedBox(height: 16),
-
             if (_uploadedImage == null)
               CustomButton(
                 text: "Take Photo",
@@ -232,11 +307,11 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
               ),
               SizedBox(height: 16),
 
-              
               CustomButton(
-                text: 'Continue',
-                onPressed: _submitData,
+                text: isLoading ? "Uploading Data..." : 'Continue',
+                onPressed: isLoading ? null : _submitData, // Disable button when loading
               ),
+              
             ],
           ],
         ),
@@ -244,3 +319,4 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
     );
   }
 }
+

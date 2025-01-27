@@ -43,6 +43,7 @@ class _DriverHomeState extends ConsumerState<DriverHome> {
   bool isLoading = false;
 
   final Map<String, dynamic> formData = {};
+
   Future<void> _makeApiCall() async {
     final url =
         "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/calculationInvolvedShipment";
@@ -108,7 +109,7 @@ void _completeStep(Map<String, dynamic> data) {
     if (_currentStep < 3) {
       _currentStep++;
     } else {
-      _makeApiCall();
+  //    _makeApiCall();
     }
   });
 }
