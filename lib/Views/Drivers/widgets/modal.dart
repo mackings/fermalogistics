@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:sizer/sizer.dart';
 
+
+
 class SuccessModal extends StatelessWidget {
   final String title;
   final String subtitle;
@@ -40,7 +42,9 @@ class SuccessModal extends StatelessWidget {
                     color: Colors.black,
                   ),
                 ),
+                
                 SizedBox(height: 8.0),
+
                 Text(
                   subtitle,
                   style: GoogleFonts.inter(
@@ -49,6 +53,7 @@ class SuccessModal extends StatelessWidget {
                   ),
                   textAlign: TextAlign.center,
                 ),
+                
                 SizedBox(height: 30.h,),
 
                 CustomButton(
@@ -57,6 +62,8 @@ class SuccessModal extends StatelessWidget {
                       Navigator.pop(context);
                       Navigator.pop(context);
                     })
+
+                    
               ],
             ),
           )

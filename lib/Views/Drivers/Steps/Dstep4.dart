@@ -208,23 +208,29 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+
             CustomText(
               text: "Facial Verification",
               fontSize: 14.sp,
               fontWeight: FontWeight.w700,
             ),
+
             SizedBox(height: 8),
+
             CustomText(
               text: "1. You must replicate the exact pose on the left picture.",
               fontSize: 7.sp,
               fontWeight: FontWeight.w400,
             ),
+
             CustomText(
               text: "2. Your face must be clearly visible",
               fontSize: 7.sp,
               fontWeight: FontWeight.w400,
             ),
+
             SizedBox(height: 4.h),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -240,6 +246,7 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
                     ),
                   ),
                 ),
+
                 Container(
                   height: 200,
                   width: MediaQuery.of(context).size.width * 0.4,
@@ -264,9 +271,12 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
                           ),
                         ),
                 ),
+
               ],
             ),
+
             SizedBox(height: 16),
+
             Row(
               children: [
                 Icon(
@@ -274,6 +284,7 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
                   color: Colors.grey,
                 ),
                 SizedBox(width: 5),
+                
                 CustomText(
                   text: "It will be visible on your profile",
                   fontSize: 7.sp,
@@ -281,13 +292,19 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
                 ),
               ],
             ),
+            
             SizedBox(height: 16),
+
             if (_uploadedImage == null)
+
               CustomButton(
                 text: "Take Photo",
                 onPressed: _takePhoto,
               ),
+
+
             if (_uploadedImage != null) ...[
+
               GestureDetector(
                 onTap: _retakePhoto,
                 child: Container(
@@ -295,7 +312,7 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
                   width: MediaQuery.of(context).size.width - 20.w,
                   child: Center(
                     child: CustomText(
-                      text: "Take a new photo",
+                      text: "Take a new photo", 
                       color: Colors.red,
                     ),
                   ),
@@ -305,6 +322,7 @@ class _FacialVerificationWidgetState extends State<FacialVerificationWidget> {
                   ),
                 ),
               ),
+
               SizedBox(height: 16),
 
               CustomButton(

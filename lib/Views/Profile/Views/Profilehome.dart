@@ -1,3 +1,4 @@
+import 'package:fama/Views/Profile/Views/Update/profileupdate.dart';
 import 'package:fama/Views/Profile/Views/Wallet/wallethome.dart';
 import 'package:fama/Views/Profile/Widgets/balcard.dart';
 import 'package:fama/Views/Profile/Widgets/profiletile.dart';
@@ -90,16 +91,21 @@ class _ProfileHomeState extends State<ProfileHome> {
                   print("Edit Profile tapped!");
                 },
               ),
+              
               ProfileOptionTile(
                 icon: Icons.person,
                 iconColor: Colors.red,
                 backgroundColor: Colors.red.shade50,
                 title: "Edit Profile",
                 onTap: () {
-                  // Define what happens when the tile is tapped
+
+                   Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ProfileUpdate()));
+                 
                   print("Edit Profile tapped!");
                 },
               ),
+
               ProfileOptionTile(
                 icon: Icons.notifications,
                 iconColor: Colors.red,

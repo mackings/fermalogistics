@@ -5,10 +5,12 @@ import 'package:fama/Views/Profile/Widgets/Notificationcard.dart';
 import 'package:fama/Views/Profile/Widgets/balcard.dart';
 import 'package:fama/Views/Profile/model/transactions.dart';
 import 'package:fama/Views/Profile/model/usermodel.dart';
+import 'package:fama/Views/Topup/views/topup.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 
 
@@ -42,7 +44,8 @@ class _WalletHomeState extends State<WalletHome> {
 
     if (response != null && response.status == "success") {
       setState(() {
-        transactions = response.transactions;
+        transactions = response.transactions!;
+        print(response.transactions);
       });
     }
     setState(() {
@@ -65,44 +68,56 @@ class _WalletHomeState extends State<WalletHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-    appBar: AppBar(
-      title: CustomText(text: "Wallet"),
-      centerTitle: true,
-    ),
-    body: Padding(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      child: Column(
-        children: [
-          BalanceCard(
-            balance: userData?.safeWallet?.toString() ?? '0.00', // Ensure a default value
-            onTopUp: () {},
-          ),
-          SizedBox(height: 30),
-          isLoading // Show loading indicator while fetching data
-              ? CircularProgressIndicator()
-              : transactions.isEmpty // Check if transactions list is empty
-                  ? Text(
-                      "No transactions available.",
-                      style: TextStyle(fontSize: 16, color: Colors.grey),
-                    )
-                  : Column(
-                      children: transactions.map((transaction) {
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: NotificationCard(
-                            icon: Icons.arrow_upward,
-                            iconColor: Colors.red,
-                            backgroundColor: Colors.red.shade50,
-                            title: "Transaction with ${transaction.senderName}",
-                            message: "\$${transaction.amount}",
-                            timestamp: formatTimestamp(transaction.createdAt.toString()),
-                          ),
-                        );
-                      }).toList(),
-                    ),
-        ],
+      appBar: AppBar(
+        title: CustomText(text: "Wallet"),
+        centerTitle: true,
       ),
-    ),
-  );
+      body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Column(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => TopUp()));
+                },
+                child: BalanceCard(
+                  balance: userData?.safeWallet?.toString() ??
+                      '0.00', // Ensure a default value
+                  onTopUp: () {},
+                ),
+              ),
+              SizedBox(height: 30),
+              isLoading // Show loading indicator while fetching data
+                  ? CircularProgressIndicator()
+                  : transactions.isEmpty // Check if transactions list is empty
+                      ? Text(
+                          "No transactions available.",
+                          style: TextStyle(fontSize: 16, color: Colors.grey),
+                        )
+                      : Column(
+                          children: transactions.map((transaction) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: NotificationCard(
+                                icon: Icons.arrow_upward,
+                                iconColor: Colors.red,
+                                backgroundColor: Colors.red.shade50,
+                                title:
+                                    "Transaction with ${transaction.senderName}",
+                                message: "\$${transaction.amount}",
+                                timestamp: formatTimestamp(
+                                    transaction.createdAt.toString()),
+                              ),
+                            );
+                          }).toList(),
+                        ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
