@@ -1,3 +1,4 @@
+import 'package:fama/Views/Auth/Pin/Createpin.dart';
 import 'package:fama/Views/Profile/Views/Update/profileupdate.dart';
 import 'package:fama/Views/Profile/Views/Wallet/wallethome.dart';
 import 'package:fama/Views/Profile/Widgets/balcard.dart';
@@ -8,6 +9,9 @@ import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+
+
+
 
 class ProfileHome extends StatefulWidget {
   const ProfileHome({super.key});
@@ -77,9 +81,13 @@ class _ProfileHomeState extends State<ProfileHome> {
               ] else ...[
                 Center(child: CircularProgressIndicator()),
               ],
+
+
               SizedBox(
                 height: 20,
               ),
+
+
               ProfileOptionTile(
                 icon: Icons.account_balance,
                 iconColor: Colors.red,
@@ -88,6 +96,21 @@ class _ProfileHomeState extends State<ProfileHome> {
                 onTap: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => WalletHome()));
+                  print("Edit Profile tapped!");
+                },
+              ),
+
+
+                            ProfileOptionTile(
+                icon: Icons.lock_outline,
+                iconColor: Colors.red,
+                backgroundColor: Colors.red.shade50,
+                title: "Transaction Pin",
+                onTap: () {
+
+                   Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CreatePin()));
+                 
                   print("Edit Profile tapped!");
                 },
               ),

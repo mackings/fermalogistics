@@ -90,6 +90,9 @@ void _onPinComplete(String id) async {
       // Error from API
       final responseData = jsonDecode(response.body);
       print("Error: ${responseData['message']}");
+      
+     Navigator.pop(context);
+     Navigator.pop(context);
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(responseData['message'])),

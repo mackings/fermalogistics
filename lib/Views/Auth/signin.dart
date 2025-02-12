@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fama/Views/Drivers/Home/driverhome.dart';
 import 'package:fama/Views/Home/dashboard.dart';
 import 'package:fama/Views/Home/home.dart';
 import 'package:fama/Views/widgets/button.dart';
@@ -24,6 +25,8 @@ class _SigninState extends ConsumerState<Signin> {
   TextEditingController password = TextEditingController();
 
   bool isLoading = false;
+
+
 
   Future<void> _login() async {
     setState(() {
@@ -52,11 +55,23 @@ class _SigninState extends ConsumerState<Signin> {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('userData', jsonEncode(responseData));
 
-        // Navigate to the Dashboard or any other page
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
+        print(responseData);
+
+        // Extract role and navigate accordingly
+        String role = responseData['user']['roles'];
+
+        if (role == 'dropShipper') {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomePage()),
+          );
+        } else {
+          print("delivery Guy");
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => DriverHomePage()),
+          );
+        }
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Login Failed: ${response.body}')),

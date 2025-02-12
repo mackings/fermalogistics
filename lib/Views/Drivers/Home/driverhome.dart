@@ -1,22 +1,21 @@
+
+import 'package:fama/Views/Drivers/Deliveries/Views/Deliveries.dart';
 import 'package:fama/Views/Home/dashboard.dart';
 import 'package:fama/Views/Profile/Views/Profilehome.dart';
-import 'package:fama/Views/Send%20Product/send.dart';
-import 'package:fama/Views/Shipments/Views/shipmentHome.dart';
 import 'package:fama/Views/Stock/Views/Stockhome.dart';
-import 'package:fama/Views/Tracking/home.dart';
-import 'package:fama/Views/Tracking/live.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:flutter/material.dart';
 
 
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class DriverHomePage extends StatefulWidget {
+
+  const DriverHomePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _DriverHomePageState createState() => _DriverHomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _DriverHomePageState extends State<DriverHomePage> {
   int _selectedIndex = 0;
 
 
@@ -35,9 +34,8 @@ class _HomePageState extends State<HomePage> {
     _pages = [
       
       Dashboard(),
-      ShipmentsHome(),
+      Deliveries(),
       StockHome(),
-      SearchHome(),
       ProfileHome()
 
     ];
@@ -56,26 +54,27 @@ class _HomePageState extends State<HomePage> {
   body: _pages[_selectedIndex],
   bottomNavigationBar: BottomNavigationBar(
     items: const <BottomNavigationBarItem>[
+
       BottomNavigationBarItem(
         icon: Icon(Icons.home),
         label: 'Home',
       ),
+
       BottomNavigationBarItem(
         icon: Icon(Icons.delivery_dining_sharp),
-        label: 'Shipping',
+        label: 'Delivery',
       ),
+
       BottomNavigationBarItem(
-        icon: Icon(Icons.inventory),
-        label: 'Stock',
+        icon: Icon(Icons.message_outlined),
+        label: 'Messages',
       ),
-      BottomNavigationBarItem(
-        icon: Icon(Icons.qr_code),
-        label: 'Tracking',
-      ),
+
       BottomNavigationBarItem(
         icon: Icon(Icons.person),
-        label: 'Account',
+        label: 'Profile',
       ),
+
     ],
     currentIndex: _selectedIndex,
     selectedItemColor: btncolor, // Color for the selected label and icon
