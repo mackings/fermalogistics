@@ -64,7 +64,7 @@ class Shipment {
       emailAddress: json['emailAddress'] ?? '',
       receiverName: json['recieverName'] ?? '',
       receiverPhoneNumber: json['recieverPhoneNumber'] ?? '',
-      receiverAddress: json['recieverAddress'] ?? '',
+      receiverAddress: json['receiverAddress'] ?? '',
       receiverEmailAddress: json['recieverEmailAddress'] ?? '',
       itemName: json['itemName'] ?? '',
       weightOfPackage: (json['weightOfPackage'] as num?)?.toDouble() ?? 0.0,

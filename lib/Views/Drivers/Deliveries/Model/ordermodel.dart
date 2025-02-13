@@ -1,25 +1,25 @@
 import 'dart:convert';
 
+
 class OrderResponse {
   final bool? success;
   final String? message;
-  final List<SendOrder>? sendOrders;
+  final List<SendOrder> sendOrders;
 
   OrderResponse({
     this.success,
     this.message,
-    this.sendOrders,
-  });
+    List<SendOrder>? sendOrders,
+  }) : sendOrders = sendOrders ?? [];
 
   factory OrderResponse.fromJson(Map<String, dynamic> json) {
     return OrderResponse(
-      success: json['success'],
-      message: json['message'],
-      sendOrders: json['sendOrders'] != null
-          ? List<SendOrder>.from(
-              json['sendOrders'].map((x) => SendOrder.fromJson(x)),
-            )
-          : null,
+      success: json['success'] as bool?,
+      message: json['message'] as String?,
+      sendOrders: (json['sendOrders'] as List?)
+              ?.map((x) => SendOrder.fromJson(x))
+              .toList() ??
+          [],
     );
   }
 
@@ -27,9 +27,7 @@ class OrderResponse {
     return {
       'success': success,
       'message': message,
-      'sendOrders': sendOrders != null
-          ? List<dynamic>.from(sendOrders!.map((x) => x.toJson()))
-          : null,
+      'sendOrders': sendOrders.map((x) => x.toJson()).toList(),
     };
   }
 }
@@ -38,10 +36,10 @@ class SendOrder {
   final String? id;
   final UserId? userId;
   final String? shippingAddress;
-  final List<CartItem>? cartItems;
+  final List<CartItem> cartItems;
   final String? paymentMethod;
-  final double? shippingPrice;
-  final double? totalAmount;
+  final double shippingPrice;
+  final double totalAmount;
   final String? reference;
   final String? country;
   final String? status;
@@ -55,10 +53,10 @@ class SendOrder {
     this.id,
     this.userId,
     this.shippingAddress,
-    this.cartItems,
+    List<CartItem>? cartItems,
     this.paymentMethod,
-    this.shippingPrice,
-    this.totalAmount,
+    double? shippingPrice,
+    double? totalAmount,
     this.reference,
     this.country,
     this.status,
@@ -67,26 +65,33 @@ class SendOrder {
     this.createdAt,
     this.updatedAt,
     this.receiverDetail,
-  });
+  })  : cartItems = cartItems ?? [],
+        shippingPrice = shippingPrice ?? 0.0,
+        totalAmount = totalAmount ?? 0.0;
 
   factory SendOrder.fromJson(Map<String, dynamic> json) {
     return SendOrder(
-      id: json['_id'],
+      id: json['_id'] as String?,
       userId: json['userId'] != null ? UserId.fromJson(json['userId']) : null,
-      shippingAddress: json['shippingAddress'],
-      cartItems: json['cartItems'] != null
-          ? List<CartItem>.from(json['cartItems'].map((x) => CartItem.fromJson(x)))
+      shippingAddress: json['shippingAddress'] as String?,
+      cartItems: (json['cartItems'] as List?)
+              ?.map((x) => CartItem.fromJson(x))
+              .toList() ??
+          [],
+      paymentMethod: json['paymentMethod'] as String?,
+      shippingPrice: (json['shippingPrice'] ?? 0).toDouble(),
+      totalAmount: (json['totalAmount'] ?? 0).toDouble(),
+      reference: json['reference'] as String?,
+      country: json['country'] as String?,
+      status: json['status'] as String?,
+      orderId: json['orderId'] as String?,
+      trackingNumber: json['trackingNumber'] as String?,
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'])
           : null,
-      paymentMethod: json['paymentMethod'],
-      shippingPrice: json['shippingPrice']?.toDouble(),
-      totalAmount: json['totalAmount']?.toDouble(),
-      reference: json['reference'],
-      country: json['country'],
-      status: json['status'],
-      orderId: json['orderId'],
-      trackingNumber: json['trackingNumber'],
-      createdAt: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : null,
-      updatedAt: json['updatedAt'] != null ? DateTime.parse(json['updatedAt']) : null,
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'])
+          : null,
       receiverDetail: json['receiverDetail'] != null
           ? ReceiverDetail.fromJson(json['receiverDetail'])
           : null,
@@ -98,9 +103,7 @@ class SendOrder {
       '_id': id,
       'userId': userId?.toJson(),
       'shippingAddress': shippingAddress,
-      'cartItems': cartItems != null
-          ? List<dynamic>.from(cartItems!.map((x) => x.toJson()))
-          : null,
+      'cartItems': cartItems.map((x) => x.toJson()).toList(),
       'paymentMethod': paymentMethod,
       'shippingPrice': shippingPrice,
       'totalAmount': totalAmount,
@@ -131,10 +134,10 @@ class ReceiverDetail {
 
   factory ReceiverDetail.fromJson(Map<String, dynamic> json) {
     return ReceiverDetail(
-      fullName: json['fullName'],
-      receiverEmail: json['receiverEmail'],
-      receiverPhoneNumber: json['receiverPhoneNumber'],
-      receiverAddress: json['receiverAddress'],
+      fullName: json['fullName'] as String?,
+      receiverEmail: json['receiverEmail'] as String?,
+      receiverPhoneNumber: json['receiverPhoneNumber'] as String?,
+      receiverAddress: json['receiverAddress'] as String?,
     );
   }
 
@@ -161,8 +164,8 @@ class UserId {
 
   factory UserId.fromJson(Map<String, dynamic> json) {
     return UserId(
-      id: json['_id'],
-      fullName: json['fullName'],
+      id: json['_id'] as String?,
+      fullName: json['fullName'] as String?,
       phoneNumber: json['phoneNumber']?.toString(),
     );
   }
@@ -178,35 +181,38 @@ class UserId {
 
 class CartItem {
   final String? productId;
-  final int? quantity;
+  final int quantity;
   final String? productName;
-  final double? price;
-  final double? vatAmount;
+  final double price;
+  final double vatAmount;
   final String? picture;
   final String? sku;
-  final double? subTotal;
+  final double subTotal;
 
   CartItem({
     this.productId,
-    this.quantity,
+    int? quantity,
     this.productName,
-    this.price,
-    this.vatAmount,
+    double? price,
+    double? vatAmount,
     this.picture,
     this.sku,
-    this.subTotal,
-  });
+    double? subTotal,
+  })  : quantity = quantity ?? 0,
+        price = price ?? 0.0,
+        vatAmount = vatAmount ?? 0.0,
+        subTotal = subTotal ?? 0.0;
 
   factory CartItem.fromJson(Map<String, dynamic> json) {
     return CartItem(
-      productId: json['productId'],
-      quantity: json['quantity'],
-      productName: json['productName'],
-      price: json['price']?.toDouble(),
-      vatAmount: json['vatAmount']?.toDouble(),
-      picture: json['picture'],
-      sku: json['sku'],
-      subTotal: json['subTotal']?.toDouble(),
+      productId: json['productId'] as String?,
+      quantity: json['quantity'] ?? 0,
+      productName: json['productName'] as String?,
+      price: (json['price'] ?? 0).toDouble(),
+      vatAmount: (json['vatAmount'] ?? 0).toDouble(),
+      picture: json['picture'] as String?,
+      sku: json['sku'] as String?,
+      subTotal: (json['subTotal'] ?? 0).toDouble(),
     );
   }
 
@@ -223,3 +229,4 @@ class CartItem {
     };
   }
 }
+

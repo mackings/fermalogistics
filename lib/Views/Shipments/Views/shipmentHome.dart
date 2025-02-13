@@ -22,8 +22,7 @@ class _ShipmentsHomeState extends ConsumerState<ShipmentsHome>
   int _activeIndex = 0;
   List<Shipment> allShipments = [];
   bool isLoading = true;
-  final ShipmentService shipmentService =
-      ShipmentService(); 
+  final ShipmentService shipmentService = ShipmentService();
 
   @override
   void initState() {
@@ -149,10 +148,12 @@ class _ShipmentsHomeState extends ConsumerState<ShipmentsHome>
                                 )
                               ],
                             )
+
                           : ListView.builder(
                               itemCount: allShipments.length,
                               itemBuilder: (context, index) {
                                 var shipment = allShipments[index];
+                                print(shipment.receiverName);
                                 return _buildShipmentCard(shipment);
                               },
                             ),

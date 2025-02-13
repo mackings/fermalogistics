@@ -58,6 +58,7 @@ Future<void> addToCart() async {
     'price': widget.product.price,
     'quantity': quantity,
     'description': widget.product.description,
+    'id':widget.product.id
   };
 
   // Encode the new product details to JSON string

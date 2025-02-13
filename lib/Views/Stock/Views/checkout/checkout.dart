@@ -95,7 +95,6 @@ class _ShippingCheckoutState extends State<ShippingCheckout> {
                 final item = cartItems[index];
                 return Column(
                   children: [
-                    
                     CartProductWidget(
                       productName: item['productName'],
                       productImage: item['productImages'][0],
@@ -225,19 +224,42 @@ class _ShippingCheckoutState extends State<ShippingCheckout> {
               ),
             ),
             SizedBox(height: 20),
+
+            // CustomButton(
+            //   text: 'Continue to Payment',
+            //   onPressed: () {
+            //     final tems = cartItems.first;
+            //     print(tems);
+
+            //     Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //             builder: (context) => CheckoutPayment(
+            //                   onComplete: (value) {},
+            //                 )));
+            //   },
+            // ),
+
+
             CustomButton(
-              text: 'Continue to Payment',
-              onPressed: () {
+  text: 'Continue to Payment',
+  onPressed: () {
+    final firstItem = cartItems.first;
+    String itemId = firstItem['id']; // Extract the ID
 
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => 
-                        CheckoutPayment(onComplete: (value){})
-               ));
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CheckoutPayment(
+          itemId: itemId, // Pass the itemId
+          onComplete: (value) {},
+        ),
+      ),
+    );
+  },
+),
 
-              },
-            ),
+
             SizedBox(height: 20),
           ],
         ),

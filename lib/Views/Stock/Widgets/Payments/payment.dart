@@ -10,19 +10,23 @@ import 'package:sizer/sizer.dart';
 
 class CheckoutPayment extends StatefulWidget {
 
+   final String itemId;
   final void Function(Map<String, dynamic> data) onComplete;
 
-  const CheckoutPayment({required this.onComplete, Key? key}) : super(key: key);
+  const CheckoutPayment({required this.onComplete, required this.itemId, Key? key}) : super(key: key);
 
   @override
   State<CheckoutPayment> createState() => _CheckoutPaymentState();
 }
 
 class _CheckoutPaymentState extends State<CheckoutPayment> {
+
+
   TextEditingController senderName = TextEditingController();
   TextEditingController senderPhone = TextEditingController();
   TextEditingController pickupAddress = TextEditingController();
   TextEditingController pickupEmail = TextEditingController();
+
 
   String selectedMethod = '';
 
@@ -32,6 +36,7 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
       print(selectedMethod);
     });
   }
+
 
 
   void _showPinInputModal(BuildContext context) {
@@ -44,10 +49,11 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
       ),
       builder: (context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: CartPinInputModal(id: '',),
+        child: CartPinInputModal(id: widget.itemId,),
       ),
     );
   }
+
 
 
   @override
@@ -121,6 +127,8 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
                 SizedBox(
                   height: 7.h,
                 ),
+
+
                 CustomButton(
                   text: 'Continue',
                   onPressed: () {
