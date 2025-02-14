@@ -1,14 +1,9 @@
 import 'dart:convert';
-import 'package:fama/Views/Drivers/Deliveries/Model/ordermodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-
-
+import '../Model/ordermodel.dart';
 
 class DeliveryService {
-  
   final String baseUrl = 'https://fama-logistics.onrender.com/api/v1/delivery/getAllSendOrders';
 
   // Method to retrieve auth token from SharedPreferences
@@ -22,9 +17,9 @@ class DeliveryService {
     return null; // If no token found, return null
   }
 
-  // Method to fetch deliveries from the API based on status
+  // Fetch deliveries based on status
   Future<List<SendOrder>> fetchDeliveries(String status) async {
-    String? token = await _getAuthToken(); // Get the token
+    String? token = await _getAuthToken();
 
     if (token == null) {
       throw Exception('Token not found');
@@ -34,20 +29,28 @@ class DeliveryService {
       Uri.parse(baseUrl),
       headers: {
         'Authorization': 'Bearer $token', // Pass token as Bearer Authorization header
+        'Content-Type': 'application/json',
       },
     );
 
     if (response.statusCode == 200) {
       // Decode response and map to SendOrder model
       var jsonResponse = json.decode(response.body);
-      List deliveries = jsonResponse['data'];
-      List<SendOrder> sendOrders = deliveries
-          .where((delivery) => delivery['status'] == status) // Filter by status
-          .map((delivery) => SendOrder.fromJson(delivery))
-          .toList();
-      return sendOrders; // Return the filtered list
+
+      if (jsonResponse['success'] == true) {
+        List<dynamic> deliveries = jsonResponse['sendOrders']; // Use sendOrders
+
+        List<SendOrder> sendOrders = deliveries
+            .map((delivery) => SendOrder.fromJson(delivery))
+            .where((order) => order.status.toLowerCase() == status.toLowerCase()) // Filter by status
+            .toList();
+
+        return sendOrders; // Return the filtered list
+      } else {
+        throw Exception(jsonResponse['message'] ?? 'Failed to load orders');
+      }
     } else {
-      throw Exception('Failed to load deliveries');
+      throw Exception('Error ${response.statusCode}: ${response.body}');
     }
   }
 }

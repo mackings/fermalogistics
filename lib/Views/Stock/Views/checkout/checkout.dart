@@ -1,9 +1,7 @@
-import 'package:fama/Views/Send%20Product/steps/paymentwidget.dart';
-import 'package:fama/Views/Send%20Product/steps/step4.dart';
+
 import 'package:fama/Views/Stock/Views/Cart/Pages/qoute.dart';
 import 'package:fama/Views/Stock/Views/Cart/Widgets/cartwidget.dart';
 import 'package:fama/Views/Stock/Widgets/Payments/payment.dart';
-import 'package:fama/Views/Stock/Widgets/widgetviews/modal.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +9,25 @@ import 'package:flutter_svg/svg.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+
+
+
 class ShippingCheckout extends StatefulWidget {
-  const ShippingCheckout({super.key});
+  final ShippingOption selectedShipping;
+  final double shippingCost;
+  final String
+      shippingType; // Add this to store the shipping type (e.g., "cargo", "express")
+  final String
+      shippingDuration; // Add this to store the shipping duration (e.g., "3-5 days")
+
+  const ShippingCheckout({
+    Key? key,
+    required this.selectedShipping,
+    required this.shippingCost,
+    required this.shippingType,
+    required this.shippingDuration,
+  }) : super(key: key);
 
   @override
   State<ShippingCheckout> createState() => _ShippingCheckoutState();
@@ -20,16 +35,25 @@ class ShippingCheckout extends StatefulWidget {
 
 class _ShippingCheckoutState extends State<ShippingCheckout> {
   ShippingOption selectedShipping = ShippingOption.cargo;
+  double shippingCost = 0.0;
+  String shippingType = ''; // Store the shipping type
+  String shippingDuration = ''; // Store the shipping duration
   double discount = 10.0; // Example discount amount
-  double shippingCost = 30.0; // Default shipping cost
   List<Map<String, dynamic>> cartItems = [];
-  String shippingAddress = ''; // Variable to store the shipping address
+  String shippingAddress = '';
 
   @override
   void initState() {
     super.initState();
     _loadCartItems();
-    _loadShippingAddress(); // Load the shipping address on initialization
+    _loadShippingAddress();
+
+    selectedShipping = widget.selectedShipping;
+    shippingCost = widget.shippingCost;
+    shippingType = widget.shippingType;
+    shippingDuration = widget.shippingDuration;
+
+    print("Received in Checkout - Type: $shippingType, Cost: $shippingCost");
   }
 
   Future<void> _loadCartItems() async {
@@ -120,6 +144,7 @@ class _ShippingCheckoutState extends State<ShippingCheckout> {
               child: CustomText(
                   text: "Shipping Type", fontWeight: FontWeight.bold),
             ),
+
             Container(
               padding: EdgeInsets.symmetric(vertical: 10),
               decoration: BoxDecoration(
@@ -134,51 +159,29 @@ class _ShippingCheckoutState extends State<ShippingCheckout> {
                       : SvgPicture.asset('assets/plane.svg'),
                 ),
                 title: CustomText(
-                  text: selectedShipping == ShippingOption.cargo
-                      ? 'Cargo'
-                      : 'Express',
+                  text: shippingType, // Use the dynamic shipping type
                 ),
                 subtitle: CustomText(
-                  text: selectedShipping == ShippingOption.cargo
-                      ? '3-5 days'
-                      : '1-2 days',
+                  text: shippingDuration, // Use the dynamic shipping duration
                 ),
                 trailing: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     CustomText(
-                      text: selectedShipping == ShippingOption.cargo
-                          ? "\$30"
-                          : "\$400",
+                      text:
+                          "\$${shippingCost.toStringAsFixed(2)}", // Use the dynamic shipping cost
                     ),
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return ShippingQuoteModal(
-                              initialSelection: selectedShipping,
-                              onSelectionChanged:
-                                  (ShippingOption newSelection) {
-                                setState(() {
-                                  selectedShipping = newSelection;
-                                  shippingCost =
-                                      newSelection == ShippingOption.cargo
-                                          ? 30.0
-                                          : 400.0;
-                                });
-                                Navigator.pop(context);
-                              },
-                            );
-                          },
-                        );
+                        Navigator.pop(context);
                       },
                     ),
                   ],
                 ),
               ),
             ),
+           
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Divider(),
@@ -223,35 +226,28 @@ class _ShippingCheckoutState extends State<ShippingCheckout> {
                 ],
               ),
             ),
+
             SizedBox(height: 20),
-
-            // CustomButton(
-            //   text: 'Continue to Payment',
-            //   onPressed: () {
-            //     final tems = cartItems.first;
-            //     print(tems);
-
-            //     Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //             builder: (context) => CheckoutPayment(
-            //                   onComplete: (value) {},
-            //                 )));
-            //   },
-            // ),
-
 
             CustomButton(
   text: 'Continue to Payment',
   onPressed: () {
-    final firstItem = cartItems.first;
-    String itemId = firstItem['id']; // Extract the ID
+    // Prepare cart data (product ID & quantity)
+    List<Map<String, dynamic>> cartData = cartItems.map((item) {
+      return {
+        'productId': item['id'],
+        'quantity': item['quantity']
+      };
+    }).toList();
 
+    // Navigate to CheckoutPayment and pass cart items & shipping address
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => CheckoutPayment(
-          itemId: itemId, // Pass the itemId
+          cartItems: cartData,  
+          shippingAddress: shippingAddress,  // Pass the selected location
+           shippingMethod: selectedShipping,
           onComplete: (value) {},
         ),
       ),
@@ -266,6 +262,8 @@ class _ShippingCheckoutState extends State<ShippingCheckout> {
       ),
     );
   }
+
+
 
   // Helper method to build price rows
   Widget _buildPriceRow(String label, String amount, {bool isTotal = false}) {

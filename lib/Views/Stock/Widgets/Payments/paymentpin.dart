@@ -6,18 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+class CartPaymentPinInputModal extends StatefulWidget {
+  final String id;
+  final List<Map<String, dynamic>> cartItems;
+  final String shippingAddress;
+  final String paymentMethod;
 
+  CartPaymentPinInputModal({
+    required this.id,
+    required this.cartItems,
+    required this.shippingAddress,
+    required this.paymentMethod,
+  });
 
-
-class CartPinInputModal extends StatefulWidget {
-  late final String id;
-
-  CartPinInputModal({required this.id});
   @override
-  _CartPinInputModalState createState() => _CartPinInputModalState();
+  _CartPaymentPinInputModalState createState() =>
+      _CartPaymentPinInputModalState();
 }
 
-class _CartPinInputModalState extends State<CartPinInputModal> {
+class _CartPaymentPinInputModalState extends State<CartPaymentPinInputModal> {
   dynamic userToken;
 
   Future<void> _retrieveUserData() async {
@@ -56,66 +63,76 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
     });
   }
 
-
-
   void _onPinComplete(String id) async {
-    
     String enteredPin = _pin.join('');
     print("Entered PIN: $enteredPin");
 
-    // API URL
     final String url =
-        "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet/$id";
+        "https://fama-logistics.onrender.com/api/v1/checkout/payByWalletBalance";
 
-    // Request body
-    final Map<String, dynamic> requestBody = {"pin": enteredPin};
+    final Map<String, dynamic> requestBody = {
+      "cartItems": widget.cartItems, // Pass the cart items
+      "shippingAddress": widget.shippingAddress, // Pass the shipping address
+      "paymentMethod":
+          widget.paymentMethod.toString().split('.').last[0].toUpperCase() +
+              widget.paymentMethod
+                  .toString()
+                  .split('.')
+                  .last
+                  .substring(1)
+                  .toLowerCase(),
+
+      "pin": enteredPin,
+    };
 
     try {
-      
-      print(id);
-      // Make the API call
+      print("Request Body: ${jsonEncode(requestBody)}");
+
       final response = await http.post(
         Uri.parse(url),
-
         headers: {
           "Content-Type": "application/json",
           'Authorization': 'Bearer $userToken',
         },
-
         body: jsonEncode(requestBody),
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        // Successful response
         final responseData = jsonDecode(response.body);
         print("Success: $responseData");
+
+        Navigator.pop(context);
+         Navigator.pop(context);
+         Navigator.pop(context);
+         Navigator.pop(context);
+         Navigator.pop(context);
+         Navigator.pop(context);
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Payment Successful!')),
         );
 
-        // Navigate to the success page
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => SuccessDetailsPage(
-              senderName: responseData['shipment']['senderName'],
-              phoneNumber: responseData['shipment']['phoneNumber'],
-              email: responseData['shipment']['emailAddress'],
-              pickupAddress: responseData['shipment']['pickupAddress'],
-              receiverName: responseData['shipment']['receiverName'],
-              receiverPhoneNumber: responseData['shipment']
-                  ['receiverPhoneNumber'],
-              receiverEmail: responseData['shipment']['receiverEmailAddress'],
-              receiverAddress: responseData['shipment']['receiverAddress'],
-              shippingFee: responseData['shipment']['amount'],
-              status: responseData['shipment']['status'],
-              trackingNumber: responseData['shipment']['trackingNumber'],
-            ),
-          ),
-        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => SuccessDetailsPage(
+        //       senderName: responseData['shipment']['senderName'],
+        //       phoneNumber: responseData['shipment']['phoneNumber'],
+        //       email: responseData['shipment']['emailAddress'],
+        //       pickupAddress: responseData['shipment']['pickupAddress'],
+        //       receiverName: responseData['shipment']['receiverName'],
+        //       receiverPhoneNumber: responseData['shipment']['receiverPhoneNumber'],
+        //       receiverEmail: responseData['shipment']['receiverEmailAddress'],
+        //       receiverAddress: responseData['shipment']['receiverAddress'],
+        //       shippingFee: responseData['shipment']['amount'],
+        //       status: responseData['shipment']['status'],
+        //       trackingNumber: responseData['shipment']['trackingNumber'],
+        //     ),
+        //   ),
+        // );
       } else {
-        // Error from API
+         Navigator.pop(context);
+
         final responseData = jsonDecode(response.body);
         String errorMessage = responseData['message'];
         print("Error: $errorMessage");
@@ -129,7 +146,6 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
         }
       }
     } catch (e) {
-      // Handle exceptions
       print("Exception: $e");
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('An error occurred: $e')),
@@ -196,7 +212,6 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
       },
     );
   }
-
 
   @override
   void initState() {

@@ -1,6 +1,7 @@
-
 import 'package:fama/Views/Send%20Product/steps/paymentwidget.dart';
+import 'package:fama/Views/Stock/Views/Cart/Pages/qoute.dart';
 import 'package:fama/Views/Stock/Widgets/Payments/Pinwidgets.dart';
+import 'package:fama/Views/Stock/Widgets/Payments/paymentpin.dart';
 import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
@@ -10,23 +11,31 @@ import 'package:sizer/sizer.dart';
 
 class CheckoutPayment extends StatefulWidget {
 
-   final String itemId;
+
+  final List<Map<String, dynamic>>
+      cartItems; 
+  final String shippingAddress;
+   final ShippingOption shippingMethod;
   final void Function(Map<String, dynamic> data) onComplete;
 
-  const CheckoutPayment({required this.onComplete, required this.itemId, Key? key}) : super(key: key);
+  const CheckoutPayment(
+      {required this.onComplete,
+      required this.cartItems,
+      required this.shippingAddress,
+      // required this.itemId,
+      Key? key,
+      required this.shippingMethod,})
+      : super(key: key);
 
   @override
   State<CheckoutPayment> createState() => _CheckoutPaymentState();
 }
 
 class _CheckoutPaymentState extends State<CheckoutPayment> {
-
-
   TextEditingController senderName = TextEditingController();
   TextEditingController senderPhone = TextEditingController();
   TextEditingController pickupAddress = TextEditingController();
   TextEditingController pickupEmail = TextEditingController();
-
 
   String selectedMethod = '';
 
@@ -37,23 +46,34 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
     });
   }
 
+  @override
+  void initState() {
+    print(widget.cartItems);
+    print(widget.shippingAddress);
+    print(widget.shippingMethod);
+    super.initState();
+  }
 
 
   void _showPinInputModal(BuildContext context) {
-    showModalBottomSheet(
-      backgroundColor: Colors.white,
-      context: context,
-      isScrollControlled: true,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  showModalBottomSheet(
+    backgroundColor: Colors.white,
+    context: context,
+    isScrollControlled: true,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24.0),
+      child: CartPaymentPinInputModal(
+        id: '',  // If needed, provide an ID from your backend
+        cartItems: widget.cartItems,  
+        shippingAddress: widget.shippingAddress,
+        paymentMethod: widget.shippingMethod.toString(),  // Pass the selected payment method
       ),
-      builder: (context) => Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: CartPinInputModal(id: widget.itemId,),
-      ),
-    );
-  }
-
+    ),
+  );
+}
 
 
   @override
@@ -63,7 +83,7 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
         title: CustomText(text: "Payment Method"),
       ),
       body: Padding(
-        padding: const EdgeInsets.only(left: 20,right: 20),
+        padding: const EdgeInsets.only(left: 20, right: 20),
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Align(
@@ -87,7 +107,6 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
                 SizedBox(
                   height: 5.h,
                 ),
-        
                 PaymentMethodContainer(
                   paymentMethod: 'My Wallet',
                   isSelected: selectedMethod == 'My Wallet',
@@ -96,7 +115,6 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
                   },
                   svgPath: 'assets/wallet.svg',
                 ),
-        
                 PaymentMethodContainer(
                   paymentMethod: 'Cash on pickup',
                   isSelected: selectedMethod == 'Cash on pickup',
@@ -105,7 +123,6 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
                   },
                   svgPath: 'assets/cash.svg',
                 ),
-        
                 PaymentMethodContainer(
                   paymentMethod: 'Paypal',
                   isSelected: selectedMethod == 'Paypal',
@@ -114,7 +131,6 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
                   },
                   svgPath: 'assets/paypal.svg',
                 ),
-        
                 PaymentMethodContainer(
                   paymentMethod: 'GooglePay',
                   isSelected: selectedMethod == 'GooglePay',
@@ -123,12 +139,9 @@ class _CheckoutPaymentState extends State<CheckoutPayment> {
                   },
                   svgPath: 'assets/GooglePay.svg',
                 ),
-        
                 SizedBox(
                   height: 7.h,
                 ),
-
-
                 CustomButton(
                   text: 'Continue',
                   onPressed: () {

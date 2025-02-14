@@ -13,10 +13,12 @@ import 'package:sizer/sizer.dart';
 
 
 class CartAddress extends ConsumerStatefulWidget {
-  const CartAddress({super.key});
+  final List<Map<String, dynamic>> cartItems;
+
+  const CartAddress({Key? key, required this.cartItems}) : super(key: key);
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _CartAddressState();
+  ConsumerState<CartAddress> createState() => _CartAddressState();
 }
 
 class _CartAddressState extends ConsumerState<CartAddress> {
@@ -29,6 +31,7 @@ class _CartAddressState extends ConsumerState<CartAddress> {
   void initState() {
     super.initState();
     getCurrentLocation();
+    print(widget.cartItems);
   }
 
   Future<void> getCurrentLocation() async {
@@ -115,22 +118,23 @@ class _CartAddressState extends ConsumerState<CartAddress> {
               SizedBox(
                 height: 49.h,
               ),
-              CustomButton(
-                text: "Continue",
-                onPressed: () async {
-                  // Save the address before navigating
-                  await _saveAddressToPreferences(mylocation.text);
-                  
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ShippingQuote(
-                        onSelectionChanged: (ShippingOption newSelection) {},
-                      ),
-                    ),
-                  );
-                },
-              ),
+CustomButton(
+  text: "Continue",
+  onPressed: () async {
+    await _saveAddressToPreferences(mylocation.text);
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ShippingQuote(
+          cartItems: widget.cartItems,
+          shippingAddress: mylocation.text,
+        ),
+      ),
+    );
+  },
+),
+
             ],
           ),
         ),

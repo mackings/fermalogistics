@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-
-import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class DeliveryCard extends StatelessWidget {
@@ -11,7 +9,7 @@ class DeliveryCard extends StatelessWidget {
   final String status;
   final String date;
   final String time;
-  final String profileImageUrl;
+  final List<String> productImages; // Supports multiple images
 
   const DeliveryCard({
     Key? key,
@@ -22,7 +20,7 @@ class DeliveryCard extends StatelessWidget {
     required this.status,
     required this.date,
     required this.time,
-    required this.profileImageUrl,
+    required this.productImages, // Accept multiple images
   }) : super(key: key);
 
   @override
@@ -53,29 +51,37 @@ class DeliveryCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("Picked up from",
-                        style: GoogleFonts.inter(
-                          color: Colors.red,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        )),
-                    Text(pickupLocation,
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        )),
+                    Text(
+                      "Picked up from",
+                      style: GoogleFonts.inter(
+                        color: Colors.red,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      pickupLocation,
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                     SizedBox(height: 8),
-                    Text("Drop off",
-                        style: GoogleFonts.inter(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        )),
-                    Text(dropOffLocation,
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                        )),
+                    Text(
+                      "Drop off",
+                      style: GoogleFonts.inter(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      dropOffLocation,
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -99,44 +105,69 @@ class DeliveryCard extends StatelessWidget {
 
           Divider(height: 20, thickness: 1),
 
-          // Recipient Details
+          // Recipient Details with Product Images
           Row(
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(profileImageUrl),
-                radius: 20,
+              // Wrap Stack in a Container to ensure finite width
+              Container(
+                width: productImages.isNotEmpty ? (productImages.length * 25.0) : 40, // Set width based on images
+                height: 40, // Set a fixed height for the avatars
+                child: Stack(
+                  children: List.generate(
+                    productImages.length,
+                    (index) => Positioned(
+                      left: index * 20.0, // Shift each image slightly to the right
+                      child: CircleAvatar(
+                        backgroundImage: NetworkImage(productImages[index]),
+                        radius: 20,
+                      ),
+                    ),
+                  ),
+                ),
               ),
-              SizedBox(width: 10),
+              SizedBox(width: 20), // Space between images and text
+
+              // Recipient Information
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(recipientName,
-                        style: GoogleFonts.inter(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        )),
-                    Text(recipientPhone,
-                        style: GoogleFonts.inter(
-                          fontSize: 14,
-                          color: Colors.grey.shade700,
-                        )),
+                    Text(
+                      recipientName,
+                      style: GoogleFonts.inter(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Text(
+                      recipientPhone,
+                      style: GoogleFonts.inter(
+                        fontSize: 14,
+                        color: Colors.grey.shade700,
+                      ),
+                    ),
                   ],
                 ),
               ),
+
+              // Date and Time
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(time,
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      )),
-                  Text(date,
-                      style: GoogleFonts.inter(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      )),
+                  Text(
+                    time,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    date,
+                    style: GoogleFonts.inter(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ],
@@ -146,5 +177,3 @@ class DeliveryCard extends StatelessWidget {
     );
   }
 }
-
-

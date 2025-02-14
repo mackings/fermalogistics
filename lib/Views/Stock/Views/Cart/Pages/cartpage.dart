@@ -8,6 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 
+
 class CartScreen extends StatefulWidget {
   @override
   _CartScreenState createState() => _CartScreenState();
@@ -125,31 +126,34 @@ class _CartScreenState extends State<CartScreen> {
                           ),
                         ],
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CartAddress()));
-                        },
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: 10, horizontal: 45),
-                          decoration: BoxDecoration(
-                            color: Colors.black,
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          child: Center(
-                            child: Text(
-                              'Checkout',
-                              style: GoogleFonts.montserrat(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
+                      
+GestureDetector(
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CartAddress(cartItems: cartItems),
+      ),
+    );
+  },
+  child: Container(
+    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 45),
+    decoration: BoxDecoration(
+      color: Colors.black,
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Center(
+      child: Text(
+        'Checkout',
+        style: GoogleFonts.montserrat(
+          color: Colors.white,
+          fontSize: 16,
+        ),
+      ),
+    ),
+  ),
+),
+
                     ],
                   ),
                 ),

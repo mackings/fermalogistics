@@ -5,6 +5,7 @@ import 'package:fama/Views/Drivers/widgets/shippingcard.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 
 
@@ -108,6 +109,9 @@ class CustomTab extends StatelessWidget {
   }
 }
 
+
+
+
 class DeliveriesList extends StatelessWidget {
   final String status;
   final DeliveryService deliveryService;
@@ -117,7 +121,7 @@ class DeliveriesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<SendOrder>>(
-      future: deliveryService.fetchDeliveries(status), 
+      future: deliveryService.fetchDeliveries(status),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -132,17 +136,26 @@ class DeliveriesList extends StatelessWidget {
             itemBuilder: (context, index) {
               SendOrder delivery = deliveries[index];
 
-              return DeliveryCard(
-                pickupLocation: delivery.shippingAddress.toString(),
-                dropOffLocation: delivery.receiverDetail!.receiverAddress.toString(),
-                recipientName: delivery.receiverDetail!.fullName.toString(),
-                recipientPhone: delivery.receiverDetail!.receiverPhoneNumber.toString(),
-                status: delivery.status.toString(),
-                date: delivery.createdAt.toString().split(' ')[0], // Extract date part
-                time: delivery.createdAt.toString().split(' ')[1], // Extract time part
-                profileImageUrl: 'https://via.placeholder.com/150', // Placeholder image URL
+              // Format date and time
+              String formattedDate = DateFormat('dd MMM yyyy').format(delivery.createdAt);
+              String formattedTime = DateFormat('h:mm a').format(delivery.createdAt);
+
+              // Get product images
+              List<String> productImages = delivery.cartItems.map((item) => item.picture).toList();
+
+              return Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DeliveryCard(
+                  pickupLocation: delivery.shippingAddress,
+                  dropOffLocation: delivery.shippingAddress,
+                  recipientName: delivery.userId.fullName,
+                  recipientPhone: delivery.userId.phoneNumber.toString(),
+                  status: delivery.status,
+                  date: formattedDate,
+                  time: formattedTime,
+                  productImages: productImages, // Pass product images
+                ),
               );
-              
             },
           );
         }
@@ -150,4 +163,5 @@ class DeliveriesList extends StatelessWidget {
     );
   }
 }
+
 
