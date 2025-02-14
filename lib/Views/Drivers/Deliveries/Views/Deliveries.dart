@@ -9,6 +9,8 @@ import 'package:intl/intl.dart';
 
 
 
+
+
 class Deliveries extends StatefulWidget {
   const Deliveries({super.key});
 
@@ -118,10 +120,21 @@ class DeliveriesList extends StatelessWidget {
 
   const DeliveriesList({required this.status, required this.deliveryService});
 
+  Future<List<SendOrder>> _getOrders() {
+    switch (status) {
+      case "Completed":
+        return deliveryService.fetchCompletedOrders();
+      case "Cancelled":
+        return deliveryService.fetchCancelledOrders();
+      default:
+        return deliveryService.fetchUpcomingOrders();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<SendOrder>>(
-      future: deliveryService.fetchDeliveries(status),
+      future: _getOrders(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -153,7 +166,7 @@ class DeliveriesList extends StatelessWidget {
                   status: delivery.status,
                   date: formattedDate,
                   time: formattedTime,
-                  productImages: productImages, // Pass product images
+                  productImages: productImages,
                 ),
               );
             },
@@ -163,5 +176,6 @@ class DeliveriesList extends StatelessWidget {
     );
   }
 }
+
 
 

@@ -1,5 +1,6 @@
 
 import 'package:fama/Views/Drivers/Deliveries/Views/Deliveries.dart';
+import 'package:fama/Views/Drivers/Pickups/Views/pickuphome.dart';
 import 'package:fama/Views/Home/dashboard.dart';
 import 'package:fama/Views/Profile/Views/Profilehome.dart';
 import 'package:fama/Views/Stock/Views/Stockhome.dart';
@@ -33,7 +34,7 @@ class _DriverHomePageState extends State<DriverHomePage> {
     
     _pages = [
       
-      Dashboard(),
+      PickupHome(),
       Deliveries(),
       StockHome(),
       ProfileHome()

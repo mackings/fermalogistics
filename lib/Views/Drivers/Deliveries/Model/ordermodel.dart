@@ -28,8 +28,8 @@ class SendOrder {
   final String shippingAddress;
   final List<CartItem> cartItems;
   final String paymentMethod;
-  final int shippingPrice;
-  final int totalAmount;
+  final num shippingPrice;
+  final num totalAmount;
   final String reference;
   final String country;
   final String status;
