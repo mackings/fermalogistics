@@ -1,132 +1,203 @@
 import 'dart:convert';
 
+
 class OrderResponse {
-  final bool success;
-  final String message;
-  final List<SendOrder> sendOrders;
+  final bool? success;
+  final String? message;
+  final List<SendOrder>? sendOrders;
 
   OrderResponse({
-    required this.success,
-    required this.message,
-    required this.sendOrders,
+    this.success,
+    this.message,
+    this.sendOrders,
   });
 
-  factory OrderResponse.fromJson(Map<String, dynamic> json) {
+  factory OrderResponse.fromJson(String source) =>
+      OrderResponse.fromMap(json.decode(source));
+
+  factory OrderResponse.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return OrderResponse();
+
     return OrderResponse(
-      success: json['success'],
-      message: json['message'],
-      sendOrders: (json['sendOrders'] as List)
-          .map((order) => SendOrder.fromJson(order))
-          .toList(),
+      success: map['success'] as bool? ?? false,
+      message: map['message'] as String? ?? '',
+      sendOrders: map['sendOrders'] != null
+          ? List<SendOrder>.from(
+              (map['sendOrders'] as List).map((x) => SendOrder.fromMap(x)))
+          : [],
     );
   }
 }
 
 class SendOrder {
-  final String id;
-  final User userId;
-  final String shippingAddress;
-  final List<CartItem> cartItems;
-  final String paymentMethod;
-  final num shippingPrice;
-  final num totalAmount;
-  final String reference;
-  final String country;
-  final String status;
-  final String orderId;
-  final String trackingNumber;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  final String? id;
+  final User? userId;
+  final String? shippingAddress;
+  final List<CartItem>? cartItems;
+  final String? paymentMethod;
+  final double? shippingPrice;
+  final double? totalAmount;
+  final String? reference;
+  final String? country;
+  final String? status;
+  final String? orderId;
+  final String? trackingNumber;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
+
+  // Additional Fields for Package Orders
+  final String? senderName;
+  final String? senderPhone;
+  final String? pickupAddress;
+  final String? receiverName;
+  final String? receiverPhoneNumber;
+  final String? receiverAddress;
+  final String? itemName;
+  final double? weightOfPackage;
+  final String? packageCategory;
+  final int? numberOfPackages;
+  final double? length;
+  final double? width;
+  final double? height;
+  final String? shipmentMethod;
+  final bool? isPaid;
+  final double? tax;
 
   SendOrder({
-    required this.id,
-    required this.userId,
-    required this.shippingAddress,
-    required this.cartItems,
-    required this.paymentMethod,
-    required this.shippingPrice,
-    required this.totalAmount,
-    required this.reference,
-    required this.country,
-    required this.status,
-    required this.orderId,
-    required this.trackingNumber,
-    required this.createdAt,
-    required this.updatedAt,
+    this.id,
+    this.userId,
+    this.shippingAddress,
+    this.cartItems,
+    this.paymentMethod,
+    this.shippingPrice,
+    this.totalAmount,
+    this.reference,
+    this.country,
+    this.status,
+    this.orderId,
+    this.trackingNumber,
+    this.createdAt,
+    this.updatedAt,
+    this.senderName,
+    this.senderPhone,
+    this.pickupAddress,
+    this.receiverName,
+    this.receiverPhoneNumber,
+    this.receiverAddress,
+    this.itemName,
+    this.weightOfPackage,
+    this.packageCategory,
+    this.numberOfPackages,
+    this.length,
+    this.width,
+    this.height,
+    this.shipmentMethod,
+    this.isPaid,
+    this.tax,
   });
 
-  factory SendOrder.fromJson(Map<String, dynamic> json) {
+  factory SendOrder.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return SendOrder();
+
     return SendOrder(
-      id: json['_id'],
-      userId: User.fromJson(json['userId']),
-      shippingAddress: json['shippingAddress'],
-      cartItems:
-          (json['cartItems'] as List).map((item) => CartItem.fromJson(item)).toList(),
-      paymentMethod: json['paymentMethod'],
-      shippingPrice: json['shippingPrice'],
-      totalAmount: json['totalAmount'],
-      reference: json['reference'],
-      country: json['country'],
-      status: json['status'],
-      orderId: json['orderId'],
-      trackingNumber: json['trackingNumber'],
-      createdAt: DateTime.parse(json['createdAt']),
-      updatedAt: DateTime.parse(json['updatedAt']),
+      id: map['_id'] as String?,
+      userId: map['userId'] != null ? User.fromMap(map['userId']) : null,
+      shippingAddress: map['shippingAddress'] as String?,
+      cartItems: map['cartItems'] != null
+          ? List<CartItem>.from(
+              (map['cartItems'] as List).map((x) => CartItem.fromMap(x)))
+          : [],
+      paymentMethod: map['paymentMethod'] as String?,
+      shippingPrice: (map['shippingPrice'] as num?)?.toDouble(),
+      totalAmount: (map['totalAmount'] as num?)?.toDouble() ??
+          (map['amount'] as num?)?.toDouble() ??
+          0.0,
+      reference: map['reference'] as String?,
+      country: map['country'] as String?,
+      status: map['status'] as String?,
+      orderId: map['orderId'] as String?,
+      trackingNumber: map['trackingNumber'] as String?,
+      createdAt:
+          map['createdAt'] != null ? DateTime.tryParse(map['createdAt']) : null,
+      updatedAt:
+          map['updatedAt'] != null ? DateTime.tryParse(map['updatedAt']) : null,
+
+      // Additional fields for package-type orders
+      senderName: map['senderName'] as String?,
+      senderPhone: map['phoneNumber'] as String?,
+      pickupAddress: map['pickupAddress'] as String?,
+      receiverName: map['receiverName'] as String?,
+      receiverPhoneNumber: map['receiverPhoneNumber'] as String?,
+      receiverAddress: map['receiverAddress'] as String?,
+      itemName: map['itemName'] as String?,
+      weightOfPackage: (map['weightOfPackage'] as num?)?.toDouble(),
+      packageCategory: map['packageCategory'] as String?,
+      numberOfPackages: map['numberOfPackages'] as int?,
+      length: (map['length'] as num?)?.toDouble(),
+      width: (map['width'] as num?)?.toDouble(),
+      height: (map['height'] as num?)?.toDouble(),
+      shipmentMethod: map['shipmentMethod'] as String?,
+      isPaid: map['isPaid'] as bool?,
+      tax: (map['tax'] as num?)?.toDouble(),
     );
   }
 }
 
 class User {
-  final String id;
-  final String fullName;
-  final int phoneNumber;
+  final String? id;
+  final String? fullName;
+  final String? phoneNumber;
 
   User({
-    required this.id,
-    required this.fullName,
-    required this.phoneNumber,
+    this.id,
+    this.fullName,
+    this.phoneNumber,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) {
+  factory User.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return User();
+
     return User(
-      id: json['_id'],
-      fullName: json['fullName'],
-      phoneNumber: json['phoneNumber'],
+      id: map['_id'] as String?,
+      fullName: map['fullName'] as String?,
+      phoneNumber: map['phoneNumber']?.toString(),
     );
   }
 }
 
 class CartItem {
-  final String productId;
-  final int quantity;
-  final int price;
-  final double vatAmount;
-  final String picture;
-  final String sku;
-  final String productName;
-  final double subTotal;
+  final String? productId;
+  final int? quantity;
+  final double? price;
+  final double? vatAmount;
+  final String? picture;
+  final String? sku;
+  final String? productName;
+  final double? subTotal;
 
   CartItem({
-    required this.productId,
-    required this.quantity,
-    required this.price,
-    required this.vatAmount,
-    required this.picture,
-    required this.sku,
-    required this.productName,
-    required this.subTotal,
+    this.productId,
+    this.quantity,
+    this.price,
+    this.vatAmount,
+    this.picture,
+    this.sku,
+    this.productName,
+    this.subTotal,
   });
 
-  factory CartItem.fromJson(Map<String, dynamic> json) {
+  factory CartItem.fromMap(Map<String, dynamic>? map) {
+    if (map == null) return CartItem();
+
     return CartItem(
-      productId: json['productId'],
-      quantity: json['quantity'],
-      price: json['price'],
-      vatAmount: json['vatAmount'].toDouble(),
-      picture: json['picture'],
-      sku: json['sku'],
-      productName: json['productName'],
-      subTotal: json['subTotal'].toDouble(),
+      productId: map['productId'] as String?,
+      quantity: map['quantity'] as int? ?? 0,
+      price: (map['price'] as num?)?.toDouble() ?? 0.0,
+      vatAmount: (map['vatAmount'] as num?)?.toDouble() ?? 0.0,
+      picture: map['picture'] as String?,
+      sku: map['sku'] as String?,
+      productName: map['productName'] as String?,
+      subTotal: (map['subTotal'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }

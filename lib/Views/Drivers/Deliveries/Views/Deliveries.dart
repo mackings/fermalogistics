@@ -118,7 +118,7 @@ class DeliveriesList extends StatelessWidget {
   final String status;
   final DeliveryService deliveryService;
 
-  const DeliveriesList({required this.status, required this.deliveryService});
+  const DeliveriesList({required this.status, required this.deliveryService, Key? key}) : super(key: key);
 
   Future<List<SendOrder>> _getOrders() {
     switch (status) {
@@ -137,33 +137,45 @@ class DeliveriesList extends StatelessWidget {
       future: _getOrders(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Center(child: Text('No $status deliveries yet.'));
         } else {
           List<SendOrder> deliveries = snapshot.data!;
+
           return ListView.builder(
             itemCount: deliveries.length,
             itemBuilder: (context, index) {
               SendOrder delivery = deliveries[index];
 
               // Format date and time
-              String formattedDate = DateFormat('dd MMM yyyy').format(delivery.createdAt);
-              String formattedTime = DateFormat('h:mm a').format(delivery.createdAt);
+              String formattedDate = DateFormat('dd MMM yyyy').format(delivery.createdAt ?? DateTime.now());
+              String formattedTime = DateFormat('h:mm a').format(delivery.createdAt ?? DateTime.now());
 
-              // Get product images
-              List<String> productImages = delivery.cartItems.map((item) => item.picture).toList();
+              // Determine pickup and drop-off locations
+              String pickupLocation = delivery.pickupAddress ?? "Warehouse";
+              String dropOffLocation = delivery.receiverAddress ?? delivery.shippingAddress ?? "N/A";
+
+              // Determine product images (fallback to user icon if empty)
+              List<String> productImages = delivery.cartItems?.map((item) => item.picture).where((img) => img != null && img.isNotEmpty).cast<String>().toList() ?? [];
+
+              if (productImages.isEmpty) {
+                productImages = ["https://cdn-icons-png.flaticon.com/512/149/149071.png"]; // User icon
+              }
+
+              // Always display "Pending" orders as "Upcoming"
+              String displayStatus = (delivery.status == "Pending") ? "Upcoming" : delivery.status ?? "Unknown";
 
               return Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: DeliveryCard(
-                  pickupLocation: delivery.shippingAddress,
-                  dropOffLocation: delivery.shippingAddress,
-                  recipientName: delivery.userId.fullName,
-                  recipientPhone: delivery.userId.phoneNumber.toString(),
-                  status: delivery.status,
+                  pickupLocation: pickupLocation,
+                  dropOffLocation: dropOffLocation,
+                  recipientName: delivery.userId?.fullName ?? "Unknown",
+                  recipientPhone: delivery.userId?.phoneNumber ?? "Unknown",
+                  status: displayStatus,
                   date: formattedDate,
                   time: formattedTime,
                   productImages: productImages,

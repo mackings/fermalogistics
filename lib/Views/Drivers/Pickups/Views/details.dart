@@ -4,7 +4,7 @@ import 'package:fama/Views/widgets/button.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:sizer/sizer.dart';
+
 
 
 
@@ -20,8 +20,8 @@ class PickupDetailsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Extract the first item from the cart
-    CartItem firstItem = upcomingOrder.cartItems.isNotEmpty
-        ? upcomingOrder.cartItems.first
+    CartItem firstItem = upcomingOrder.cartItems!.isNotEmpty
+        ? upcomingOrder.cartItems!.first
         : CartItem(
             productId: '',
             quantity: 0,
@@ -65,12 +65,12 @@ class PickupDetailsPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          upcomingOrder.userId.fullName,
+                          upcomingOrder.userId!.fullName.toString(),
                           style: GoogleFonts.inter(
                               fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         Text(
-                          upcomingOrder.userId.phoneNumber,
+                          upcomingOrder.userId!.phoneNumber.toString(),
                           style: GoogleFonts.inter(
                               fontSize: 14, color: Colors.grey),
                         ),
@@ -100,13 +100,13 @@ class PickupDetailsPage extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
                     child: Image.network(
-                      firstItem.picture.isNotEmpty
-                          ? firstItem.picture
-                          : "https://via.placeholder.com/150", // Default image if empty
-                      height: 60,
-                      width: 60,
-                      fit: BoxFit.cover,
-                    ),
+  (firstItem.picture?.isNotEmpty ?? false) 
+      ? firstItem.picture! 
+      : "https://via.placeholder.com/150", // Default image if null or empty
+  height: 60,
+  width: 60,
+  fit: BoxFit.cover,
+)
                   ),
                   const SizedBox(width: 12),
                   Expanded(
@@ -114,13 +114,13 @@ class PickupDetailsPage extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          firstItem.productName,
+                          firstItem.productName.toString(),
                           style: GoogleFonts.inter(
                               fontSize: 16, fontWeight: FontWeight.w500),
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          "\$${firstItem.price.toStringAsFixed(2)}",
+                          "\$${firstItem.price!.toStringAsFixed(2)}",
                           style: GoogleFonts.inter(
                               fontSize: 14, fontWeight: FontWeight.bold),
                         ),

@@ -47,7 +47,8 @@ class DeliveryService {
         if (deliveries.isEmpty) {
           return []; // Return empty list if no orders are found
         }
-        return deliveries.map((delivery) => SendOrder.fromJson(delivery)).toList();
+        return deliveries.map((delivery) => SendOrder.fromMap(delivery)).toList();
+
       } else {
         throw Exception(jsonResponse['message'] ?? 'Failed to load orders');
       }
@@ -63,7 +64,7 @@ class DeliveryService {
     return await _fetchOrders(upcomingOrdersUrl);
   }
 
-  // Fetch Completed Orders
+  // Fetch Completed Orders 
   Future<List<SendOrder>> fetchCompletedOrders() async {
     return await _fetchOrders(completedOrdersUrl);
   }

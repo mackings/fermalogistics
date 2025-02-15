@@ -41,7 +41,7 @@ class PickupService {
         if (jsonResponse['success'] == true) {
           return PickupModel.fromMap(jsonResponse);
         } else {
-          print('Error: ${jsonResponse['message']}');
+          print('Errors ${jsonResponse['message']}');
           return null;
         }
       } else if (response.statusCode == 404) {

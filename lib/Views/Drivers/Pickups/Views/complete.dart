@@ -1,27 +1,31 @@
 import 'package:fama/Views/Drivers/Pickups/Models/pickupmodel.dart';
-import 'package:fama/Views/Drivers/Pickups/Views/complete.dart';
+import 'package:fama/Views/Drivers/Pickups/Views/success.dart';
 import 'package:fama/Views/Drivers/Pickups/widgets/deliverycard.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-
-
-class Pickupdelivery extends StatefulWidget {
+class CompleteDelivery extends StatefulWidget {
   final SendOrder upcomingOrder;
 
-  const Pickupdelivery({
+  const CompleteDelivery({
     Key? key,
     required this.upcomingOrder,
   }) : super(key: key);
 
   @override
-  State<Pickupdelivery> createState() => _PickupdeliveryState();
+  State<CompleteDelivery> createState() => _CompleteDeliveryState();
 }
 
-class _PickupdeliveryState extends State<Pickupdelivery> {
+class _CompleteDeliveryState extends State<CompleteDelivery> {
+
+  String _formatTime(DateTime? dateTime) {
+  if (dateTime == null) return "N/A"; // Return a placeholder if null
+  return DateFormat('hh:mm a').format(dateTime);
+}
+
   @override
   Widget build(BuildContext context) {
-    
     String _formatTime(DateTime dateTime) {
       int hour = dateTime.hour > 12
           ? dateTime.hour - 12
@@ -34,6 +38,7 @@ class _PickupdeliveryState extends State<Pickupdelivery> {
       return "$hour:$minute$period";
     }
 
+    // Extract necessary data
     String deliveryDate =
         "${widget.upcomingOrder.createdAt!.day} ${_getMonth(widget.upcomingOrder.createdAt!.month)}, ${widget.upcomingOrder.createdAt!.year}";
 
@@ -41,38 +46,31 @@ class _PickupdeliveryState extends State<Pickupdelivery> {
 
 
     String customerName = widget.upcomingOrder.userId!.fullName.toString();
-    String customerPhone = widget.upcomingOrder.userId!.phoneNumber.toString();
+    String? customerPhone = widget.upcomingOrder.userId!.phoneNumber;
     String? dropoffLocation = widget.upcomingOrder.shippingAddress;
 
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(text: "Pickup Status"),
+        title: CustomText(text: "Confirm delivery"),
       ),
       body: Column(
         children: [
-
+          const SizedBox(height: 30),
           DeliveryInfoCard(
             deliveryTime: deliveryTime,
             deliveryDate: deliveryDate,
             customerName: customerName,
-            customerPhone: customerPhone,
+            customerPhone: customerPhone.toString(),
             pickupLocation: "Warehouse",
             dropoffLocation: dropoffLocation.toString(),
-            status: widget.upcomingOrder.status.toString(),
+            status: widget.upcomingOrder.status.toString(), // Use actual status
             profileImageUrl: "https://via.placeholder.com/150",
+            buttonColor: Colors.red,
+            buttonText: "Arrived at Customer location",
             onStatusButtonTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CompleteDelivery(
-                    upcomingOrder: widget.upcomingOrder
-                  ),
-                ),
-              );
+              showDeliveryCompletedSheet(context);
             },
           ),
-
-          
         ],
       ),
     );
@@ -80,10 +78,19 @@ class _PickupdeliveryState extends State<Pickupdelivery> {
 
   String _getMonth(int month) {
     List<String> months = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
     ];
     return months[month - 1];
   }
 }
-

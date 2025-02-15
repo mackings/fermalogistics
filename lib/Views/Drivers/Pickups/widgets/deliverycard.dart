@@ -1,4 +1,4 @@
-import 'package:fama/Views/widgets/button.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -11,6 +11,9 @@ class DeliveryInfoCard extends StatelessWidget {
   final String dropoffLocation;
   final String status;
   final String profileImageUrl;
+  final VoidCallback onStatusButtonTap;
+  final Color? buttonColor; // Optional button color
+  final String? buttonText; // Optional button text
 
   const DeliveryInfoCard({
     Key? key,
@@ -22,6 +25,9 @@ class DeliveryInfoCard extends StatelessWidget {
     required this.dropoffLocation,
     required this.status,
     required this.profileImageUrl,
+    required this.onStatusButtonTap,
+    this.buttonColor, // Optional
+    this.buttonText, // Optional
   }) : super(key: key);
 
   @override
@@ -33,13 +39,12 @@ class DeliveryInfoCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(height: 10),
 
-            SizedBox(height: 10,),
             // Estimated Delivery Time
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -65,7 +70,7 @@ class DeliveryInfoCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-      
+
             // Customer Info
             Row(
               children: [
@@ -89,14 +94,19 @@ class DeliveryInfoCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                IconButton(icon: const Icon(Icons.phone, color: Colors.green), onPressed: () {}),
-                IconButton(icon: const Icon(Icons.mail_outline, color: Colors.blue), onPressed: () {}),
+                IconButton(
+                  icon: const Icon(Icons.phone, color: Colors.green),
+                  onPressed: () {},
+                ),
+                IconButton(
+                  icon: const Icon(Icons.mail_outline, color: Colors.blue),
+                  onPressed: () {},
+                ),
               ],
             ),
             const SizedBox(height: 12),
-
             Divider(),
-      
+
             // Pickup and Drop-off
             Row(
               children: [
@@ -120,7 +130,7 @@ class DeliveryInfoCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-      
+
             Row(
               children: [
                 const Icon(Icons.local_shipping, color: Colors.black),
@@ -143,30 +153,30 @@ class DeliveryInfoCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 15),
-      
-      CustomButton(text: "Arrived at drop-off", onPressed: (){})
-            // Delivery Status
-            // Container(
-            //   width: double.infinity,
-            //   padding: const EdgeInsets.symmetric(vertical: 8),
-            //   decoration: BoxDecoration(
-            //     color: status == "In Transit" ? Colors.green.shade100 : Colors.grey.shade200,
-            //     borderRadius: BorderRadius.circular(8),
-            //   ),
-            //   child: Center(
-            //     child: Text(
-            //       status,
-            //       style: GoogleFonts.inter(
-            //         fontSize: 14,
-            //         fontWeight: FontWeight.bold,
-            //         color: status == "In Transit" ? Colors.green : Colors.grey,
-            //       ),
-            //     ),
-            //   ),
-            // ),
+
+            // Status Button with Custom Function
+            GestureDetector(
+              onTap: onStatusButtonTap,
+              child: Container(
+                height: 50,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: buttonColor ?? Colors.green, // Default to green if not provided
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: Text(
+                    buttonText ?? "In Transit", // Default text if not provided
+                    style: GoogleFonts.inter(fontSize: 14, color: Colors.white),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 }
+
+
