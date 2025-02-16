@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-
 class PickupModel {
   final bool? success;
   final String? message;
@@ -45,6 +44,7 @@ class SendOrder {
   final DateTime? createdAt;
   final DateTime? updatedAt;
 
+
   // Additional Fields for Package Orders
   final String? senderName;
   final String? senderPhone;
@@ -62,6 +62,7 @@ class SendOrder {
   final String? shipmentMethod;
   final bool? isPaid;
   final double? tax;
+  final num? amount;
 
   SendOrder({
     this.id,
@@ -94,7 +95,47 @@ class SendOrder {
     this.shipmentMethod,
     this.isPaid,
     this.tax,
+    this.amount
   });
+
+  // ✅ **Added toMap() method**
+  Map<String, dynamic> toMap() {
+    return {
+      '_id': id,
+      'userId': userId?.toMap(),
+      'shippingAddress': shippingAddress,
+      'cartItems': cartItems?.map((x) => x.toMap()).toList(),
+      'paymentMethod': paymentMethod,
+      'shippingPrice': shippingPrice,
+      'totalAmount': totalAmount,
+      'reference': reference,
+      'country': country,
+      'status': status,
+      'orderId': orderId,
+      'trackingNumber': trackingNumber,
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
+
+      // Additional fields for package orders
+      'senderName': senderName,
+      'phoneNumber': senderPhone,
+      'pickupAddress': pickupAddress,
+      'receiverName': receiverName,
+      'receiverPhoneNumber': receiverPhoneNumber,
+      'receiverAddress': receiverAddress,
+      'itemName': itemName,
+      'weightOfPackage': weightOfPackage,
+      'packageCategory': packageCategory,
+      'numberOfPackages': numberOfPackages,
+      'length': length,
+      'width': width,
+      'height': height,
+      'shipmentMethod': shipmentMethod,
+      'isPaid': isPaid,
+      'tax': tax,
+      'amount':amount
+    };
+  }
 
   factory SendOrder.fromMap(Map<String, dynamic>? map) {
     if (map == null) return SendOrder();
@@ -109,9 +150,7 @@ class SendOrder {
           : [],
       paymentMethod: map['paymentMethod'] as String?,
       shippingPrice: (map['shippingPrice'] as num?)?.toDouble(),
-      totalAmount: (map['totalAmount'] as num?)?.toDouble() ??
-          (map['amount'] as num?)?.toDouble() ??
-          0.0,
+      totalAmount: (map['totalAmount'] as num?)?.toDouble() ?? 0.0,
       reference: map['reference'] as String?,
       country: map['country'] as String?,
       status: map['status'] as String?,
@@ -122,7 +161,7 @@ class SendOrder {
       updatedAt:
           map['updatedAt'] != null ? DateTime.tryParse(map['updatedAt']) : null,
 
-      // Additional fields for package-type orders
+      // Additional fields for package orders
       senderName: map['senderName'] as String?,
       senderPhone: map['phoneNumber'] as String?,
       pickupAddress: map['pickupAddress'] as String?,
@@ -139,6 +178,7 @@ class SendOrder {
       shipmentMethod: map['shipmentMethod'] as String?,
       isPaid: map['isPaid'] as bool?,
       tax: (map['tax'] as num?)?.toDouble(),
+      amount: (map['amount'] as num?)?.toDouble(),
     );
   }
 }
@@ -153,6 +193,14 @@ class User {
     this.fullName,
     this.phoneNumber,
   });
+
+  Map<String, dynamic> toMap() {
+    return {
+      '_id': id,
+      'fullName': fullName,
+      'phoneNumber': phoneNumber,
+    };
+  }
 
   factory User.fromMap(Map<String, dynamic>? map) {
     if (map == null) return User();
@@ -186,6 +234,19 @@ class CartItem {
     this.subTotal,
   });
 
+  Map<String, dynamic> toMap() {
+    return {
+      'productId': productId,
+      'quantity': quantity,
+      'price': price,
+      'vatAmount': vatAmount,
+      'picture': picture,
+      'sku': sku,
+      'productName': productName,
+      'subTotal': subTotal,
+    };
+  }
+
   factory CartItem.fromMap(Map<String, dynamic>? map) {
     if (map == null) return CartItem();
 
@@ -201,4 +262,3 @@ class CartItem {
     );
   }
 }
-

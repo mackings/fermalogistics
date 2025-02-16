@@ -1,4 +1,5 @@
 import 'package:fama/Views/Auth/Pin/Createpin.dart';
+import 'package:fama/Views/Drivers/DriverHome.dart';
 import 'package:fama/Views/Profile/Views/Update/profileupdate.dart';
 import 'package:fama/Views/Profile/Views/Wallet/wallethome.dart';
 import 'package:fama/Views/Profile/Widgets/balcard.dart';
@@ -21,7 +22,6 @@ class ProfileHome extends StatefulWidget {
 }
 
 class _ProfileHomeState extends State<ProfileHome> {
-  
   UserData? userData;
 
   @override
@@ -65,15 +65,12 @@ class _ProfileHomeState extends State<ProfileHome> {
                       ),
                       leading: CircleAvatar(
                         radius: 30,
-                        backgroundImage:
-                            NetworkImage(userData!.picture.toString()),
+                        backgroundImage: NetworkImage(userData!.picture.toString()),
                       ),
                     ),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                SizedBox(height: 10),
                 BalanceCard(
                   balance: userData!.safeWallet,
                   onTopUp: () {},
@@ -82,61 +79,43 @@ class _ProfileHomeState extends State<ProfileHome> {
                 Center(child: CircularProgressIndicator()),
               ],
 
+              SizedBox(height: 20),
 
-              SizedBox(
-                height: 20,
-              ),
-
-
+              // Standard Profile Options
               ProfileOptionTile(
                 icon: Icons.account_balance,
                 iconColor: Colors.red,
                 backgroundColor: Colors.red.shade50,
                 title: "Wallet",
                 onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => WalletHome()));
-                  print("Edit Profile tapped!");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => WalletHome()));
                 },
               ),
-
-
-                            ProfileOptionTile(
+              ProfileOptionTile(
                 icon: Icons.lock_outline,
                 iconColor: Colors.red,
                 backgroundColor: Colors.red.shade50,
                 title: "Transaction Pin",
                 onTap: () {
-
-                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CreatePin()));
-                 
-                  print("Edit Profile tapped!");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePin()));
                 },
               ),
-              
               ProfileOptionTile(
                 icon: Icons.person,
                 iconColor: Colors.red,
                 backgroundColor: Colors.red.shade50,
                 title: "Edit Profile",
                 onTap: () {
-
-                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => ProfileUpdate()));
-                 
-                  print("Edit Profile tapped!");
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileUpdate()));
                 },
               ),
-
               ProfileOptionTile(
                 icon: Icons.notifications,
                 iconColor: Colors.red,
                 backgroundColor: Colors.red.shade50,
                 title: "Notifications",
                 onTap: () {
-                  // Define what happens when the tile is tapped
-                  print("Edit Profile tapped!");
+                  print("Notifications tapped!");
                 },
               ),
               ProfileOptionTile(
@@ -145,9 +124,22 @@ class _ProfileHomeState extends State<ProfileHome> {
                 backgroundColor: Colors.red.shade50,
                 title: "Refer and Earn",
                 onTap: () {
-                  print("Edit Profile tapped!");
+                  print("Refer and Earn tapped!");
                 },
               ),
+
+              // **Conditional Menu for Delivery Personnel**
+              if (userData != null && userData!.roles == "deliveryPersonnel") ...[
+                ProfileOptionTile(
+                  icon: Icons.verified_user,
+                  iconColor: Colors.red,
+                  backgroundColor: Colors.red.shade50,
+                  title: "Verification",
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => DriverHome()));
+                  },
+                ),
+              ],
             ],
           ),
         ),
@@ -155,3 +147,4 @@ class _ProfileHomeState extends State<ProfileHome> {
     );
   }
 }
+

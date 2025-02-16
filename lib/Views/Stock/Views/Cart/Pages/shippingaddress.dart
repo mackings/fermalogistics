@@ -121,14 +121,14 @@ class _CartAddressState extends ConsumerState<CartAddress> {
 CustomButton(
   text: "Continue",
   onPressed: () async {
-    await _saveAddressToPreferences(mylocation.text);
+    await _saveAddressToPreferences("${currentAddress==null?mylocation.text:currentAddress}");
 
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ShippingQuote(
           cartItems: widget.cartItems,
-          shippingAddress: mylocation.text,
+          shippingAddress: "${currentAddress==null?mylocation.text:currentAddress}",
         ),
       ),
     );

@@ -1,12 +1,13 @@
 import 'dart:convert';
+import 'package:fama/Views/Drivers/Pickups/Models/pickupmodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Model/ordermodel.dart';
 
 
 
-
 class DeliveryService {
+
   final String upcomingOrdersUrl =
       'https://fama-logistics.onrender.com/api/v1/delivery/getAllSendOrders';
   final String completedOrdersUrl =
@@ -15,6 +16,7 @@ class DeliveryService {
       'https://fama-logistics.onrender.com/api/v1/delivery/getAllCancelledOrders';
 
   // Retrieve auth token from SharedPreferences
+
   Future<String?> _getAuthToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userDataString = prefs.getString('userData');

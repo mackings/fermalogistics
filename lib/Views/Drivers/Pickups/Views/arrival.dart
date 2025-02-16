@@ -36,7 +36,8 @@ class _ArrivalState extends State<Arrival> {
     ? DateFormat('h:mm a').format(widget.upcomingOrder.createdAt!)
     : "N/A",
 
-              pickupLocation: widget.upcomingOrder.shippingAddress.toString(),
+              pickupLocation: '${widget.upcomingOrder!.pickupAddress==null?
+                            widget.upcomingOrder!.shippingAddress.toString():widget.upcomingOrder!.pickupAddress}',
               onSeeItems: () {
                 Navigator.push(
                   context,

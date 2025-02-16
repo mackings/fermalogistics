@@ -67,6 +67,9 @@ void showDeliveryCompletedSheet(BuildContext context) {
               OutlinedButton(
                 onPressed: () {
                   Navigator.pop(context); // Close Bottom Sheet
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                  Navigator.pop(context);
                 },
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(color: Colors.red),

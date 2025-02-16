@@ -1,13 +1,14 @@
 
 import 'package:fama/Views/Drivers/Deliveries/Api/apiservice.dart';
 import 'package:fama/Views/Drivers/Deliveries/Model/ordermodel.dart';
+import 'package:fama/Views/Drivers/Deliveries/widgets/Order.dart';
+import 'package:fama/Views/Drivers/Pickups/Models/pickupmodel.dart';
+import 'package:fama/Views/Drivers/Pickups/Views/details.dart';
 import 'package:fama/Views/Drivers/widgets/shippingcard.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-
-
 
 
 
@@ -51,7 +52,7 @@ class _DeliveriesState extends State<Deliveries> with SingleTickerProviderStateM
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(50.0),
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal: 16),
+              margin: EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 color: Colors.grey.shade200,
                 borderRadius: BorderRadius.circular(10),
@@ -75,7 +76,7 @@ class _DeliveriesState extends State<Deliveries> with SingleTickerProviderStateM
         body: TabBarView(
           controller: _tabController,
           children: [
-            DeliveriesList(status: "Upcoming", deliveryService: _deliveryService),
+            DeliveriesList(status: "pending", deliveryService: _deliveryService),
             DeliveriesList(status: "Completed", deliveryService: _deliveryService),
             DeliveriesList(status: "Cancelled", deliveryService: _deliveryService),
           ],
@@ -104,7 +105,7 @@ class CustomTab extends StatelessWidget {
         style: GoogleFonts.inter(
           fontWeight: FontWeight.w500,
           color: isActive ? Colors.black : Colors.grey,
-          fontSize: 12,
+          fontSize: 10,
         ),
       ),
     );
@@ -137,7 +138,7 @@ class DeliveriesList extends StatelessWidget {
       future: _getOrders(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator(color: Colors.red,));
         } else if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
         } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -170,15 +171,43 @@ class DeliveriesList extends StatelessWidget {
 
               return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: DeliveryCard(
-                  pickupLocation: pickupLocation,
-                  dropOffLocation: dropOffLocation,
-                  recipientName: delivery.userId?.fullName ?? "Unknown",
-                  recipientPhone: delivery.userId?.phoneNumber ?? "Unknown",
-                  status: displayStatus,
-                  date: formattedDate,
-                  time: formattedTime,
-                  productImages: productImages,
+                child: GestureDetector(
+                  onTap: () {
+                    showAcceptOrderSheet(
+      context: context,
+      title: "New Delivery Request",
+      deliveryTime: formattedTime,
+      pickupLocation: pickupLocation,
+      onAccept: () {
+        
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => PickupDetailsPage(
+        upcomingOrder: delivery,
+      ),
+    ),
+  );
+
+      },
+      onDecline: () {
+
+      },
+      onSeeItems: () {
+
+      },
+    );
+                  },
+                  child: DeliveryCard(
+                    pickupLocation: pickupLocation,
+                    dropOffLocation: dropOffLocation,
+                    recipientName: delivery.userId?.fullName ?? "Unknown",
+                    recipientPhone: delivery.userId?.phoneNumber ?? "Unknown",
+                    status: displayStatus,
+                    date: formattedDate,
+                    time: formattedTime,
+                    productImages: productImages,
+                  ),
                 ),
               );
             },

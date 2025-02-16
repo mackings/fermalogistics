@@ -21,7 +21,6 @@ class Pickupdelivery extends StatefulWidget {
 class _PickupdeliveryState extends State<Pickupdelivery> {
   @override
   Widget build(BuildContext context) {
-    
     String _formatTime(DateTime dateTime) {
       int hour = dateTime.hour > 12
           ? dateTime.hour - 12
@@ -37,12 +36,14 @@ class _PickupdeliveryState extends State<Pickupdelivery> {
     String deliveryDate =
         "${widget.upcomingOrder.createdAt!.day} ${_getMonth(widget.upcomingOrder.createdAt!.month)}, ${widget.upcomingOrder.createdAt!.year}";
 
-    String deliveryTime = _formatTime(widget.upcomingOrder.createdAt ?? DateTime.now());
-
+    String deliveryTime =
+        _formatTime(widget.upcomingOrder.createdAt ?? DateTime.now());
 
     String customerName = widget.upcomingOrder.userId!.fullName.toString();
     String customerPhone = widget.upcomingOrder.userId!.phoneNumber.toString();
     String? dropoffLocation = widget.upcomingOrder.shippingAddress;
+    String? pickupLocation = widget.upcomingOrder.pickupAddress;
+    String? deliveryLocation = widget.upcomingOrder.receiverAddress;
 
     return Scaffold(
       appBar: AppBar(
@@ -50,29 +51,25 @@ class _PickupdeliveryState extends State<Pickupdelivery> {
       ),
       body: Column(
         children: [
-
           DeliveryInfoCard(
             deliveryTime: deliveryTime,
             deliveryDate: deliveryDate,
             customerName: customerName,
             customerPhone: customerPhone,
-            pickupLocation: "Warehouse",
-            dropoffLocation: dropoffLocation.toString(),
+            pickupLocation: pickupLocation == null?"WareHouse":pickupLocation,
+            dropoffLocation: deliveryLocation== null? dropoffLocation.toString():deliveryLocation,
             status: widget.upcomingOrder.status.toString(),
-            profileImageUrl: "https://via.placeholder.com/150",
+            profileImageUrl: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
             onStatusButtonTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => CompleteDelivery(
-                    upcomingOrder: widget.upcomingOrder
-                  ),
+                  builder: (context) =>
+                      CompleteDelivery(upcomingOrder: widget.upcomingOrder),
                 ),
               );
             },
           ),
-
-          
         ],
       ),
     );
@@ -80,10 +77,19 @@ class _PickupdeliveryState extends State<Pickupdelivery> {
 
   String _getMonth(int month) {
     List<String> months = [
-      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
     ];
     return months[month - 1];
   }
 }
-

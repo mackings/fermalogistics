@@ -394,7 +394,7 @@ Container(
 
               SizedBox(height: 5.h),
               CustomButton(
-                text: "Live Tracking",
+                text: "Continue",
                 onPressed: () {
                   Navigator.push(
                     context,

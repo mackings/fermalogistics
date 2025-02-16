@@ -3,12 +3,16 @@ import 'package:fama/Views/Drivers/Pickups/Models/pickupmodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class PickupService {
   final String pickupOrdersUrl =
       'https://fama-logistics.onrender.com/api/v1/delivery/getAllSendOrders';
 
-  // Retrieve auth token from SharedPreferences
+  final String acceptOrderUrl =
+      'https://fama-logistics.onrender.com/api/v1/delivery/acceptOrder/';
+
+  final String confirmPickupUrl =
+      'https://fama-logistics.onrender.com/api/v1/delivery/pickUpOrder/';
+
   Future<String?> _getAuthToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userDataString = prefs.getString('userData');
@@ -19,7 +23,6 @@ class PickupService {
     return null;
   }
 
-  // Fetch Pickup Orders
   Future<PickupModel?> fetchPickupOrders() async {
     String? token = await _getAuthToken();
     if (token == null) {
@@ -44,9 +47,6 @@ class PickupService {
           print('Errors ${jsonResponse['message']}');
           return null;
         }
-      } else if (response.statusCode == 404) {
-        print('Error: No orders found (404)');
-        return null;
       } else {
         print('Error ${response.statusCode}: ${response.body}');
         return null;
@@ -54,6 +54,138 @@ class PickupService {
     } catch (e) {
       print('Exception: $e');
       return null;
+    }
+  }
+
+  Future<bool> acceptOrder(String orderId) async {
+    String? token = await _getAuthToken();
+    if (token == null) {
+      print('Error: Token not found');
+      return false;
+    }
+
+    try {
+      final response = await http.put(
+        Uri.parse('$acceptOrderUrl$orderId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({"status": "processing"}),
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = json.decode(response.body);
+        if (jsonResponse['success'] == true) {
+          print('Order Accepted Successfully');
+          return true;
+        } else {
+          print('Error: ${jsonResponse['message']}');
+          return false;
+        }
+      } else {
+        print('Error ${response.statusCode}: ${response.body}');
+        return false;
+      }
+    } catch (e) {
+      print('Exception: $e');
+      return false;
+    }
+  }
+
+  Future<Map<String, dynamic>> confirmPickup(String orderId) async {
+    String? token = await _getAuthToken();
+    if (token == null) {
+      return {'success': false, 'message': 'Authentication token not found'};
+    }
+
+    try {
+      final response = await http.put(
+        Uri.parse('$confirmPickupUrl$orderId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({"status": "in-transit"}),
+      );
+
+      if (response.statusCode == 200) {
+        return {'success': true, 'message': 'Pickup confirmed successfully'};
+      } else {
+        return {
+          'success': false,
+          'message': 'Error ${response.statusCode}: ${response.body}'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Exception: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> markDeliveryArrived(String orderId) async {
+    String? token = await _getAuthToken();
+    if (token == null) {
+      return {'success': false, 'message': 'Authentication token not found'};
+    }
+
+    try {
+      final response = await http.put(
+        Uri.parse(
+            'https://fama-logistics.onrender.com/api/v1/delivery/deliveryArrived/$orderId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({"status": "arrived"}),
+      );
+
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'message': 'Driver has arrived at the destination'
+        };
+      } else {
+        return {
+          'success': false,
+          'message': 'Error ${response.statusCode}: ${response.body}'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Exception: $e'};
+    }
+  }
+
+  Future<Map<String, dynamic>> markDeliveryCompleted(String orderId) async {
+    String? token = await _getAuthToken();
+    if (token == null) {
+      return {'success': false, 'message': 'Authentication token not found'};
+    }
+
+    try {
+      final response = await http.put(
+        Uri.parse(
+            'https://fama-logistics.onrender.com/api/v1/delivery/deliveryCompleted/$orderId'),
+        headers: {
+          'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json',
+        },
+        // body: jsonEncode({"status": "completed"}),
+      );
+
+      if (response.statusCode == 200) {
+        return {
+          'success': true,
+          'message': 'Delivery has been completed successfully'
+        };
+      } else {
+        print(response.body);
+        return {
+          'success': false,
+          'message': 'Error ${response.statusCode}: ${response.body}'
+        };
+      }
+    } catch (e) {
+      return {'success': false, 'message': 'Exception: $e'};
     }
   }
 }

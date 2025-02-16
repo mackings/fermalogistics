@@ -151,7 +151,7 @@ if (response.statusCode == 200) {
                         subtitle: '5-7 days',
                         cost: shippingCosts?["Regular"],
                         icon:
-                            'assets/truck.svg', // Update the asset path accordingly
+                            'assets/track.svg', // Update the asset path accordingly
                         option: ShippingOption.regular,
                       ),
 

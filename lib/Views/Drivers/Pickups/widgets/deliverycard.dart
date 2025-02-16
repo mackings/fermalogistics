@@ -95,11 +95,15 @@ class DeliveryInfoCard extends StatelessWidget {
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.phone, color: Colors.green),
+                  icon: CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    child: const Icon(Icons.phone, color: Colors.white)),
                   onPressed: () {},
                 ),
                 IconButton(
-                  icon: const Icon(Icons.mail_outline, color: Colors.blue),
+                  icon: CircleAvatar(
+                    backgroundColor: Colors.grey,
+                    child: const Icon(Icons.mail_outline, color: Colors.white)),
                   onPressed: () {},
                 ),
               ],
