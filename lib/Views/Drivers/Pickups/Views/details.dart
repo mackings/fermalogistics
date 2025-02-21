@@ -128,43 +128,49 @@ class _PickupDetailsPageState extends State<PickupDetailsPage> {
       },
     );
   }
-Future<void> _confirmPickup(BuildContext context, SendOrder upcomingOrder,
-    StateSetter setModalState) async {
-  String orderId = upcomingOrder.id.toString();
-  PickupService pickupService = PickupService();
 
-  Map<String, dynamic> response = {'success': false, 'message': 'Unknown error'};
+  Future<void> _confirmPickup(BuildContext context, SendOrder upcomingOrder,
+      StateSetter setModalState) async {
+    String orderId = upcomingOrder.id.toString();
+    PickupService pickupService = PickupService();
 
-  try {
-    response = await pickupService.confirmPickup(orderId);
-  } catch (e) {
-    debugPrint("Error confirming pickup: $e");
-  }
+    Map<String, dynamic> response = {
+      'success': false,
+      'message': 'Unknown error'
+    };
 
-  if (mounted) {
-    Navigator.pop(context); // Close modal
+    try {
+      response = await pickupService.confirmPickup(orderId);
+    } catch (e) {
+      debugPrint("Error confirming pickup: $e");
+    }
 
-    bool shouldNavigate =
-        response['success'] == true ||
-        response['message'].contains("Order has already been in-transit");
+    if (mounted) {
+      Navigator.pop(context); // Close modal
 
-    if (shouldNavigate) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => CompleteDelivery(upcomingOrder: upcomingOrder), 
-        ),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response['message']),
-          backgroundColor: Colors.red,
-        ),
-      );
+      bool shouldNavigate = response['success'] == true ||
+          response['message'].contains("Order has already been in-transit")||
+          response['message'].contains('Order has already been marked as in-transit') ;
+
+      if (shouldNavigate) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                CompleteDelivery(upcomingOrder: upcomingOrder),
+          ),
+        );
+      } else {
+        print(response['message']);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response['message']),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
-}
 
   @override
   void initState() {
@@ -275,7 +281,7 @@ Future<void> _confirmPickup(BuildContext context, SendOrder upcomingOrder,
                         ),
                         const SizedBox(height: 10),
                         Text(
-                          "\$${ widget.upcomingOrder.amount ==null?productPrice.toStringAsFixed(2):widget.upcomingOrder.amount}",
+                          "\$${widget.upcomingOrder.amount == null ? productPrice.toStringAsFixed(2) : widget.upcomingOrder.amount}",
                           style: GoogleFonts.inter(
                               fontSize: 14, fontWeight: FontWeight.bold),
                         ),

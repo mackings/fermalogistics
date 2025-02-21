@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:fama/Views/Drivers/Pickups/Apis/pickupservice.dart';
 import 'package:fama/Views/Drivers/Pickups/Models/pickupmodel.dart';
 import 'package:fama/Views/Drivers/Pickups/Views/arrival.dart';
@@ -18,6 +19,7 @@ import 'package:sizer/sizer.dart';
 
 
 
+
 class PickupHome extends StatefulWidget {
   const PickupHome({super.key});
 
@@ -26,6 +28,7 @@ class PickupHome extends StatefulWidget {
 }
 
 class _PickupHomeState extends State<PickupHome> {
+
 
   GoogleMapController? _mapController;
   Position? _currentPosition;
@@ -46,6 +49,8 @@ class _PickupHomeState extends State<PickupHome> {
   }
 
 
+
+
 Future<void> _getCurrentLocation() async {
   bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
   if (!serviceEnabled) return;
@@ -58,27 +63,39 @@ Future<void> _getCurrentLocation() async {
 
   Position position = await Geolocator.getCurrentPosition();
 
-  // Handle the case where latitude and longitude are not in the model
   LatLng updatedPickupLocation = LatLng(position.latitude, position.longitude); // Default to current location
 
   if (upcomingOrder != null && upcomingOrder!.pickupAddress != null && upcomingOrder!.pickupAddress!.isNotEmpty) {
     try {
-      List<geo.Location> locations = await geo.locationFromAddress(upcomingOrder!.pickupAddress!);
-      if (locations.isNotEmpty) {
-        updatedPickupLocation = LatLng(locations.first.latitude, locations.first.longitude);
+      if (upcomingOrder!.pickupAddress!.toLowerCase() == "warehouse") {
+        // If pickup location is "warehouse", use Lagos, Nigeria
+        List<geo.Location> locations = await geo.locationFromAddress("Lagos, Nigeria");
+        if (locations.isNotEmpty) {
+          updatedPickupLocation = LatLng(locations.first.latitude, locations.first.longitude);
+        }
+      } else {
+        // Use the pickup address from the API
+        List<geo.Location> locations = await geo.locationFromAddress(upcomingOrder!.pickupAddress!);
+        if (locations.isNotEmpty) {
+          updatedPickupLocation = LatLng(locations.first.latitude, locations.first.longitude);
+        }
       }
     } catch (e) {
       print("Error getting coordinates from address: $e");
     }
   }
 
+  // ✅ Update state and polyline
   setState(() {
     _currentPosition = position;
     pickupLocation = updatedPickupLocation;
+    _updatePolyline(); // Update the polyline after setting the pickup location
   });
 
   _mapController?.animateCamera(CameraUpdate.newLatLng(updatedPickupLocation));
 }
+
+
 
 
 
@@ -201,8 +218,8 @@ void _updatePolyline() {
   _polylines.add(
     Polyline(
       polylineId: PolylineId("route"),
-      color: Colors.red, // Thick red line
-      width: 5, // Thickness of the line
+      color: Colors.red, // Make the line red
+      width: 5, // Make the line thicker for better visibility
       points: [
         LatLng(_currentPosition!.latitude, _currentPosition!.longitude), // Start (current location)
         pickupLocation!, // Destination (pickup location)
@@ -211,13 +228,28 @@ void _updatePolyline() {
     ),
   );
 
+  // Ensure the camera fits both locations
+  LatLngBounds bounds = LatLngBounds(
+    southwest: LatLng(
+      min(_currentPosition!.latitude, pickupLocation!.latitude),
+      min(_currentPosition!.longitude, pickupLocation!.longitude),
+    ),
+    northeast: LatLng(
+      max(_currentPosition!.latitude, pickupLocation!.latitude),
+      max(_currentPosition!.longitude, pickupLocation!.longitude),
+    ),
+  );
+
+  _mapController?.animateCamera(CameraUpdate.newLatLngBounds(bounds, 100)); // Add padding around markers
+
   setState(() {}); // Update UI
 }
+
 
 @override
 void didChangeDependencies() {
   super.didChangeDependencies();
-  _updatePolyline(); // Update polyline when dependencies change
+  _updatePolyline(); 
 }
 
 
@@ -242,31 +274,37 @@ void didChangeDependencies() {
       /// 1️⃣ Map Background (Google Map)
       Positioned.fill(
         child: GoogleMap(
-          initialCameraPosition: CameraPosition(
-            target: _currentPosition != null
-                ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
-                : LatLng(0, 0),
-            zoom: 15,
-          ),
-          myLocationEnabled: true,
-          myLocationButtonEnabled: false,
-          onMapCreated: (controller) => _mapController = controller,
-          markers: pickupLocation != null
-              ? {
-                  Marker(
-                    markerId: MarkerId("pickup"),
-                    position: pickupLocation!,
-                    infoWindow: InfoWindow(title: "Pickup Location"),
-                  ),
-                  Marker(
-                    markerId: MarkerId("current"),
-                    position: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
-                    infoWindow: InfoWindow(title: "Your Location"),
-                  ),
-                }
-              : {},
-          polylines: _polylines, // Thick red polyline
-        ),
+  initialCameraPosition: CameraPosition(
+    target: _currentPosition != null
+        ? LatLng(_currentPosition!.latitude, _currentPosition!.longitude)
+        : LatLng(0, 0),
+    zoom: 15,
+  ),
+  myLocationEnabled: true,
+  myLocationButtonEnabled: true,
+  onMapCreated: (controller) {
+    _mapController = controller;
+    _updatePolyline(); // Ensure the polyline updates after the map is created
+  },
+  markers: {
+    if (pickupLocation != null)
+      Marker(
+        markerId: MarkerId("pickup"),
+        position: pickupLocation!,
+        infoWindow: InfoWindow(title: "Pickup Location"),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+      ),
+    if (_currentPosition != null)
+      Marker(
+        markerId: MarkerId("current"),
+        position: LatLng(_currentPosition!.latitude, _currentPosition!.longitude),
+        infoWindow: InfoWindow(title: "Your Location"),
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+      ),
+  },
+  polylines: _polylines, // Ensure the route is visible
+)
+
       ),
 
       /// 2️⃣ Semi-transparent Map Overlay (Optional, for better visibility)
@@ -341,3 +379,4 @@ void didChangeDependencies() {
 
   }
 }
+
