@@ -8,6 +8,8 @@ import 'package:fama/Views/Drivers/Chats/Models/user.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+
 class ChatScreen extends StatefulWidget {
   final UserModel user;
 
@@ -18,6 +20,8 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+
+
   final TextEditingController _messageController = TextEditingController();
   final UserService _userService = UserService();
   File? _selectedImage;
@@ -44,6 +48,7 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+
   Future<void> _pickImage() async {
     final picker = ImagePicker();
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
@@ -54,6 +59,8 @@ class _ChatScreenState extends State<ChatScreen> {
       });
     }
   }
+
+
 
   Future<void> _loadMessages() async {
     try {
@@ -159,7 +166,7 @@ class _ChatScreenState extends State<ChatScreen> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (isMe)
-            CircleAvatar(
+            CircleAvatar( 
               backgroundImage: NetworkImage(
                 widget.user.picture ??
                     "https://cdn-icons-png.flaticon.com/512/149/149071.png",
@@ -167,6 +174,7 @@ class _ChatScreenState extends State<ChatScreen> {
               radius: 16,
             ),
           SizedBox(width: 5),
+
           Column(
             crossAxisAlignment:
                 isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,

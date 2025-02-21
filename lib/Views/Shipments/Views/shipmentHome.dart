@@ -74,6 +74,7 @@ class _ShipmentsHomeState extends ConsumerState<ShipmentsHome>
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           backgroundColor: Colors.white,
           title: CustomText(text: 'Shipping'),
           elevation: 0,
