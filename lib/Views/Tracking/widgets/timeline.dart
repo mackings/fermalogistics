@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
+
+
 class TimelineData {
   final Color indicatorColor;
   final Color beforeLineColor;

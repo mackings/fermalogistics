@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sizer/sizer.dart';
 
-class MainTrackingDetails extends StatelessWidget {
+class MainTrackingDetails extends StatefulWidget {
   final String trackingID;
   final String status;
   final String fromLocation;
@@ -31,139 +31,205 @@ class MainTrackingDetails extends StatelessWidget {
     required this.weight,
   }) : super(key: key);
 
-  List<TimelineData> _getTimelineData() {
-    switch (status.toLowerCase()) {
+  @override
+  State<MainTrackingDetails> createState() => _MainTrackingDetailsState();
+}
+
+class _MainTrackingDetailsState extends State<MainTrackingDetails> {
+  late List<TimelineData> timelineData;
+
+  @override
+  void initState() {
+    super.initState();
+    timelineData = _getTimelineData(widget.status);
+  }
+
+  @override
+  void didUpdateWidget(MainTrackingDetails oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.status != widget.status) {
+      setState(() {
+        timelineData = _getTimelineData(widget.status);
+      });
+    }
+  }
+
+  List<TimelineData> _getTimelineData(String status) {
+    switch (widget.status.toLowerCase()) {
       case 'pending':
         return [
           TimelineData(
-            indicatorColor: Colors.red,
-            beforeLineColor: Colors.transparent,
-            afterLineColor: Colors.red,
-          ),
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.transparent,
+              afterLineColor: Colors.red),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.red,
-            afterLineColor: Colors.white,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.white),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.white,
-            afterLineColor: Colors.white,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.white,
+              afterLineColor: Colors.white),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.white,
-            afterLineColor: Colors.white,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.white,
+              afterLineColor: Colors.white),
+          TimelineData(
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.white,
+              afterLineColor: Colors.transparent),
         ];
-      case 'shipping':
+      case 'processing':
         return [
           TimelineData(
-            indicatorColor: Colors.red,
-            beforeLineColor: Colors.transparent,
-            afterLineColor: Colors.red,
-          ),
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.transparent,
+              afterLineColor: Colors.red),
           TimelineData(
-            indicatorColor: Colors.red,
-            beforeLineColor: Colors.red,
-            afterLineColor: Colors.red,
-          ),
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.red),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.red,
-            afterLineColor: Colors.white,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.white),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.white,
-            afterLineColor: Colors.white,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.white,
+              afterLineColor: Colors.white),
+          TimelineData(
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.white,
+              afterLineColor: Colors.transparent),
         ];
-      case 'delivered':
+      case 'in-transit':
         return [
           TimelineData(
-            indicatorColor: Colors.red,
-            beforeLineColor: Colors.transparent,
-            afterLineColor: Colors.red,
-          ),
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.transparent,
+              afterLineColor: Colors.red),
           TimelineData(
-            indicatorColor: Colors.red,
-            beforeLineColor: Colors.red,
-            afterLineColor: Colors.red,
-          ),
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.red),
           TimelineData(
-            indicatorColor: Colors.red,
-            beforeLineColor: Colors.red,
-            afterLineColor: Colors.red,
-          ),
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.red),
           TimelineData(
-            indicatorColor: Colors.red,
-            beforeLineColor: Colors.red,
-            afterLineColor: Colors.red,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.white),
+          TimelineData(
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.white,
+              afterLineColor: Colors.transparent),
+        ];
+      case 'arrived':
+        return [
+          TimelineData(
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.transparent,
+              afterLineColor: Colors.red),
+          TimelineData(
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.red),
+          TimelineData(
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.red),
+          TimelineData(
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.red),
+          TimelineData(
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.transparent),
+        ];
+      case 'completed':
+        return [
+          TimelineData(
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.transparent,
+              afterLineColor: Colors.red),
+          TimelineData(
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.red),
+          TimelineData(
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.red),
+          TimelineData(
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.red),
+          TimelineData(
+              indicatorColor: Colors.red,
+              beforeLineColor: Colors.red,
+              afterLineColor: Colors.transparent),
         ];
       case 'cancelled':
         return [
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.transparent,
-            afterLineColor: Colors.grey,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.transparent,
+              afterLineColor: Colors.grey),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.grey,
-            afterLineColor: Colors.grey,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.grey,
+              afterLineColor: Colors.grey),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.grey,
-            afterLineColor: Colors.grey,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.grey,
+              afterLineColor: Colors.grey),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.grey,
-            afterLineColor: Colors.grey,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.grey,
+              afterLineColor: Colors.grey),
+          TimelineData(
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.grey,
+              afterLineColor: Colors.transparent),
         ];
       default:
         return [
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.transparent,
-            afterLineColor: Colors.grey,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.transparent,
+              afterLineColor: Colors.grey),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.white,
-            afterLineColor: Colors.grey,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.grey,
+              afterLineColor: Colors.grey),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.white,
-            afterLineColor: Colors.white,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.grey,
+              afterLineColor: Colors.grey),
           TimelineData(
-            indicatorColor: Colors.grey,
-            beforeLineColor: Colors.grey,
-            afterLineColor: Colors.white,
-          ),
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.grey,
+              afterLineColor: Colors.grey),
+          TimelineData(
+              indicatorColor: Colors.grey,
+              beforeLineColor: Colors.grey,
+              afterLineColor: Colors.transparent),
         ];
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    List<TimelineData> timelineData = _getTimelineData(); // Fetch timeline data based on status
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: CustomText(
-           text: "Tracking ID",
-           fontSize: 10.sp,
-       ), 
-
+          text: "Tracking ID",
+          fontSize: 10.sp,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -197,40 +263,43 @@ class MainTrackingDetails extends StatelessWidget {
                             ),
                             child: Center(
                               child: CustomText(
-                                text: status,
+                                text: widget.status,
                                 color: Colors.black,
                               ),
                             ),
                           ),
                         ],
                       ),
-Align(
-      alignment: Alignment.centerLeft,
-      child: Row(
-        children: [
-          CustomText(text: trackingID), // Assuming CustomText is your custom widget
-          SizedBox(width: 2.w),
-          GestureDetector(
-            onTap: () {
-              Clipboard.setData(ClipboardData(text: trackingID));
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text('Tracking ID copied!'),
-                  duration: const Duration(seconds: 2),
-                ),
-              );
-            },
-            child: const Icon(
-              Icons.copy_all_outlined,
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
-    ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Row(
+                          children: [
+                            CustomText(
+                                text: widget
+                                    .trackingID), // Assuming CustomText is your custom widget
+                            SizedBox(width: 2.w),
+                            GestureDetector(
+                              onTap: () {
+                                Clipboard.setData(
+                                    ClipboardData(text: widget.trackingID));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text('Tracking ID copied!'),
+                                    duration: const Duration(seconds: 2),
+                                  ),
+                                );
+                              },
+                              child: const Icon(
+                                Icons.copy_all_outlined,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       SizedBox(height: 2.h),
                       Timelines(
-                        firstTile: timelineData[0], // Use dynamic timeline data
+                        firstTile: timelineData[0],
                         middleTile1: timelineData[1],
                         middleTile2: timelineData[2],
                         lastTile: timelineData[3],
@@ -243,7 +312,7 @@ Align(
                             children: [
                               CustomText(text: "Created", color: Colors.grey),
                               CustomText(
-                                text: fromDate,
+                                text: widget.fromDate,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -254,7 +323,7 @@ Align(
                             children: [
                               CustomText(text: "Estimated", color: Colors.grey),
                               CustomText(
-                                text: estimatedDate,
+                                text: widget.estimatedDate,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -271,7 +340,7 @@ Align(
                             children: [
                               CustomText(text: "From", color: Colors.grey),
                               CustomText(
-                                text: fromLocation,
+                                text: widget.fromLocation,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -282,7 +351,7 @@ Align(
                             children: [
                               CustomText(text: "To", color: Colors.grey),
                               CustomText(
-                                text: toLocation,
+                                text: widget.toLocation,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -301,7 +370,7 @@ Align(
                             children: [
                               CustomText(text: "Sender", color: Colors.grey),
                               CustomText(
-                                text: sender,
+                                text: widget.sender,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -312,7 +381,7 @@ Align(
                             children: [
                               CustomText(text: "Weight", color: Colors.grey),
                               CustomText(
-                                text: weight,
+                                text: widget.weight,
                                 color: Colors.black,
                                 fontWeight: FontWeight.w600,
                               ),
@@ -325,6 +394,7 @@ Align(
                 ),
               ),
               SizedBox(height: 5.h),
+
               CustomerService(
                 name: "Mac Kingsley",
                 title: "Customer Services",
@@ -337,71 +407,83 @@ Align(
               ),
               SizedBox(height: 5.h),
 
-Container(
-  decoration: BoxDecoration(
-    color: btngrey,
-    borderRadius: BorderRadius.circular(15),
-  ),
-  child: Padding(
-    padding: const EdgeInsets.all(8.0),
-    child: Column(
-      children: [
-
-        CustomTimelineTile(
-          title: "Order Placed",
-          subtitle: "An order has been placed.",
-          date: fromDate,
-          time: "03:00",
-          isFirst: true,
-          isActive: status.toLowerCase() == "pending" || status.toLowerCase() == "shipping" || status.toLowerCase() == "delivered",
-        ),
-
-        CustomTimelineTile(
-          title: "Processing",
-          subtitle: "Your order is being processed.",
-          date: fromDate,
-          time: "03:15",
-          isActive: status.toLowerCase() == "shipping" || status.toLowerCase() == "delivered",
-        ),
-
-        CustomTimelineTile(
-          title: "Packed",
-          date: estimatedDate,
-          time: "00:00",
-          isActive: status.toLowerCase() == "delivered",
-        ),
-
-        CustomTimelineTile(
-          title: "Shipping",
-          date: estimatedDate,
-          time: "00:00",
-          isActive: status.toLowerCase() == "delivered",
-        ),
-
-        CustomTimelineTile(
-          title: "Delivered",
-          date: "DD/MM/YY",
-          time: "00:00",
-          isLast: true,
-          isActive: status.toLowerCase() == "delivered",
-        ),
-        
-      ],
-    ),
-  ),
-),
-
+              Container(
+                decoration: BoxDecoration(
+                  color: btngrey,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      CustomTimelineTile(
+                        title: "Order Placed",
+                        subtitle: "An order has been placed.",
+                        date: widget.fromDate,
+                        isFirst: true,
+                        isActive: widget.status.toLowerCase() != "cancelled",
+                        indicatorColor: timelineData[0].indicatorColor,
+                        beforeLineColor: timelineData[0].beforeLineColor,
+                        afterLineColor: timelineData[0].afterLineColor,
+                      ),
+                      CustomTimelineTile(
+                        title: "Processing",
+                        subtitle: "Your order is being processed.",
+                        date: widget.fromDate,
+                        // time: "03:15",
+                        isActive: widget.status.toLowerCase() == "processing" ||
+                            widget.status.toLowerCase() == "shipping" ||
+                            widget.status.toLowerCase() == "delivered",
+                        indicatorColor: timelineData[1].indicatorColor,
+                        beforeLineColor: timelineData[1].beforeLineColor,
+                        afterLineColor: timelineData[1].afterLineColor,
+                      ),
+                      CustomTimelineTile(
+                        title: "Packed",
+                        //date: estimatedDate,
+                        subtitle: "Your order has been packed for shipment",
+                        date: "",
+                        // time:"Your order has been packed for shipment",
+                        isActive: widget.status.toLowerCase() == "shipping" ||
+                            widget.status.toLowerCase() == "delivered",
+                        indicatorColor: timelineData[2].indicatorColor,
+                        beforeLineColor: timelineData[2].beforeLineColor,
+                        afterLineColor: timelineData[2].afterLineColor,
+                      ),
+                      CustomTimelineTile(
+                        title: "Shipping",
+                        subtitle: "Your order has reached your region",
+                        date: "",
+                        isActive: widget.status.toLowerCase() == "delivered",
+                        indicatorColor: timelineData[3].indicatorColor,
+                        beforeLineColor: timelineData[3].beforeLineColor,
+                        afterLineColor: timelineData[3].afterLineColor,
+                      ),
+                      CustomTimelineTile(
+                        title: "Delivered",
+                        subtitle: "Your order has been delivered",
+                        date: "",
+                        // time: "00:00",
+                        isLast: true,
+                        isActive: widget.status.toLowerCase() == "delivered",
+                        indicatorColor: timelineData[4].indicatorColor,
+                        beforeLineColor: timelineData[4].beforeLineColor,
+                        afterLineColor: timelineData[4].afterLineColor,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
               SizedBox(height: 5.h),
+
               CustomButton(
                 text: "Continue",
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => LiveTracking()),
-                  );
+                  Navigator.pop(context);
                 },
               ),
+              
               SizedBox(height: 5.h),
             ],
           ),
@@ -410,4 +492,3 @@ Container(
     );
   }
 }
-

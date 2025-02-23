@@ -1,34 +1,39 @@
-import 'package:fama/Views/widgets/colors.dart';
+
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
-import 'package:sizer/sizer.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 
 class CustomTimelineTile extends StatelessWidget {
   final String title;
-  final String? subtitle; // Subtitle can now be null
+  final String? subtitle;
   final String date;
   final String? time;
   final bool isFirst;
   final bool isLast;
   final bool isActive;
+  final Color indicatorColor;
+  final Color beforeLineColor;
+  final Color afterLineColor;
 
   const CustomTimelineTile({
     Key? key,
     required this.title,
-    this.subtitle, // Make subtitle optional
+    this.subtitle,
     required this.date,
     this.time,
     this.isFirst = false,
     this.isLast = false,
     this.isActive = false,
+    required this.indicatorColor,
+    required this.beforeLineColor,
+    required this.afterLineColor,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     IconData icon;
-    // Determine icon based on the title
+
     switch (title) {
       case "Order Placed":
         icon = Icons.shopping_cart;
@@ -53,21 +58,29 @@ class CustomTimelineTile extends StatelessWidget {
       isFirst: isFirst,
       isLast: isLast,
       hasIndicator: true,
+      beforeLineStyle: LineStyle(
+        color: beforeLineColor,
+        thickness: 2.0,
+      ),
+      afterLineStyle: LineStyle(
+        color: afterLineColor,
+        thickness: 2.0,
+      ),
       indicatorStyle: IndicatorStyle(
         height: 30,
         width: 30,
         indicator: CircleAvatar(
           radius: 15,
-          backgroundColor: Colors.white,
+          backgroundColor: indicatorColor,
           child: Icon(
             icon,
-            color: isActive ? btncolor : Colors.grey,
+            color: isActive || indicatorColor == Colors.red ? Colors.white : Colors.grey.shade600,
             size: 18,
           ),
         ),
       ),
       endChild: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 8.0),
+        padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -75,16 +88,16 @@ class CustomTimelineTile extends StatelessWidget {
               text: title,
               fontWeight: FontWeight.w600,
             ),
-            SizedBox(height: 4.0),
-            if (subtitle != null) // Conditionally render the subtitle
+            const SizedBox(height: 4.0),
+            if (subtitle != null)
               CustomText(
                 text: subtitle!,
-                fontSize: 6.sp,
+                fontSize: 12,
               ),
-            SizedBox(height: 4.0),
+            const SizedBox(height: 4.0),
             CustomText(
-              text: "$date${time != null ? ', $time' : ''}", // Include time only if it's not null
-              fontSize: 6.sp,
+              text: "$date${time != null ? ', $time' : ''}",
+              fontSize: 12,
               color: Colors.grey,
             ),
           ],
@@ -93,3 +106,6 @@ class CustomTimelineTile extends StatelessWidget {
     );
   }
 }
+
+
+

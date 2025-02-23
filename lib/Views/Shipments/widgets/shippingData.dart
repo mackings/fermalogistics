@@ -38,118 +38,59 @@ List<TimelineData> _getTimelineData() {
   switch (status.toLowerCase()) {
     case 'pending':
       return [
-        TimelineData(
-          indicatorColor: Colors.red, // First dot red
-          beforeLineColor: Colors.transparent, // No line before the first dot
-          afterLineColor: Colors.red, // Color for the line after the first dot
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey, // Second dot grey
-          beforeLineColor: Colors.red, // Line from the first to the second dot
-          afterLineColor: Colors.white, // Line after the second dot
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey, // Third dot grey
-          beforeLineColor: Colors.white, // Line before the third dot
-          afterLineColor: Colors.white, // Change this to white
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey, // Fourth dot grey
-          beforeLineColor: Colors.white, // Line before the fourth dot
-          afterLineColor: Colors.white, // Change this to white
-        ),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.transparent, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.red, afterLineColor: Colors.white),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.white, afterLineColor: Colors.white),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.white, afterLineColor: Colors.white),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.white, afterLineColor: Colors.transparent),
       ];
-    case 'shipping':
+    case 'processing':
       return [
-        TimelineData(
-          indicatorColor: Colors.red, // First dot red
-          beforeLineColor: Colors.transparent,
-          afterLineColor: Colors.red,
-        ),
-        TimelineData(
-          indicatorColor: Colors.red, // Second dot red
-          beforeLineColor: Colors.red,
-          afterLineColor: Colors.red, // Line after the second dot
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey, // Third dot grey
-          beforeLineColor: Colors.red, // Line before the third dot
-          afterLineColor: Colors.white, // Change this to white
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey, // Fourth dot grey
-          beforeLineColor: Colors.white, // Line before the fourth dot
-          afterLineColor: Colors.white, // Change this to white
-        ),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.transparent, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.red, afterLineColor: Colors.white),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.white, afterLineColor: Colors.white),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.white, afterLineColor: Colors.transparent),
       ];
-    case 'delivered':
+    case 'in-transit':
       return [
-        TimelineData(
-          indicatorColor: Colors.red, // First dot red
-          beforeLineColor: Colors.transparent, // No line before the first dot
-          afterLineColor: Colors.red, // Color for the line after the first dot
-        ),
-        TimelineData(
-          indicatorColor: Colors.red, // Second dot red
-          beforeLineColor: Colors.red, // Line from first to second
-          afterLineColor: Colors.red, // Line after the second dot
-        ),
-        TimelineData(
-          indicatorColor: Colors.red, // Third dot red
-          beforeLineColor: Colors.red, // Line from second to third
-          afterLineColor: Colors.red, // Line after the third dot
-        ),
-        TimelineData(
-          indicatorColor: Colors.red, // Fourth dot red
-          beforeLineColor: Colors.red, // Line from third to fourth
-          afterLineColor: Colors.red, // Line after the fourth dot
-        ),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.transparent, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.red, afterLineColor: Colors.white),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.white, afterLineColor: Colors.transparent),
+      ];
+    case 'arrived':
+      return [
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.transparent, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.red, afterLineColor: Colors.transparent),
+      ];
+    case 'completed':
+      return [
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.transparent, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.red),
+        TimelineData(indicatorColor: Colors.red, beforeLineColor: Colors.red, afterLineColor: Colors.transparent),
       ];
     case 'cancelled':
       return [
-        TimelineData(
-          indicatorColor: Colors.grey, // All dots grey
-          beforeLineColor: Colors.transparent,
-          afterLineColor: Colors.grey,
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey,
-          beforeLineColor: Colors.grey,
-          afterLineColor: Colors.grey,
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey,
-          beforeLineColor: Colors.grey,
-          afterLineColor: Colors.grey,
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey,
-          beforeLineColor: Colors.grey,
-          afterLineColor: Colors.grey,
-        ),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.transparent, afterLineColor: Colors.grey),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.grey, afterLineColor: Colors.grey),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.grey, afterLineColor: Colors.grey),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.grey, afterLineColor: Colors.grey),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.grey, afterLineColor: Colors.transparent),
       ];
     default:
       return [
-        TimelineData(
-          indicatorColor: Colors.grey,
-          beforeLineColor: Colors.transparent,
-          afterLineColor: Colors.grey,
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey,
-          beforeLineColor: Colors.white,
-          afterLineColor: Colors.grey,
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey,
-          beforeLineColor: Colors.white,
-          afterLineColor: Colors.white, // Change this to white
-        ),
-        TimelineData(
-          indicatorColor: Colors.grey,
-          beforeLineColor: Colors.grey,
-          afterLineColor: Colors.white, // Change this to white
-        ),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.transparent, afterLineColor: Colors.grey),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.grey, afterLineColor: Colors.grey),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.grey, afterLineColor: Colors.grey),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.grey, afterLineColor: Colors.grey),
+        TimelineData(indicatorColor: Colors.grey, beforeLineColor: Colors.grey, afterLineColor: Colors.transparent),
       ];
   }
 }

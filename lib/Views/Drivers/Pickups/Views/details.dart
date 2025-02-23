@@ -322,7 +322,8 @@ class _PickupDetailsPageState extends State<PickupDetailsPage> {
               "Remember to check receipts and make sure it corresponds with the order.",
               style: GoogleFonts.inter(fontSize: 13, color: Colors.grey),
             ),
-            const SizedBox(height: 165),
+
+            const SizedBox(height: 140),
 
             CustomButton(
               text: "Confirm Pickup",
@@ -330,6 +331,7 @@ class _PickupDetailsPageState extends State<PickupDetailsPage> {
                 _showConfirmPickupModal(context, widget.upcomingOrder);
               },
             ),
+            
           ],
         ),
       ),

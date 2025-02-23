@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
+
+
 class SearchCard extends StatefulWidget {
   const SearchCard({super.key});
 
@@ -23,8 +25,8 @@ class _SearchCardState extends State<SearchCard> {
       children: [
         GestureDetector(
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => TrackingDetails()));
+            // Navigator.push(context,
+            //     MaterialPageRoute(builder: (context) => TrackingDetails()));
           },
           child: Container(
             decoration: BoxDecoration(

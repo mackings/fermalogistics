@@ -5,10 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 
-
-
 class UserService {
-
   final String apiUrl =
       "https://fama-logistics.onrender.com/api/v1/firebaseMessage/viewAllUsers";
   final String sendMessageUrl =
@@ -25,15 +22,15 @@ class UserService {
   }
 
   Future<String?> getCurrentUserId() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? userDataString = prefs.getString('userData');
-  if (userDataString != null) {
-    Map<String, dynamic> userData = jsonDecode(userDataString);
-    return userData['id']; // Ensure this matches the key used in your API response
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userDataString = prefs.getString('userData');
+    if (userDataString != null) {
+      Map<String, dynamic> userData = jsonDecode(userDataString);
+      return userData[
+          'id']; // Ensure this matches the key used in your API response
+    }
+    return null;
   }
-  return null;
-}
-
 
 
   Future<List<UserModel>> fetchUsers() async {
@@ -95,6 +92,7 @@ class UserService {
         print("✅ Message sent successfully!");
       } else {
         print("❌ Failed to send message: ${response.statusCode}");
+        print(response);
         throw Exception("Failed to send message.");
       }
     } catch (e) {
@@ -105,13 +103,14 @@ class UserService {
 
 
 
-    Future<List<Map<String, dynamic>>> fetchChatMessages(String userId) async {
+  Future<List<Map<String, dynamic>>> fetchChatMessages(String userId) async {
     String? token = await _getAuthToken();
     if (token == null) {
       throw Exception("Authentication token not found");
     }
 
-    final uri = Uri.parse("https://fama-logistics.onrender.com/api/v1/firebaseMessage/userViewMessage/$userId");
+    final uri = Uri.parse(
+        "https://fama-logistics.onrender.com/api/v1/firebaseMessage/userViewMessage/$userId");
     try {
       final response = await http.get(
         uri,
@@ -126,7 +125,8 @@ class UserService {
         List<dynamic> messagesList = data['messages'];
 
         return messagesList.map((message) {
-          final details = message['receiverDetails'] ?? message['senderDetails'];
+          final details =
+              message['receiverDetails'] ?? message['senderDetails'];
           return {
             "id": message["id"],
             "text": details["message"] ?? "",
@@ -144,5 +144,4 @@ class UserService {
       throw Exception("Error fetching messages: $e");
     }
   }
-
 }
