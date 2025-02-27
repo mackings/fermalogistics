@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
 
+
+
 class Verification extends ConsumerStatefulWidget {
   const Verification({super.key});
 
@@ -83,14 +85,11 @@ class _VerificationState extends ConsumerState<Verification> {
                     height: 2.h,
                   ),
                   VerificationWidget(onOtpEntered: _validateOtp),
+
                   SizedBox(
                     height: 5.h,
                   ),
-                  // CustomButton(
-                  //     text: "Verify",
-                  //     onPressed: () {
-                  //       // You can also handle button presses if needed
-                  //     })
+
                 ],
               ),
             ),

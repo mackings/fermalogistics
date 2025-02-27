@@ -1,6 +1,7 @@
 import 'package:fama/Views/Auth/Pin/Createpin.dart';
 import 'package:fama/Views/Drivers/DriverHome.dart';
 import 'package:fama/Views/Profile/Views/Update/profileupdate.dart';
+import 'package:fama/Views/Profile/Views/Update/switchprofilr.dart';
 import 'package:fama/Views/Profile/Views/Wallet/wallethome.dart';
 import 'package:fama/Views/Profile/Widgets/balcard.dart';
 import 'package:fama/Views/Profile/Widgets/profiletile.dart';
@@ -100,6 +101,17 @@ class _ProfileHomeState extends State<ProfileHome> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePin()));
                 },
               ),
+
+            ProfileOptionTile(
+                icon: Icons.car_rental,
+                iconColor: Colors.red,
+                backgroundColor: Colors.red.shade50,
+                title: "Become a Driver",
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => SwitchProfile()));
+                },
+              ),
+
               ProfileOptionTile(
                 icon: Icons.person,
                 iconColor: Colors.red,

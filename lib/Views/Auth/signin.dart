@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fama/Views/Auth/forgotpassword.dart';
 import 'package:fama/Views/Drivers/Home/driverhome.dart';
 import 'package:fama/Views/Home/dashboard.dart';
 import 'package:fama/Views/Home/home.dart';
@@ -25,8 +26,6 @@ class _SigninState extends ConsumerState<Signin> {
   TextEditingController password = TextEditingController();
 
   bool isLoading = false;
-
-
 
   Future<void> _login() async {
     setState(() {
@@ -73,8 +72,10 @@ class _SigninState extends ConsumerState<Signin> {
           );
         }
       } else {
+         final responseData = jsonDecode(response.body);
+        
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Login Failed: ${response.body}')),
+          SnackBar(content: Text('${responseData['message']}')),
         );
       }
     } catch (e) {
@@ -122,6 +123,7 @@ class _SigninState extends ConsumerState<Signin> {
                     height: 2.h,
                   ),
                   CustomTextFormField(
+                    isPassword: true,
                       labelText: "Password *",
                       hintText: 'Enter your password',
                       controller: password,
@@ -132,7 +134,14 @@ class _SigninState extends ConsumerState<Signin> {
                   ),
                   Align(
                       alignment: Alignment.topRight,
-                      child: CustomText(text: 'Forgot password?')),
+                      child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Forgotpassword()));
+                          },
+                          child: CustomText(text: 'Forgot password?'))),
                   SizedBox(
                     height: 23.h,
                   ),

@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http_parser/http_parser.dart';
 
+
+
 class UserService {
   final String apiUrl =
       "https://fama-logistics.onrender.com/api/v1/firebaseMessage/viewAllUsers";
@@ -21,6 +23,7 @@ class UserService {
     return null;
   }
 
+
   Future<String?> getCurrentUserId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? userDataString = prefs.getString('userData');
@@ -31,7 +34,6 @@ class UserService {
     }
     return null;
   }
-
 
   Future<List<UserModel>> fetchUsers() async {
     String? token = await _getAuthToken();
@@ -60,7 +62,6 @@ class UserService {
     }
   }
 
-  // ✅ Send Message API
   Future<void> sendMessage({
     required String receiverId,
     required String message,
@@ -77,7 +78,7 @@ class UserService {
 
     request.fields['message'] = message;
 
-    // If an image is provided, attach it
+    // Attach image if provided
     if (imageFile != null) {
       request.files.add(await http.MultipartFile.fromPath(
         'imageUrl',
@@ -86,22 +87,36 @@ class UserService {
       ));
     }
 
+    // ✅ Print Request Body
+    print("📤 Request Body: ${jsonEncode(request.fields)}");
+
+    if (imageFile != null) {
+      print("📤 Image File: ${imageFile.path}");
+    }
+
     try {
       var response = await request.send();
+      var responseBody =
+          await response.stream.bytesToString(); // Read response body
+
+      // ✅ Print Response Body
+      print("📥 Response Status Code: ${response.statusCode}");
+      print("📥 Response Body: $responseBody");
+
       if (response.statusCode == 200) {
         print("✅ Message sent successfully!");
       } else {
-        print("❌ Failed to send message: ${response.statusCode}");
-        print(response);
-        throw Exception("Failed to send message.");
+        print(receiverId);
+        print(
+            "❌ Failed to send message: ${jsonDecode(responseBody)['message']}");
+        throw Exception(
+            "Failed to send message: ${jsonDecode(responseBody)['message']}");
       }
     } catch (e) {
       print("🚨 Error sending message: $e");
       throw Exception("Error sending message.");
     }
   }
-
-
 
   Future<List<Map<String, dynamic>>> fetchChatMessages(String userId) async {
     String? token = await _getAuthToken();

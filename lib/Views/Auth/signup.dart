@@ -20,6 +20,7 @@ import 'dart:convert';
 
 
 class Signup extends ConsumerStatefulWidget {
+  
   const Signup({super.key});
 
   @override
@@ -27,6 +28,7 @@ class Signup extends ConsumerStatefulWidget {
 }
 
 class _SignupState extends ConsumerState<Signup> {
+
   TextEditingController fullname = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
@@ -181,6 +183,7 @@ Future<void> signUp() async {
                   ),
                   SizedBox(height: 2.h),
                   CustomTextFormField(
+                    isPassword: true,
                     labelText: "Password",
                     hintText: "Enter your password",
                     controller: password,

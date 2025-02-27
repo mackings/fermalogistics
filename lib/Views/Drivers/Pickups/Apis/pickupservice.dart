@@ -112,9 +112,12 @@ class PickupService {
       if (response.statusCode == 200) {
         return {'success': true, 'message': 'Pickup confirmed successfully'};
       } else {
+        final Map<String, dynamic> errorData = jsonDecode(response.body);
+    String errorMessage = errorData['message'] ?? 'Unknown error occurred';
+      
         return {
-          'success': false,
-          'message': 'Error ${response.statusCode}: ${response.body}'
+         'success': false,
+      'message': ' $errorMessage'
         };
       }
     } catch (e) {
