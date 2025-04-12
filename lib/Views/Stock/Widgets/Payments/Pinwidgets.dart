@@ -108,7 +108,7 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
                   ['receiverPhoneNumber'],
               receiverEmail: responseData['shipment']['receiverEmailAddress'],
               receiverAddress: responseData['shipment']['receiverAddress'],
-              shippingFee: responseData['shipment']['amount'],
+              shippingFee: (responseData['shipment']['amount'] as num).toDouble(),
               status: responseData['shipment']['status'],
               trackingNumber: responseData['shipment']['trackingNumber'],
             ),

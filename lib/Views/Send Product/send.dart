@@ -25,6 +25,8 @@ class SendProduct extends ConsumerStatefulWidget {
 }
 
 class _SendProductState extends ConsumerState<SendProduct> {
+
+
   dynamic userToken;
 
   Future<void> _retrieveUserData() async {
@@ -45,7 +47,6 @@ class _SendProductState extends ConsumerState<SendProduct> {
   bool isLoading = false;
 
   final Map<String, dynamic> formData = {};
-// "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet"
   Future<void> _makeApiCall() async {
     final url =
         "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/calculationInvolvedShipment";
@@ -129,7 +130,7 @@ class _SendProductState extends ConsumerState<SendProduct> {
       ),
       builder: (context) => Padding(
         padding: const EdgeInsets.symmetric(horizontal: 24.0),
-        child: CartPinInputModal(id: id), // Pass the ID here
+        child: CartPinInputModal(id: id), 
       ),
     );
   }
@@ -246,6 +247,7 @@ class _SendProductState extends ConsumerState<SendProduct> {
                       ),
                     ),
                     SizedBox(height: 20),
+                    
                     _buildSummaryRow(
                         "Sender's Name", shipmentData['senderName']),
                     _buildSummaryRow(

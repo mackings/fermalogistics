@@ -45,6 +45,18 @@ class ApiService {
     return null;
   }
 
+    Future<String?> retrieveUserCurrency() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userDataString = prefs.getString('userData');
+
+    if (userDataString != null) {
+      Map<String, dynamic> userData = jsonDecode(userDataString);
+      return userData['user']['userCurrency']; // Return token for further use
+    }
+
+    return null;
+  }
+
   Future<String?> getAddressFromCoordinates(double latitude, double longitude) async {
     List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
     if (placemarks.isNotEmpty) {

@@ -2,6 +2,7 @@ import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class SuccessDetailsPage extends StatelessWidget {
   final String senderName;
@@ -35,7 +36,7 @@ class SuccessDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("E-Receipt"),
+        title: CustomText(text: "E-Recipt",)
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -164,30 +165,35 @@ class SuccessDetailsPage extends StatelessWidget {
   }
 
   // Helper method to create a detail row
-  Widget _buildDetailRow(String title, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 6.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: TextStyle(
+Widget _buildDetailRow(String title, String value) {
+
+  return Padding(
+    padding: const EdgeInsets.symmetric(vertical: 6.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.inter(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+            color: Colors.grey[700],
+          ),
+        ),
+        Flexible(
+          child: Text(
+            value,
+            style: GoogleFonts.inter(
               fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[700],
+              fontWeight: FontWeight.w500,
+              color: Colors.black,
             ),
+            textAlign: TextAlign.right,
           ),
-          Flexible(
-            child: Text(
-              value,
-              style: const TextStyle(fontSize: 16, color: Colors.black),
-              textAlign: TextAlign.right,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }
 

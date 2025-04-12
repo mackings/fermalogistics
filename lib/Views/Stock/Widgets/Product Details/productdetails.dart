@@ -7,16 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
 class ProductDetailsPage extends StatefulWidget {
   final Product product;
+  final String currency;
 
-  ProductDetailsPage({required this.product});
+  const ProductDetailsPage({
+    Key? key,
+    required this.product,
+    required this.currency,
+  }) : super(key: key);
 
   @override
   _ProductDetailsPageState createState() => _ProductDetailsPageState();
 }
+
 
 class _ProductDetailsPageState extends State<ProductDetailsPage> {
   int quantity = 1;
@@ -58,10 +62,9 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
       'weight': widget.product.weight,
       'height': widget.product.height,
       'numberofPackages': widget.product.quantity,
-      'length':widget.product.length,
-      'width':widget.product.width
+      'length': widget.product.length,
+      'width': widget.product.width
     };
-
 
     // Encode the new product details to JSON string
     String productJson = jsonEncode(productDetails);
@@ -289,7 +292,7 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                 color: Colors.grey),
                           ),
                           Text(
-                            '\$${widget.product.price * quantity}',
+                            '${widget.currency}${widget.product.price * quantity}',
                             style: GoogleFonts.montserrat(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,

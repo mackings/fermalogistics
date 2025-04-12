@@ -22,10 +22,12 @@ class _SearchStockState extends State<SearchStock> {
   List<Product> searchResults = [];
   bool isLoading = false;
   List<String> recentSearches = [];
+    final ApiService apiService = ApiService();
 
   @override
   void initState() {
     super.initState();
+     _retrieveUserCurrency();
     _loadRecentSearches();
     searchController.addListener(_onSearchChanged);
   }
@@ -99,6 +101,16 @@ class _SearchStockState extends State<SearchStock> {
     }
   }
 
+  dynamic userCurrency;
+    Future<void> _retrieveUserCurrency() async {
+    userCurrency = await apiService.retrieveUserCurrency();
+    if (userCurrency != null) {
+      setState(() {
+        print(userCurrency);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -162,7 +174,10 @@ class _SearchStockState extends State<SearchStock> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => ProductDetailsPage(product: product),
+                          builder: (context) => ProductDetailsPage(
+                            product: product,
+                            currency: userCurrency,
+                            ),
                         ),
                       );
                     },

@@ -1,14 +1,14 @@
 import 'package:fama/Views/Stock/Widgets/widgetviews/texts.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:sizer/sizer.dart';
 
 
 class ProductCard extends StatelessWidget {
-
   final String imageUrl;
   final String productName;
-  final String price;
+  final dynamic price;
   final double rating;
 
   const ProductCard({
@@ -18,6 +18,26 @@ class ProductCard extends StatelessWidget {
     required this.price,
     required this.rating,
   }) : super(key: key);
+
+
+String formatPrice(dynamic price) {
+  try {
+    if (price == null) return "₦0";
+
+    // Remove currency symbol, comma, spaces
+    String cleaned = price.toString().replaceAll(RegExp(r'[₦,\s]'), '');
+
+    double parsedPrice = double.tryParse(cleaned) ?? 0.0;
+
+    // Use NumberFormat to format with commas
+    final formatter = NumberFormat("#,##0", "en_NG");
+
+    return "₦${formatter.format(parsedPrice)}";
+  } catch (e) {
+    return "₦0";
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +121,7 @@ class ProductCard extends StatelessWidget {
               ],
             ),
             CustomText(
-              text: price,
+              text: formatPrice(price),
               fontSize: 10.sp,
               color: Colors.black,
               fontWeight: FontWeight.w600,
@@ -112,3 +132,4 @@ class ProductCard extends StatelessWidget {
     );
   }
 }
+

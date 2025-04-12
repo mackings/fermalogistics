@@ -106,28 +106,36 @@ class _ScanCodeState extends State<ScanCode> {
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: Column(
             children: [
+
               SizedBox(
                 height: 15.h,
               ),
+
               Icon(
                 Icons.qr_code_2,
                 size: 190,
               ),
+
               SizedBox(
                 height: 20.h,
               ),
+
               CustomButton(
                   text: "Scan ",
                   onPressed: () {
                     scanBarcode();
                   }),
+
+
               SizedBox(
                 height: 2.h,
               ),
+
               CustomText(
                 text: "Kindly hold the camera still at the barcode",
                 fontSize: 8.sp,
               )
+
             ],
           ),
         ),

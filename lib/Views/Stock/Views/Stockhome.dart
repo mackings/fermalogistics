@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:location/location.dart' as loc;
 
-
-
 class StockHome extends StatefulWidget {
   const StockHome({super.key});
 
@@ -21,10 +19,10 @@ class StockHome extends StatefulWidget {
 }
 
 class _StockHomeState extends State<StockHome> {
-
   final ApiService apiService = ApiService();
 
   dynamic userToken;
+  dynamic userCurrency;
   dynamic userImage;
   String? currentAddress;
   loc.LocationData? currentLocation;
@@ -44,6 +42,14 @@ class _StockHomeState extends State<StockHome> {
     }
   }
 
+  Future<void> _retrieveUserCurrency() async {
+    userCurrency = await apiService.retrieveUserCurrency();
+    if (userCurrency != null) {
+      setState(() {
+        print(userCurrency);
+      });
+    }
+  }
 
   Future<void> getCurrentLocation() async {
     currentLocation = await apiService.getCurrentLocation();
@@ -71,8 +77,6 @@ class _StockHomeState extends State<StockHome> {
     }
   }
 
-
-
   Future<void> fetchCategories() async {
     try {
       final fetchedCategories = await apiService.fetchCategories();
@@ -95,7 +99,6 @@ class _StockHomeState extends State<StockHome> {
     }
   }
 
-
   Future<void> fetchProductsByCategory(String category) async {
     try {
       if (category == 'All') {
@@ -116,6 +119,7 @@ class _StockHomeState extends State<StockHome> {
   void initState() {
     getCurrentLocation();
     _retrieveUserData();
+    _retrieveUserCurrency();
     fetchCategories();
     fetchProducts();
     super.initState();
@@ -134,7 +138,6 @@ class _StockHomeState extends State<StockHome> {
                 currentAddress: currentAddress,
                 onRefresh: () {},
                 onSettings: () {
-
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => CartScreen()));
                 },
@@ -142,7 +145,7 @@ class _StockHomeState extends State<StockHome> {
               const SizedBox(height: 20),
               GestureDetector(
                 onTap: () {
-                Navigator.push(context,
+                  Navigator.push(context,
                       MaterialPageRoute(builder: (context) => SearchStock()));
                 },
                 child: SearchTextField(
@@ -234,6 +237,7 @@ class _StockHomeState extends State<StockHome> {
                                 MaterialPageRoute(
                                   builder: (context) => ProductDetailsPage(
                                     product: products[firstProductIndex],
+                                    currency:userCurrency
                                   ),
                                 ),
                               );
@@ -242,7 +246,7 @@ class _StockHomeState extends State<StockHome> {
                             child: ProductCard(
                               productName:
                                   products[firstProductIndex].productName,
-                              price: 'N${products[firstProductIndex].price}',
+                              price: '${userCurrency}${products[firstProductIndex].price}',
                               rating: 4.5,
                               imageUrl: products[firstProductIndex]
                                       .productImages
@@ -264,6 +268,7 @@ class _StockHomeState extends State<StockHome> {
                                   MaterialPageRoute(
                                     builder: (context) => ProductDetailsPage(
                                       product: products[secondProductIndex],
+                                      currency:userCurrency
                                     ),
                                   ),
                                 );
@@ -272,7 +277,7 @@ class _StockHomeState extends State<StockHome> {
                               child: ProductCard(
                                 productName:
                                     products[secondProductIndex].productName,
-                                price: 'N${products[secondProductIndex].price}',
+                                price: '${userCurrency}${products[secondProductIndex].price}',
                                 rating: 4.5,
                                 imageUrl: products[secondProductIndex]
                                         .productImages
