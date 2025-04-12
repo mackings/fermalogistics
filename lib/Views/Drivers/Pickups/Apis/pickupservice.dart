@@ -3,7 +3,11 @@ import 'package:fama/Views/Drivers/Pickups/Models/pickupmodel.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+
+
 class PickupService {
+
   final String pickupOrdersUrl =
       'https://fama-logistics.onrender.com/api/v1/delivery/getAllSendOrders';
 
@@ -32,7 +36,7 @@ class PickupService {
 
     try {
       final response = await http.get(
-        Uri.parse(pickupOrdersUrl),
+        Uri.parse(pickupOrdersUrl), 
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',
@@ -92,6 +96,8 @@ class PickupService {
       return false;
     }
   }
+
+
 
   Future<Map<String, dynamic>> confirmPickup(String orderId) async {
     String? token = await _getAuthToken();

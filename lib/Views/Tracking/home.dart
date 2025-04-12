@@ -1,14 +1,12 @@
 import 'package:fama/Views/Shipments/widgets/shippingData.dart';
 import 'package:fama/Views/Tracking/Api/trackingservice.dart';
+import 'package:fama/Views/Tracking/Scancode.dart';
 import 'package:fama/Views/widgets/colors.dart';
 import 'package:fama/Views/widgets/formfields.dart';
 import 'package:fama/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-
-
 
 class SearchHome extends StatefulWidget {
   const SearchHome({super.key});
@@ -78,7 +76,8 @@ class _SearchHomeState extends State<SearchHome> {
   }
 
   void _setSearchText(String trackingCode) {
-    searchController.text = trackingCode; // Populate the text field with the selected tracking code
+    searchController.text =
+        trackingCode; // Populate the text field with the selected tracking code
   }
 
   @override
@@ -88,6 +87,18 @@ class _SearchHomeState extends State<SearchHome> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         title: CustomText(text: "Tracking"),
+        actions: [
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ScanCode()));
+            },
+            child: CustomText(
+              text: "Scan QR",
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20),
@@ -105,7 +116,9 @@ class _SearchHomeState extends State<SearchHome> {
             ),
             SizedBox(height: 10.0),
             // Show recent searches only if not loading and shipment is null
-            if (!isLoading && shipment == null && recentSearches.isNotEmpty) ...[
+            if (!isLoading &&
+                shipment == null &&
+                recentSearches.isNotEmpty) ...[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -136,16 +149,20 @@ class _SearchHomeState extends State<SearchHome> {
                       children: [
                         Expanded(
                           child: GestureDetector(
-                            onTap: () => _setSearchText(trackingCode), // Set search text on tap
+                            onTap: () => _setSearchText(
+                                trackingCode), // Set search text on tap
                             child: Text(
                               trackingCode, // Display tracking code
-                              style: TextStyle(color: Colors.black), // Optional: make it look clickable
+                              style: TextStyle(
+                                  color: Colors
+                                      .black), // Optional: make it look clickable
                             ),
                           ),
                         ),
                         IconButton(
                           icon: Icon(Icons.close),
-                          onPressed: () => _removeFromRecent(trackingCode), // Remove tracking code on close
+                          onPressed: () => _removeFromRecent(
+                              trackingCode), // Remove tracking code on close
                         ),
                       ],
                     ),
@@ -193,5 +210,3 @@ class _SearchHomeState extends State<SearchHome> {
     );
   }
 }
-
-
