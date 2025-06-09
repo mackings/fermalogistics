@@ -57,7 +57,7 @@ class _StepForm3State extends State<StepForm3> {
   Future<Map<String, dynamic>?> calculateShipmentCost(
       Map<String, dynamic> shipmentData) async {
     final url = Uri.parse(
-        'https://fama-logistics.onrender.com/api/v1/dropshipperShipment/calculateShipmentCost');
+        'https://fama-logistics-ljza.onrender.com/api/v1/dropshipperShipment/calculateShipmentCost');
 
     try {
       print(shipmentData);  

@@ -310,7 +310,7 @@ class _RequestproductState extends ConsumerState<Requestproduct>
                         );
                       } else if (snapshot.hasData) {
                         final cancelledRequests = snapshot.data!
-                            .where((request) => request.status == 'delivered')
+                            .where((request) => request.status == 'completed')
                             .toList();
 
                         if (cancelledRequests.isEmpty) {

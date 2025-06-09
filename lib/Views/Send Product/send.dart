@@ -108,6 +108,8 @@ class _SendProductState extends ConsumerState<SendProduct> {
     }
   }
 
+
+
   void _completeStep(Map<String, dynamic> data) {
     setState(() {
       _stepsCompleted[_currentStep] = true;
@@ -119,6 +121,8 @@ class _SendProductState extends ConsumerState<SendProduct> {
       }
     });
   }
+
+
 
   void _showPinInputModal(BuildContext context, String id) {
     showModalBottomSheet(
@@ -136,64 +140,89 @@ class _SendProductState extends ConsumerState<SendProduct> {
   }
 
 
+  late List<Widget?> _stepForms;
 
-  @override
-  void initState() {
-    _retrieveUserData();
-    super.initState();
-  }
+
+@override
+void initState() {
+  super.initState();
+  _retrieveUserData();
+
+  _stepForms = [
+    StepForm1(onComplete: _completeStep),
+    StepForm2(onComplete: _completeStep),
+    StepForm3(onComplete: _completeStep, previousData: formData),
+    StepForm4(onComplete: _completeStep),
+  ];
+}
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: CustomText(text: "Send Order"),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(4, (index) {
-                return Container(
-                  width: 70,
-                  height: 3,
-                  color: _stepsCompleted[index] ? Colors.red : Colors.grey,
-                );
-              }),
-            ),
-            Expanded(
-              child: _getFormForStep(_currentStep),
-            ),
-            if (isLoading)
-              LinearProgressIndicator(
-                color: btncolor,
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _getFormForStep(int step) {
-    switch (step) {
-      case 0:
-        return StepForm1(onComplete: _completeStep);
-      case 1:
-        return StepForm2(onComplete: _completeStep);
-      case 2:
-        return StepForm3(
-          onComplete: _completeStep,
-          previousData: formData,
-        );
-
-      case 3:
-        return StepForm4(onComplete: _completeStep);
-      default:
-        return Container();
+    return PopScope(
+  canPop: _currentStep == 0, // Allow system pop only on the first step
+  onPopInvoked: (didPop) {
+    if (!didPop && _currentStep > 0) {
+      setState(() {
+        _currentStep--;
+      });
     }
+  },
+  child: Scaffold(
+    appBar: AppBar(
+      title: CustomText(text: "Send Order"),
+    ),
+    body: Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(4, (index) {
+              return Container(
+                width: 70,
+                height: 3,
+                color: _stepsCompleted[index] ? Colors.red : Colors.grey,
+              );
+            }),
+          ),
+          Expanded(
+            child: _getFormForStep(_currentStep),
+          ),
+          if (isLoading)
+            LinearProgressIndicator(
+              color: btncolor,
+            ),
+        ],
+      ),
+    ),
+  ),
+);
+
+
   }
+
+
+Widget _getFormForStep(int step) => _stepForms[step]!;
+
+  // Widget _getFormForStep(int step) {
+  //   switch (step) {
+  //     case 0:
+  //       return StepForm1(onComplete: _completeStep);
+  //     case 1:
+  //       return StepForm2(onComplete: _completeStep);
+  //     case 2:
+  //       return StepForm3(
+  //         onComplete: _completeStep,
+  //         previousData: formData,
+  //       );
+
+  //     case 3:
+  //       return StepForm4(onComplete: _completeStep);
+  //     default:
+  //       return Container();
+  //   }
+  // }
 
 
   void _showShipmentSummary(
@@ -287,6 +316,8 @@ class _SendProductState extends ConsumerState<SendProduct> {
       },
     );
   }
+
+
 
   Widget _buildSummaryRow(String label, String value) {
     return Padding(

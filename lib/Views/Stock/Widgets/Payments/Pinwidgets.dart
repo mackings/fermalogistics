@@ -6,9 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-
-
-
 class CartPinInputModal extends StatefulWidget {
   late final String id;
 
@@ -56,22 +53,18 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
     });
   }
 
-
-
   void _onPinComplete(String id) async {
-    
     String enteredPin = _pin.join('');
     print("Entered PIN: $enteredPin");
 
     // API URL
     final String url =
-        "https://fama-logistics.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet/$id";
+        "https://fama-logistics-ljza.onrender.com/api/v1/dropshipperShipment/createShipmentPayByWallet/$id";
 
     // Request body
     final Map<String, dynamic> requestBody = {"pin": enteredPin};
 
     try {
-      
       print(id);
       // Make the API call
       final response = await http.post(
@@ -86,56 +79,65 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+
         // Successful response
         final responseData = jsonDecode(response.body);
-        print("Success: $responseData");
+        print("$responseData");
+        print(response.statusCode);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Payment Successful!')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Payment Successful!')));
 
         // Navigate to the success page
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => SuccessDetailsPage(
-              senderName: responseData['shipment']['senderName'],
-              phoneNumber: responseData['shipment']['phoneNumber'],
-              email: responseData['shipment']['emailAddress'],
-              pickupAddress: responseData['shipment']['pickupAddress'],
-              receiverName: responseData['shipment']['receiverName'],
-              receiverPhoneNumber: responseData['shipment']
-                  ['receiverPhoneNumber'],
-              receiverEmail: responseData['shipment']['receiverEmailAddress'],
-              receiverAddress: responseData['shipment']['receiverAddress'],
-              shippingFee: (responseData['shipment']['amount'] as num).toDouble(),
-              status: responseData['shipment']['status'],
-              trackingNumber: responseData['shipment']['trackingNumber'],
-            ),
+            builder:
+                (context) => SuccessDetailsPage(
+                  senderName: responseData['shipment']['senderName'],
+                  phoneNumber: responseData['shipment']['phoneNumber'],
+                  email: responseData['shipment']['emailAddress'],
+                  pickupAddress: responseData['shipment']['pickupAddress'],
+                  receiverName: responseData['shipment']['receiverName'],
+                  receiverPhoneNumber:
+                      responseData['shipment']['receiverPhoneNumber'],
+                  receiverEmail:
+                      responseData['shipment']['receiverEmailAddress'],
+                  receiverAddress: responseData['shipment']['receiverAddress'],
+                  shippingFee:
+                      (responseData['shipment']['amount'] as num).toDouble(),
+                  status: responseData['shipment']['status'],
+                  trackingNumber: responseData['shipment']['trackingNumber'],
+                ),
           ),
         );
       } else {
-        // Error from API
+
+        // print(response.body);
         final responseData = jsonDecode(response.body);
         String errorMessage = responseData['message'];
-        print("Error: $errorMessage");
+        // print("Error: $errorMessage");
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
-        );
+        // ScaffoldMessenger.of(
+        //   context,
+        // ).showSnackBar(SnackBar(content: Text(errorMessage)));
 
         if (errorMessage == "PIN does not exist. Please create a new PIN.") {
+          print("Yes a PIN Error");
           _showCreatePinErrorModal();
         }
       }
     } catch (e) {
       // Handle exceptions
       print("Exception: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
     }
   }
+
+
 
   void _showCreatePinErrorModal() {
     showDialog(
@@ -151,30 +153,33 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
           ),
           actions: [
             // Cancel Button
-            GestureDetector(
-              onTap: () => Navigator.of(context).pop(),
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+
+                GestureDetector(
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: CustomText(
+                      text: "Cancel",
+                      color: Colors.white,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
-                child: CustomText(
-                  text: "Cancel",
-                  color: Colors.white,
-                  fontSize: 14,
-                ),
-              ),
-            ),
-            SizedBox(width: 10), // Add space between buttons
-            // Create PIN Button
-            GestureDetector(
+
+
+
+        GestureDetector(
               onTap: () {
                 Navigator.of(context).pop(); // Close the modal
                 Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const CreatePin(),
-                  ),
+                  MaterialPageRoute(builder: (context) => const CreatePin()),
                 );
               },
               child: Container(
@@ -191,12 +196,15 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
                 ),
               ),
             ),
+
+
+              ],
+            ),
           ],
         );
       },
     );
   }
-
 
   @override
   void initState() {
@@ -284,9 +292,7 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               for (int j = 1; j <= 3; j++)
-                Expanded(
-                  child: _buildNumberButton('${3 * (i - 1) + j}'),
-                ),
+                Expanded(child: _buildNumberButton('${3 * (i - 1) + j}')),
             ],
           ),
         Row(
@@ -312,9 +318,10 @@ class _CartPinInputModalState extends State<CartPinInputModal> {
           shape: BoxShape.circle,
           color: Colors.grey[200],
         ),
-        child: isDelete
-            ? Icon(Icons.backspace, size: 24)
-            : Text(value, style: TextStyle(fontSize: 24)),
+        child:
+            isDelete
+                ? Icon(Icons.backspace, size: 24)
+                : Text(value, style: TextStyle(fontSize: 24)),
       ),
     );
   }

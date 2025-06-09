@@ -53,7 +53,7 @@ class _TopUpPinState extends State<TopUpPin> {
       return;
     }
 
-    final String url = "https://fama-logistics.onrender.com/api/v1/wallet/fundWallet";
+    final String url = "https://fama-logistics-ljza.onrender.com/api/v1/wallet/fundWallet";
 
     try {
       final response = await http.post(
