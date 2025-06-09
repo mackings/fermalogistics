@@ -59,7 +59,7 @@ void _onPinComplete(String id) async {
   print("Entered PIN: $enteredPin");
 
   // API URL
-  final String url = "https://getnamibia-logistics.onrender.com/api/v1/wallet/createNewPin";
+  final String url = "https://fama-logistics-ljza.onrender.com/api/v1/wallet/createNewPin";
 
   // Request body
   final Map<String, dynamic> requestBody = {"pin": enteredPin};

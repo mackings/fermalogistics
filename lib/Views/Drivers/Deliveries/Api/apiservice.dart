@@ -9,11 +9,11 @@ import '../Model/ordermodel.dart';
 class DeliveryService {
 
   final String upcomingOrdersUrl =
-      'https://fama-logistics.onrender.com/api/v1/delivery/getAllSendOrders';
+      'https://fama-logistics-ljza.onrender.com/api/v1/delivery/getAllSendOrders';
   final String completedOrdersUrl =
-      'https://fama-logistics.onrender.com/api/v1/delivery/getAllCompletedOrders';
+      'https://fama-logistics-ljza.onrender.com/api/v1/delivery/getAllCompletedOrders';
   final String cancelledOrdersUrl =
-      'https://fama-logistics.onrender.com/api/v1/delivery/getAllCancelledOrders';
+      'https://fama-logistics-ljza.onrender.com/api/v1/delivery/getAllCancelledOrders';
 
   // Retrieve auth token from SharedPreferences
 

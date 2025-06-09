@@ -9,13 +9,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 class PickupService {
 
   final String pickupOrdersUrl =
-      'https://fama-logistics.onrender.com/api/v1/delivery/getAllSendOrders';
+      'https://fama-logistics-ljza.onrender.com/api/v1/delivery/getAllSendOrders';
 
   final String acceptOrderUrl =
-      'https://fama-logistics.onrender.com/api/v1/delivery/acceptOrder/';
+      'https://fama-logistics-ljza.onrender.com/api/v1/delivery/acceptOrder/';
 
   final String confirmPickupUrl =
-      'https://fama-logistics.onrender.com/api/v1/delivery/pickUpOrder/';
+      'https://fama-logistics-ljza.onrender.com/api/v1/delivery/pickUpOrder/';
 
   Future<String?> _getAuthToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();

@@ -90,8 +90,9 @@ class _SearchHomeState extends State<SearchHome> {
         actions: [
           GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //     context, MaterialPageRoute(builder: (context) => ScanCode()));
+              
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => ScanCode()));
             },
             child: CustomText(
               text: "Scan QR",

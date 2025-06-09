@@ -129,13 +129,13 @@ Future<void> signUp() async {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text(responseData['message'])),
       );
-      print(response.body);
+      print(responseData);
     }
   } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('An error occurred: $e')),
     );
-    print(e);
+   // print(e);
   } finally {
     setState(() {
       isLoading = false;
@@ -214,33 +214,38 @@ Column(
       child: Row(
         children: [
           // Dropdown for selecting country code
-          Expanded(
-            flex: 3,
-            child: DropdownButtonFormField<String>(
-              isExpanded: true,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-              ),
-              items: countryCodes.keys.map((code) {
-                return DropdownMenuItem<String>(
-                  value: code,
-                  child: Text(code),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  countrycode.text = value!; // Store only the country code
-                  selectedCountry = countryCodes[value]!; // Map to the country name
-                });
-              },
-              value: countrycode.text.isEmpty
-                  ? countryCodes.keys.first
-                  : countrycode.text, // Default or selected value
-              dropdownColor: Colors.white,
-              icon: Icon(Icons.arrow_drop_down, color: Colors.black),
-            ),
-          ),
+Expanded(
+  flex: 4, // Increased from 3 to 4
+  child: DropdownButtonFormField<String>(
+    isExpanded: true,
+    decoration: const InputDecoration(
+      border: InputBorder.none,
+      contentPadding: EdgeInsets.zero,
+    ),
+    items: countryCodes.keys.map((code) {
+      return DropdownMenuItem<String>(
+        value: code,
+        child: Text(
+          code,
+          overflow: TextOverflow.ellipsis, // Prevents overflow
+          style: const TextStyle(fontSize: 14), // Optional: shrink slightly
+        ),
+      );
+    }).toList(),
+    onChanged: (value) {
+      setState(() {
+        countrycode.text = value!;
+        selectedCountry = countryCodes[value]!;
+      });
+    },
+    value: countrycode.text.isEmpty
+        ? countryCodes.keys.first
+        : countrycode.text,
+    dropdownColor: Colors.white,
+    icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+  ),
+),
+
           SizedBox(width: 8.0),
           // Text field for phone number
 

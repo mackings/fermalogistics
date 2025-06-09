@@ -72,16 +72,19 @@ class _SigninState extends ConsumerState<Signin> {
           );
         }
       } else {
-         final responseData = jsonDecode(response.body);
-        
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('${responseData['message']}')),
-        );
+        final responseData = jsonDecode(response.body);
+        print(responseData);
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('${responseData['message']}')));
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('An error occurred: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
+
+      print(e);
     } finally {
       setState(() {
         isLoading = false;
@@ -92,9 +95,7 @@ class _SigninState extends ConsumerState<Signin> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-      ),
+      appBar: AppBar(automaticallyImplyLeading: false),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -105,70 +106,60 @@ class _SigninState extends ConsumerState<Signin> {
                 fontSize: 12.sp,
               ),
               subtitle: CustomText(
-                  text: 'Please enter your details below to continue'),
+                text: 'Please enter your details below to continue',
+              ),
             ),
-            SizedBox(
-              height: 5.h,
-            ),
+            SizedBox(height: 5.h),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15),
               child: Column(
                 children: [
                   CustomTextFormField(
-                      labelText: "Phone Number / Email Address *",
-                      hintText: 'Email or Phone number',
-                      controller: email,
-                      onChanged: (value) {}),
-                  SizedBox(
-                    height: 2.h,
+                    labelText: "Phone Number / Email Address *",
+                    hintText: 'Email or Phone number',
+                    controller: email,
+                    onChanged: (value) {},
                   ),
+                  SizedBox(height: 2.h),
                   CustomTextFormField(
                     isPassword: true,
-                      labelText: "Password *",
-                      hintText: 'Enter your password',
-                      controller: password,
-                      suffix: Icon(Icons.visibility_off_sharp),
-                      onChanged: (value) {}),
-                  SizedBox(
-                    height: 1.h,
+                    labelText: "Password *",
+                    hintText: 'Enter your password',
+                    controller: password,
+                    suffix: Icon(Icons.visibility_off_sharp),
+                    onChanged: (value) {},
                   ),
+                  SizedBox(height: 1.h),
                   Align(
-                      alignment: Alignment.topRight,
-                      child: GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Forgotpassword()));
-                          },
-                          child: CustomText(text: 'Forgot password?'))),
-                  SizedBox(
-                    height: 23.h,
+                    alignment: Alignment.topRight,
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Forgotpassword(),
+                          ),
+                        );
+                      },
+                      child: CustomText(text: 'Forgot password?'),
+                    ),
                   ),
+                  SizedBox(height: 23.h),
                   isLoading
-                      ? CircularProgressIndicator(
-                          color: btncolor,
-                        )
-                      : CustomButton(
-                          text: 'Login',
-                          onPressed: _login,
-                        ),
-                  SizedBox(
-                    height: 2.h,
-                  ),
+                      ? CircularProgressIndicator(color: btncolor)
+                      : CustomButton(text: 'Login', onPressed: _login),
+                  SizedBox(height: 2.h),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomText(text: 'Don\'t have an account?'),
-                      SizedBox(
-                        width: 1.w,
-                      ),
+                      SizedBox(width: 1.w),
                       CustomText(
                         text: 'Create Account',
                         fontWeight: FontWeight.w600,
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
