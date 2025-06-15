@@ -43,18 +43,15 @@ class _SignupState extends ConsumerState<Signup> {
   String selectedCountry = ''; // Selected country name
 
   // Map of country codes and names
-  final Map<String, String> countryCodes = {
-    '+234': 'Nigeria',
-    '+233': 'Ghana',
-    '+245': 'Guinea-Bissau',
-    '+86': 'China',
-    '+254': 'Kenya',
-    '+27': 'South Africa',
-    '+225': 'Ivory Coast',
-    '+237': 'Cameroon',
-    '+211': 'South Sudan',
-    '+212': 'Morocco',
-  };
+final Map<String, String> countryCodes = {
+  '+234': 'Nigeria',
+  '+260': 'Zambia',
+  '+267': 'Botswana',
+  '+255': 'Tanzania',
+  '+264': 'Namibia',
+  '+265': 'Malawi',
+};
+
 
   void _checkPasswordRequirements(String password) {
     setState(() {
@@ -217,10 +214,10 @@ Column(
 Expanded(
   flex: 4, // Increased from 3 to 4
   child: DropdownButtonFormField<String>(
-    isExpanded: true,
+    isExpanded: true, 
     decoration: const InputDecoration(
       border: InputBorder.none,
-      contentPadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,  
     ),
     items: countryCodes.keys.map((code) {
       return DropdownMenuItem<String>(
@@ -261,18 +258,12 @@ Expanded(
               style: GoogleFonts.inter(),
             ),
           ),
-
-          
+                   
         ],
       ),
     ),
   ],
 ),
-
-
-
-
-
 
 
                   SizedBox(height: 3.h),
