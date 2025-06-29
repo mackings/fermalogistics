@@ -27,37 +27,39 @@ class _SigninState extends ConsumerState<Signin> {
 
   bool isLoading = false;
 
-  Future<void> _login() async {
-    setState(() {
-      isLoading = true;
-    });
 
-    final Map<String, dynamic> requestData = {
-      "email": email.text,
-      "password": password.text,
-    };
 
-    final String url =
-        "https://fama-logistics-ljza.onrender.com/api/v1/user/userLogin";
 
-    try {
-      final response = await http.post(
-        Uri.parse(url),
-        headers: {"Content-Type": "application/json"},
-        body: jsonEncode(requestData),
-      );
+Future<void> _login() async {
+  setState(() {
+    isLoading = true;
+  });
 
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
+  final Map<String, dynamic> requestData = {
+    "email": email.text,
+    "password": password.text,
+  };
 
-        // Save the entire response as a JSON string
+  final String url =
+      "https://fama-logistics-ljza.onrender.com/api/v1/user/userLogin";
+
+  try {
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {"Content-Type": "application/json"},
+      body: jsonEncode(requestData),
+    );
+
+    final responseData = jsonDecode(response.body);
+    print('API Response: $responseData'); // ✅ Console log
+
+    if (response.statusCode == 200) {
+      if (responseData['user'] != null && responseData['user']['roles'] != null) {
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setString('userData', jsonEncode(responseData));
 
-        print(responseData);
-
-        // Extract role and navigate accordingly
         String role = responseData['user']['roles'];
+        print('User role: $role');
 
         if (role == 'dropShipper') {
           Navigator.pushReplacement(
@@ -65,32 +67,39 @@ class _SigninState extends ConsumerState<Signin> {
             MaterialPageRoute(builder: (context) => HomePage()),
           );
         } else {
-          print("delivery Guy");
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(builder: (context) => DriverHomePage()),
           );
         }
       } else {
-        final responseData = jsonDecode(response.body);
-        print(responseData);
-
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('${responseData['message']}')));
+        // ✅ Use API message if available
+        String msg = responseData['message'] ?? 'Invalid response format.';
+        print('Missing user or role. Message: $msg');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(msg)),
+        );
       }
-    } catch (e) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text('An error occurred: $e')));
-
-      print(e);
-    } finally {
-      setState(() {
-        isLoading = false;
-      });
+    } else {
+      print('Login failed: $responseData');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${responseData['message']}')),
+      );
     }
+  } catch (e) {
+    print('Error during login: $e');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('An error occurred. Please try again.')),
+    );
+  } finally {
+    setState(() {
+      isLoading = false;
+    });
   }
+}
+
+
+
 
   @override
   Widget build(BuildContext context) {

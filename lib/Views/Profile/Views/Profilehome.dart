@@ -23,6 +23,7 @@ class ProfileHome extends StatefulWidget {
 }
 
 class _ProfileHomeState extends State<ProfileHome> {
+
   UserData? userData;
 
   @override
@@ -102,15 +103,21 @@ class _ProfileHomeState extends State<ProfileHome> {
                 },
               ),
 
-            ProfileOptionTile(
-                icon: Icons.car_rental,
-                iconColor: Colors.red,
-                backgroundColor: Colors.red.shade50,
-                title: "Become a Driver",
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => SwitchProfile()));
-                },
-              ),
+ProfileOptionTile(
+  icon: Icons.car_rental,
+  iconColor: Colors.red,
+  backgroundColor: Colors.red.shade50,
+  title: userData?.roles == 'deliveryPersonnel'
+      ? "Switch to User"
+      : "Switch to Driver",
+  onTap: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SwitchProfile()),
+    );
+  },
+),
+
 
               ProfileOptionTile(
                 icon: Icons.person,
