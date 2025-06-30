@@ -69,7 +69,14 @@ if (response.statusCode == 200) {
         context,
         MaterialPageRoute(builder: (context) => HomePage()),
       );
-    } else {
+    } 
+   if (role == 'admin') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    }
+    else {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => DriverHomePage()),

@@ -1,14 +1,27 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:getnamibia/Views/Profile/model/usermodel.dart';
 import 'package:getnamibia/Views/Tracking/Model/scanmodel.dart';
 import 'package:getnamibia/Views/widgets/button.dart';
 import 'package:getnamibia/Views/widgets/texts.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
-class ProductDetailsModal extends StatelessWidget {
+
+
+class ProductDetailsModal extends StatefulWidget {
+
   final Product product;
 
   const ProductDetailsModal({Key? key, required this.product}) : super(key: key);
+
+  @override
+  State<ProductDetailsModal> createState() => _ProductDetailsModalState();
+}
+
+class _ProductDetailsModalState extends State<ProductDetailsModal> {
 
   String formatDate(String date) {
     try {
@@ -16,6 +29,25 @@ class ProductDetailsModal extends StatelessWidget {
       return DateFormat("d, MMMM yyyy").format(parsedDate); // e.g., 12, July 2025
     } catch (_) {
       return date;
+    }
+  }
+
+   UserData? userData;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? userDataString = prefs.getString('userData');
+    if (userDataString != null) {
+      Map<String, dynamic> userJson = json.decode(userDataString)['user'];
+      setState(() {
+        userData = UserData.fromJson(userJson);
+      });
     }
   }
 
@@ -47,12 +79,12 @@ class ProductDetailsModal extends StatelessWidget {
             const SizedBox(height: 16),
 
             // Product Image
-            if (product.productImages.isNotEmpty)
+            if (widget.product.productImages.isNotEmpty)
               Center(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(15),
                   child: Image.network(
-                    product.productImages.first,
+                    widget.product.productImages.first,
                     height: 160,
                     width: 160,
                     fit: BoxFit.cover,
@@ -67,13 +99,13 @@ class ProductDetailsModal extends StatelessWidget {
               child: Column(
                 children: [
                   CustomText(
-                    text: product.productName,
+                    text: widget.product.productName,
                     fontWeight: FontWeight.bold,
                     fontSize: 22,
                   ),
                   const SizedBox(height: 6),
                   CustomText(
-                    text: "\$${formatter.format(product.price)}",
+                    text: "\$${formatter.format(widget.product.price)}",
                     fontSize: 18,
                     color: Colors.green,
                   ),
@@ -86,29 +118,29 @@ class ProductDetailsModal extends StatelessWidget {
             _sectionWithDivider(
               title: "Product Information",
               children: [
-                _infoRow(Icons.category, "Category", product.categoryName),
+                _infoRow(Icons.category, "Category", widget.product.categoryName),
                // _infoRow(Icons.qr_code, "Barcode", product.barcode),
-                _infoRow(Icons.confirmation_number, "SKU", product.sku),
-                _infoRow(Icons.receipt_long, "Tax Class", product.taxClass),
-                _infoRow(Icons.inventory_2, "Available", "${product.quantity}"),
-                _infoRow(Icons.shopping_cart_checkout, "Sold", "${product.quantitySold}"),
+                _infoRow(Icons.confirmation_number, "SKU", widget.product.sku),
+                _infoRow(Icons.receipt_long, "Tax Class", widget.product.taxClass),
+                _infoRow(Icons.inventory_2, "Available", "${widget.product.quantity}"),
+                _infoRow(Icons.shopping_cart_checkout, "Sold", "${widget.product.quantitySold}"),
               ],
             ),
 
             _sectionWithDivider(
               title: "Dimensions & Specs",
               children: [
-                _infoRow(Icons.scale, "Weight", "${product.weight} kg"),
-                _infoRow(Icons.square_foot, "Size", "${product.length} × ${product.width} × ${product.height} cm"),
-                _infoRow(Icons.public, "Origin", product.countryOfOrigin),
+                _infoRow(Icons.scale, "Weight", "${widget.product.weight} kg"),
+                _infoRow(Icons.square_foot, "Size", "${widget.product.length} × ${widget.product.width} × ${widget.product.height} cm"),
+                _infoRow(Icons.public, "Origin", widget.product.countryOfOrigin),
               ],
             ),
 
             _sectionWithDivider(
               title: "Additional Details",
               children: [
-                _infoRow(Icons.percent, "VAT", "${product.vatAmount}%"),
-                _infoRow(Icons.money_off, "Discount", "${product.discount}%"),
+                _infoRow(Icons.percent, "VAT", "${widget.product.vatAmount}%"),
+                _infoRow(Icons.money_off, "Discount", "${widget.product.discount}%"),
               ],
             ),
 
@@ -116,7 +148,7 @@ class ProductDetailsModal extends StatelessWidget {
               title: "Description",
               children: [
                 CustomText(
-                  text: product.description,
+                  text: widget.product.description,
                   fontSize: 14,
                   color: Colors.black87,
                 ),
@@ -126,17 +158,31 @@ class ProductDetailsModal extends StatelessWidget {
             _sectionWithDivider(
               title: "Timestamps",
               children: [
-                _infoRow(Icons.calendar_today, "Created", formatDate(product.createdAt)),
-                _infoRow(Icons.update, "Updated", formatDate(product.updatedAt)),
+                _infoRow(Icons.calendar_today, "Created", formatDate(widget.product.createdAt)),
+                _infoRow(Icons.update, "Updated", formatDate(widget.product.updatedAt)),
               ],
             ),
 
             const SizedBox(height: 20),
 
-            CustomButton(
-              text: "Done",
-              onPressed: () => Navigator.pop(context),
-            ),
+
+if (userData?.roles == 'admin')
+  CustomButton(
+    text: "Accept Product",
+    onPressed: () {
+      // Add accept logic here
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Product accepted!")),
+      );
+    },
+  )
+else
+  CustomButton(
+    text: "Done",
+    onPressed: () => Navigator.pop(context),
+  ),
+
+  
           ],
         ),
       ),
