@@ -3,6 +3,7 @@ import 'package:getnamibia/Views/widgets/button.dart';
 import 'package:getnamibia/Views/widgets/colors.dart';
 import 'package:getnamibia/Views/widgets/countrycode.dart';
 import 'package:getnamibia/Views/widgets/formfields.dart';
+import 'package:getnamibia/Views/widgets/newcountrycode.dart';
 import 'package:getnamibia/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,6 +17,16 @@ class Createaddress extends ConsumerStatefulWidget {
 }
 
 class _CreateaddressState extends ConsumerState<Createaddress> {
+
+  bool hasUpperCase = false;
+  bool hasLowerCase = false;
+  bool hasNumber = false;
+  bool hasSpecialChar = false;
+
+
+  String selectedCountry = 'Nigeria';
+  String selectedCode = '+234';
+
   TextEditingController firstname = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController pickupaddress = TextEditingController();
@@ -46,6 +57,29 @@ class _CreateaddressState extends ConsumerState<Createaddress> {
               SizedBox(
                 height: 2.h,
               ),
+
+              Newcountrycode(
+  labelText: 'Phone Number *',
+  hintText: '8137159066',
+  controller: phone,
+  selectedCountryCode: selectedCode,
+  onCountryCodeChanged: (code) {
+    setState(() {
+      selectedCode = code;
+      //countrycode.text = code;
+    });
+    print("Code: $code");
+  },
+  onCountryNameChanged: (name) {
+    setState(() {
+      selectedCountry = name;
+    });
+    print("Country Name: $name");
+  },
+  onChanged: (value) {
+  },
+),
+
               // CountryCodeTextFormField(
               //   labelText: 'Phone Number*',
               //   hintText: "8137159066",
@@ -54,6 +88,7 @@ class _CreateaddressState extends ConsumerState<Createaddress> {
               //   countryCodes: ['+234', '+91', '+44'],
               //   selectedCountryCode: '+234',
               // ),
+
               SizedBox(
                 height: 2.h,
               ),

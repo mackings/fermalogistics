@@ -3,6 +3,7 @@ import 'package:getnamibia/Views/Product/Api/apiclass.dart';
 import 'package:getnamibia/Views/widgets/button.dart';
 import 'package:getnamibia/Views/widgets/colors.dart';
 import 'package:getnamibia/Views/widgets/formfields.dart';
+import 'package:getnamibia/Views/widgets/packagedd.dart';
 import 'package:getnamibia/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -26,6 +27,10 @@ class _GetquoteState extends ConsumerState<Getquote> {
   
   dynamic userToken;
   bool isLoading = false;
+
+String selectedRate = '';
+List<String> rateOptions = ['Express', 'Cargo'];
+
 
   // Controllers for additional fields
   TextEditingController heightController = TextEditingController();
@@ -113,22 +118,19 @@ class _GetquoteState extends ConsumerState<Getquote> {
                   onChanged: (value) {}),
               SizedBox(height: 2.h),
 
-CustomTextFormField(
-  labelText: 'Rates *',
-  hintText: 'Express',
-  controller: rateController,
-  onChanged: (value) {},
-  inputFormatters: [
-    TextInputFormatter.withFunction((oldValue, newValue) {
-      final text = newValue.text;
-      return newValue.copyWith(
-        text: text.isNotEmpty ? text[0].toUpperCase() + text.substring(1) : '',
-        selection: newValue.selection,
-      );
-      
-    }),
-  ],
+
+CustomDropdownFormField(
+  labelText: "Rates *",
+  hintText: "Select Rate",
+  value: selectedRate,
+  items: rateOptions,
+  onChanged: (newValue) {
+    setState(() {
+      selectedRate = newValue ?? '';
+    });
+  },
 ),
+
 
               SizedBox(height: 5.h),
 
@@ -151,7 +153,7 @@ CustomTextFormField(
                             height: double.parse(heightController.text),
                             width: double.parse(widthController.text),
                             length: double.parse(lengthController.text),
-                            rates: rateController.text,
+                            rates: selectedRate,
                             userToken: userToken, // Pass userToken
                           );
 
