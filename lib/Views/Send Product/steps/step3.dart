@@ -184,161 +184,181 @@ class _StepForm3State extends State<StepForm3> {
               hintText: "Select a Category",
               value: selectedCategory2,
               items: categories2,
-              onChanged: (newValue) async {
-                setState(() {
-                  selectedCategory2 = newValue ?? '';
-                });
+onChanged: (newValue) async {
+  setState(() {
+    selectedCategory2 = newValue ?? '';
+  });
 
+  // Data to send
+  Map<String, dynamic> dataToSend = {
+    'receiverAddress': widget.previousData['receiverAddress'],
+    'pickupAddress': widget.previousData['pickupAddress'],
+    'weightOfPackage': int.tryParse(weight.text) ?? 0,
+    'numberOfPackages': int.tryParse(noofPackages.text) ?? 0,
+    'height': int.tryParse(height.text) ?? 0,
+    'width': int.tryParse(width.text) ?? 0,
+    'length': double.tryParse(length.text) ?? 0.0,
+  };
 
-                Map<String, dynamic> dataToSend = {
-                  'receiverAddress': widget.previousData['receiverAddress'],
-                  'pickupAddress': widget.previousData['pickupAddress'],
-                  'weightOfPackage': int.tryParse(weight.text) ?? 0,
-                  'numberOfPackages': int.tryParse(noofPackages.text) ?? 0,
-                  'height': int.tryParse(height.text) ?? 0,
-                  'width': int.tryParse(width.text) ?? 0,
-                  'length': double.tryParse(length.text) ?? 0.0,
-                };
-
-try {
-  // Send the API request
-  final response = await calculateShipmentCost(dataToSend);
-
-  if (response != null) {
-    // Show the rates modal with the new showModalBottomSheet
-    showModalBottomSheet(
-      backgroundColor: Colors.white,
-      isScrollControlled: true,
+  try {
+    // Show loading overlay
+    showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return FractionallySizedBox(
-          heightFactor: 0.4,
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(15),
-                  topRight: Radius.circular(15),
+      barrierDismissible: false,
+      builder: (context) => Center(
+        child: CircularProgressIndicator(color: Colors.red,),
+      ),
+    );
+
+    // Perform the API request
+    final response = await calculateShipmentCost(dataToSend);
+
+    // Dismiss the loader
+    Navigator.pop(context);
+
+    if (response != null) {
+      // Show modal with results
+      showModalBottomSheet(
+        backgroundColor: Colors.white,
+        isScrollControlled: true,
+        context: context,
+        builder: (BuildContext context) {
+          return FractionallySizedBox(
+            heightFactor: 0.4,
+            child: SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(15),
+                    topRight: Radius.circular(15),
+                  ),
                 ),
-              ),
-              width: MediaQuery.of(context).size.width,
-              height: 70.h,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  top: 15,
-                  left: 15,
-                  right: 15,
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        CustomText(
-                          text: 'Rates',
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: CircleAvatar(
-                            radius: 15,
-                            backgroundColor: Colors.black,
-                            child: Icon(
-                              Icons.close_outlined,
-                              color: Colors.white,
-                              size: 15,
+                width: MediaQuery.of(context).size.width,
+                height: 70.h,
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    top: 15,
+                    left: 15,
+                    right: 15,
+                  ),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          CustomText(
+                            text: 'Rates',
+                            fontSize: 12.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.pop(context);
+                            },
+                            child: CircleAvatar(
+                              radius: 15,
+                              backgroundColor: Colors.black,
+                              child: Icon(
+                                Icons.close_outlined,
+                                color: Colors.white,
+                                size: 15,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 2.h),
-                    Divider(color: Colors.grey),
-                    SizedBox(height: 3.h),
-
-                    // Cargo Rate Section
-                    Container(
-                      height: 10.h,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: btngrey,
-                        borderRadius: BorderRadius.circular(8),
+                        ],
                       ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Color(0xFFFFEFF0),
-                          child: SvgPicture.asset('assets/ship.svg'),
-                        ),
-                        title: CustomText(
-                          text: 'Cargo',
-                          fontSize: 9.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        subtitle: CustomText(
-                          text: '3-5 days',
-                          color: const Color.fromARGB(255, 226, 217, 217),
-                        ),
-                        trailing: CustomText(
-                          text: 'USD ${response['cargo'].toString()}', // Cargo price
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
+                      SizedBox(height: 2.h),
+                      Divider(color: Colors.grey),
+                      SizedBox(height: 3.h),
 
-                    SizedBox(height: 3.h),
-
-                  
-                    Container(
-                      height: 10.h,
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                        color: btngrey,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          backgroundColor: Color(0xFFFFEFF0),
-                          child: SvgPicture.asset('assets/plane.svg'),
+                      // Cargo
+                      Container(
+                        height: 10.h,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: btngrey,
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        title: CustomText(
-                          text: 'Express',
-                          fontSize: 9.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        subtitle: CustomText(
-                          text: '1-2 days',
-                          color: const Color.fromARGB(255, 226, 217, 217),
-                        ),
-                        trailing: CustomText(
-                          text: 'USD ${response['express'].toString()}', // Express price
-                          fontWeight: FontWeight.w600,
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Color(0xFFFFEFF0),
+                            child: SvgPicture.asset('assets/ship.svg'),
+                          ),
+                          title: CustomText(
+                            text: 'Cargo',
+                            fontSize: 9.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          subtitle: CustomText(
+                            text: '3-5 days',
+                            color: const Color.fromARGB(255, 226, 217, 217),
+                          ),
+                          trailing: CustomText(
+                            text: 'USD ${response['cargo'].toString()}',
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
-                    ),
-                    
 
-                    SizedBox(height: 2.h),
-                  ],
+                      SizedBox(height: 3.h),
+
+                      // Express
+                      Container(
+                        height: 10.h,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(
+                          color: btngrey,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundColor: Color(0xFFFFEFF0),
+                            child: SvgPicture.asset('assets/plane.svg'),
+                          ),
+                          title: CustomText(
+                            text: 'Express',
+                            fontSize: 9.sp,
+                            fontWeight: FontWeight.w600,
+                          ),
+                          subtitle: CustomText(
+                            text: '1-2 days',
+                            color: const Color.fromARGB(255, 226, 217, 217),
+                          ),
+                          trailing: CustomText(
+                            text: 'USD ${response['express'].toString()}',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+
+                      SizedBox(height: 2.h),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      );
+    }
+  } catch (error) {
+    // Dismiss the loader if there's an error
+    Navigator.pop(context);
+    print("Error calculating shipment cost: $error");
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text("Failed to fetch shipment rates.")),
     );
   }
-} catch (error) {
-  print("Error calculating shipment cost: $error");
-  // Handle error scenario
 }
 
-              },
+
             ),
+
+
+
             SizedBox(height: 5.h),
             CustomButton(
               text: 'Continue',

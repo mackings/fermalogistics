@@ -10,9 +10,11 @@ import 'package:getnamibia/Views/widgets/formfields.dart';
 import 'package:getnamibia/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:getnamibia/Views/widgets/verifysheet.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizer/sizer.dart';
 import 'package:http/http.dart' as http;
+
 
 class Signin extends ConsumerStatefulWidget {
   const Signin({super.key});
@@ -53,39 +55,38 @@ Future<void> _login() async {
     final responseData = jsonDecode(response.body);
     print('API Response: $responseData'); // ✅ Console log
 
-    if (response.statusCode == 200) {
-      if (responseData['user'] != null && responseData['user']['roles'] != null) {
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setString('userData', jsonEncode(responseData));
+if (response.statusCode == 200) {
+  if (responseData['user'] != null && responseData['user']['roles'] != null) {
+    // Save to shared prefs
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('userData', jsonEncode(responseData));
 
-        String role = responseData['user']['roles'];
-        print('User role: $role');
+    String role = responseData['user']['roles'];
+    print('User role: $role');
 
-        if (role == 'dropShipper') {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => HomePage()),
-          );
-        } else {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => DriverHomePage()),
-          );
-        }
-      } else {
-        // ✅ Use API message if available
-        String msg = responseData['message'] ?? 'Invalid response format.';
-        print('Missing user or role. Message: $msg');
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(msg)),
-        );
-      }
+    if (role == 'dropShipper') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
     } else {
-      print('Login failed: $responseData');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('${responseData['message']}')),
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => DriverHomePage()),
       );
     }
+  } else {
+    String msg = responseData['message'] ?? 'Invalid response format.';
+    if (msg.contains("pending")) {
+      VerifyAccountBottomSheet.show(context);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg)),
+      );
+    }
+  }
+}
+
   } catch (e) {
     print('Error during login: $e');
     ScaffoldMessenger.of(context).showSnackBar(

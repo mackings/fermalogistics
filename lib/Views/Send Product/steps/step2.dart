@@ -2,6 +2,7 @@ import 'package:getnamibia/Views/Address/createaddress.dart';
 import 'package:getnamibia/Views/widgets/button.dart';
 import 'package:getnamibia/Views/widgets/countrycode.dart';
 import 'package:getnamibia/Views/widgets/formfields.dart';
+import 'package:getnamibia/Views/widgets/newcountrycode.dart';
 import 'package:getnamibia/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:sizer/sizer.dart';
@@ -60,7 +61,7 @@ class _StepForm1State extends State<StepForm2> {
             ),
 
 
-                        CountryCodeTextFormField(
+                        Newcountrycode(
   labelText: 'Phone Number *',
   hintText: '8137159066',
   controller: senderPhone,
@@ -75,15 +76,6 @@ class _StepForm1State extends State<StepForm2> {
   }, onCountryNameChanged: (name) {  },
 ),
 
-
-            // CountryCodeTextFormField(
-            //   labelText: 'Phone Number *',
-            //   hintText: "8137159066",
-            //   controller: senderPhone,
-            //   onChanged: (value) {},
-            //   countryCodes: ['+1', '+91', '+234'],
-            //   selectedCountryCode: '+234',
-            // ),
 
 
             SizedBox(
