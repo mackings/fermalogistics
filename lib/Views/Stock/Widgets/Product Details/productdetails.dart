@@ -292,7 +292,8 @@ class _ProductDetailsPageState extends State<ProductDetailsPage> {
                                 color: Colors.grey),
                           ),
                           Text(
-                            '${widget.currency}${widget.product.price * quantity}',
+                            // '${widget.currency}${widget.product.price * quantity}',
+                            '\$${widget.product.price * quantity}',
                             style: GoogleFonts.montserrat(
                                 fontSize: 25,
                                 fontWeight: FontWeight.bold,

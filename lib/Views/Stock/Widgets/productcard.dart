@@ -32,7 +32,9 @@ String formatPrice(dynamic price) {
     // Use NumberFormat to format with commas
     final formatter = NumberFormat("#,##0", "en_NG");
 
-    return "₦${formatter.format(parsedPrice)}";
+    //return "₦${formatter.format(parsedPrice)}";
+   return "\$${formatter.format(parsedPrice)}";
+
   } catch (e) {
     return "₦0";
   }

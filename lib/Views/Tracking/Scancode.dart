@@ -1,10 +1,11 @@
-
+import 'package:getnamibia/Views/Tracking/Api/Scanservice.dart';
+import 'package:getnamibia/Views/Tracking/Model/scanmodel.dart';
+import 'package:getnamibia/Views/Tracking/widgets/scanmodal.dart';
 import 'package:getnamibia/Views/widgets/button.dart';
 import 'package:getnamibia/Views/widgets/texts.dart';
 import 'package:flutter/material.dart';
 import 'package:simple_barcode_scanner/simple_barcode_scanner.dart';
 import 'package:sizer/sizer.dart';
-
 
 
 class ScanCode extends StatefulWidget {
@@ -15,14 +16,20 @@ class ScanCode extends StatefulWidget {
 }
 
 class _ScanCodeState extends State<ScanCode> {
-  String result = "";
+  String? extractProductId(String url) {
+    final uri = Uri.tryParse(url);
+    if (uri != null && uri.pathSegments.isNotEmpty) {
+      return uri.pathSegments.last;
+    }
+    return null;
+  }
 
   Future<void> scanBarcode() async {
     try {
       String? res = await SimpleBarcodeScanner.scanBarcode(
         context,
         barcodeAppBar: const BarcodeAppBar(
-          appBarTitle: 'Scan Barcode',
+          appBarTitle: 'Scan Barcodes',
           centerTitle: true,
           enableBackButton: true,
           backButtonIcon: Icon(Icons.arrow_back_ios),
@@ -33,71 +40,36 @@ class _ScanCodeState extends State<ScanCode> {
       );
 
       if (res != null && res.isNotEmpty && res != "-1") {
-        setState(() {
-          result = res;
-        });
+        final productId = extractProductId(res);
 
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          backgroundColor: Colors.white,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
-          ),
-          builder: (context) {
-            return Padding(
-              padding: EdgeInsets.only(
-                top: 20,
-                left: 20,
-                right: 20,
-                bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      const Spacer(),
-                      GestureDetector(
-                        onTap: () => Navigator.of(context).pop(),
-                        child: const Icon(Icons.close, size: 28),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 10),
-                  const Center(
-                    child: Icon(Icons.qr_code_scanner,
-                        size: 50, color: Colors.green),
-                  ),
-                  const SizedBox(height: 10),
-                  const Center(
-                    child: Text(
-                      'Scanned Barcode',
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Center(
-                    child: Text(
-                      result,
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                          fontSize: 16, color: Colors.black87),
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  CustomButton(
-                      text: "Done",
-                      onPressed: () {
-                        Navigator.pop(context);
-                      })
-                ],
-              ),
-            );
-          },
-        );
+        if (productId == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Invalid barcode format.')),
+          );
+          return;
+        }
+
+        final apiService = ProductApiService();
+        final Product? product = await apiService.fetchProductById(productId);
+
+        if (product == null) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Failed to fetch product info.')),
+          );
+          return;
+        }
+
+
+showModalBottomSheet(
+  context: context,
+  isScrollControlled: true,
+  backgroundColor: Colors.white,
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(top: Radius.circular(25)),
+  ),
+  builder: (context) => ProductDetailsModal(product: product),
+);
+
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -109,9 +81,7 @@ class _ScanCodeState extends State<ScanCode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: CustomText(text: 'Scan Barcode'),
-      ),
+      appBar: AppBar(title: CustomText(text: 'Scan Barcode')),
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Padding(
@@ -121,15 +91,12 @@ class _ScanCodeState extends State<ScanCode> {
               SizedBox(height: 15.h),
               const Icon(Icons.qr_code_2, size: 190),
               SizedBox(height: 20.h),
-              CustomButton(
-                text: "Scan",
-                onPressed: scanBarcode,
-              ),
+              CustomButton(text: "Scan", onPressed: scanBarcode),
               SizedBox(height: 2.h),
               CustomText(
                 text: "Kindly hold the camera still at the barcode",
                 fontSize: 8.sp,
-              )
+              ),
             ],
           ),
         ),
@@ -137,3 +104,4 @@ class _ScanCodeState extends State<ScanCode> {
     );
   }
 }
+

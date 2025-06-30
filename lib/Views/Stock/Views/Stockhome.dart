@@ -241,12 +241,12 @@ class _StockHomeState extends State<StockHome> {
                                   ),
                                 ),
                               );
-                              print(products[firstProductIndex].description);
+                              print(products[firstProductIndex].price);
                             },
                             child: ProductCard(
                               productName:
                                   products[firstProductIndex].productName,
-                              price: '${userCurrency}${products[firstProductIndex].price}',
+                              price: '${products[firstProductIndex].price}',
                               rating: 4.5,
                               imageUrl: products[firstProductIndex]
                                       .productImages
@@ -274,10 +274,11 @@ class _StockHomeState extends State<StockHome> {
                                 );
                                 print(products[secondProductIndex].description);
                               },
+                              // price: '${userCurrency}${products[secondProductIndex].price}',
                               child: ProductCard(
                                 productName:
                                     products[secondProductIndex].productName,
-                                price: '${userCurrency}${products[secondProductIndex].price}',
+                                price: '${products[secondProductIndex].price}',
                                 rating: 4.5,
                                 imageUrl: products[secondProductIndex]
                                         .productImages
