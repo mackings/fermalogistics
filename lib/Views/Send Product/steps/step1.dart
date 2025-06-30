@@ -21,6 +21,8 @@ class StepForm1 extends StatefulWidget {
 
 class _StepForm1State extends State<StepForm1> {
 
+  String selectedCode = '+234';
+
   TextEditingController senderName = TextEditingController();
   TextEditingController senderPhone = TextEditingController();
   TextEditingController pickupAddress = TextEditingController();
@@ -61,15 +63,30 @@ class _StepForm1State extends State<StepForm1> {
             ),
       
             SizedBox(height: 2.h,),
+
+            CountryCodeTextFormField(
+  labelText: 'Phone Number *',
+  hintText: '8137159066',
+  controller: senderPhone,
+  selectedCountryCode: selectedCode,
+  onCountryCodeChanged: (code) {
+    setState(() {
+      selectedCode = code;
+    });
+  },
+  onChanged: (value) {
+    // Handle phone number input
+  }, onCountryNameChanged: (name) {  },
+),
       
-               CountryCodeTextFormField(
-                      labelText: 'Phone Number *',
-                      hintText: "8137159066",
-                      controller: senderPhone,
-                      onChanged: (value) {},
-                      countryCodes: ['+1', '+91', '+234'],
-                      selectedCountryCode: '+234',
-                    ),
+              //  CountryCodeTextFormField(
+              //         labelText: 'Phone Number *',
+              //         hintText: "8137159066",
+              //         controller: senderPhone,
+              //         onChanged: (value) {},
+              //         countryCodes: ['+260', '+267', '+234','+255','+264','+265'],
+              //         selectedCountryCode: '+234',
+              //       ),
       
                     SizedBox(height: 2.h,),
       

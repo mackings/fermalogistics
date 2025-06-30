@@ -46,14 +46,14 @@ class _CreateaddressState extends ConsumerState<Createaddress> {
               SizedBox(
                 height: 2.h,
               ),
-              CountryCodeTextFormField(
-                labelText: 'Phone Number*',
-                hintText: "8137159066",
-                controller: phone,
-                onChanged: (value) {},
-                countryCodes: ['+234', '+91', '+44'],
-                selectedCountryCode: '+234',
-              ),
+              // CountryCodeTextFormField(
+              //   labelText: 'Phone Number*',
+              //   hintText: "8137159066",
+              //   controller: phone,
+              //   onChanged: (value) {},
+              //   countryCodes: ['+234', '+91', '+44'],
+              //   selectedCountryCode: '+234',
+              // ),
               SizedBox(
                 height: 2.h,
               ),

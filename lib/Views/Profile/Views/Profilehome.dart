@@ -93,6 +93,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => WalletHome()));
                 },
               ),
+
               ProfileOptionTile(
                 icon: Icons.lock_outline,
                 iconColor: Colors.red,
@@ -102,6 +103,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => CreatePin()));
                 },
               ),
+
 
 ProfileOptionTile(
   icon: Icons.car_rental,
@@ -128,6 +130,8 @@ ProfileOptionTile(
                   Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileUpdate()));
                 },
               ),
+
+
               ProfileOptionTile(
                 icon: Icons.notifications,
                 iconColor: Colors.red,
@@ -137,6 +141,8 @@ ProfileOptionTile(
                   print("Notifications tapped!");
                 },
               ),
+
+
               ProfileOptionTile(
                 icon: Icons.connect_without_contact,
                 iconColor: Colors.red,
@@ -147,8 +153,10 @@ ProfileOptionTile(
                 },
               ),
 
+
               // **Conditional Menu for Delivery Personnel**
               if (userData != null && userData!.roles == "deliveryPersonnel") ...[
+
                 ProfileOptionTile(
                   icon: Icons.verified_user,
                   iconColor: Colors.red,
@@ -158,6 +166,7 @@ ProfileOptionTile(
                     Navigator.push(context, MaterialPageRoute(builder: (context) => DriverHome()));
                   },
                 ),
+                
               ],
             ],
           ),

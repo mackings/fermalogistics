@@ -56,6 +56,8 @@ dependencies:
   flutter_inappwebview: ^6.0.0
   flutter_slidable: ^3.1.2
   simple_barcode_scanner: ^0.3.0
+  country_picker: ^2.0.20
+  intl_phone_number_input: ^0.7.4
 
 dev_dependencies:
   flutter_test:
