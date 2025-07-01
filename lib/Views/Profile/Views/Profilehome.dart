@@ -60,7 +60,7 @@ class _ProfileHomeState extends State<ProfileHome> {
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: ListTile(
-                      title: CustomText(text: "${userData!.fullName}"),
+                      title: CustomText(text: "${userData!.fullName == null? "Admin":userData!.fullName}"),
                       subtitle: CustomText(
                         text: "${userData!.email}",
                         color: Colors.grey,

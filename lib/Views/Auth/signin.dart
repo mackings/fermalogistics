@@ -56,35 +56,33 @@ Future<void> _login() async {
     print('API Response: $responseData'); // ✅ Console log
 
 if (response.statusCode == 200) {
-  if (responseData['user'] != null && responseData['user']['roles'] != null) {
-    // Save to shared prefs
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+  final user = responseData['user'];
+  final role = user?['roles'];
+
+  if (user != null && role != null) {
+    // Save user data to SharedPreferences
+    final prefs = await SharedPreferences.getInstance();
     await prefs.setString('userData', jsonEncode(responseData));
 
-    String role = responseData['user']['roles'];
     print('User role: $role');
 
-    if (role == 'dropShipper') {
+    // Define roles that go to HomePage
+    const homePageRoles = ['dropShipper', 'admin'];
+
+    if (homePageRoles.contains(role)) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (_) => HomePage()),
       );
-    } 
-   if (role == 'admin') {
+    } else {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
-      );
-    }
-    else {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => DriverHomePage()),
+        MaterialPageRoute(builder: (_) => DriverHomePage()),
       );
     }
   } else {
-    String msg = responseData['message'] ?? 'Invalid response format.';
-    if (msg.contains("pending")) {
+    final msg = responseData['message'] ?? 'Invalid response format.';
+    if (msg.toLowerCase().contains("pending")) {
       VerifyAccountBottomSheet.show(context);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -93,6 +91,7 @@ if (response.statusCode == 200) {
     }
   }
 }
+
 
   } catch (e) {
     print('Error during login: $e');
